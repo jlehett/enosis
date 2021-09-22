@@ -1,0 +1,11 @@
+{
+  "name": "flint",
+  "version": "0.0.1",
+  "description": "Flint is a library aiming to provide consistent, easy-to-read interfaces of solutions for a wide variety of web development problems.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "J. T. Lehett",
+  "license": "ISC"
+}
