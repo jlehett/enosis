@@ -4,7 +4,6 @@
  * developer to resolve or reject the created promise from outside of the
  * promise's scope.
  * @class
- * @public
  */
 class Deferred {
     
