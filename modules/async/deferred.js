@@ -22,4 +22,4 @@ class Deferred {
     }
 };
 
-module.exports = Deferred;
+export default Deferred;
