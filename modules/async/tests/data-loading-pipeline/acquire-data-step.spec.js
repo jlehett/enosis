@@ -1,14 +1,14 @@
 import { expect } from 'chai';
 import {
     DataLoadingPipeline,
-    AcquireDataSpec
+    AcquireDataStep
 } from '../../data-loading-pipeline';
 
-describe('Acquire Data Spec', () => {
+describe('Acquire Data Step', () => {
     
     it ('is able to be declared and used without a post-processing function', async () => {
         const dataLoadingPipeline = new DataLoadingPipeline([
-            new AcquireDataSpec(
+            new AcquireDataStep(
                 'testVar',
                 (progressiveStorage) => {
                     return new Promise((resolve, reject) => {
@@ -24,7 +24,7 @@ describe('Acquire Data Spec', () => {
 
     it ('is able to be declared and used with a post-processing function', async () => {
         const dataLoadingPipeline = new DataLoadingPipeline([
-            new AcquireDataSpec(
+            new AcquireDataStep(
                 'testVar',
                 (progressiveStorage) => {
                     return new Promise((resolve, reject) => {

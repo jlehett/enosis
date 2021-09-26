@@ -1,4 +1,4 @@
-import DataLoadingSpec from './data-loading-specs/data-loading-spec.abstract';
+import DataPipelineStep from './data-loading-steps/data-pipeline-step.abstract';
 import forEach from 'lodash/forEach';
 
 /**
@@ -14,17 +14,17 @@ import forEach from 'lodash/forEach';
  * introduce many unintended issues.
  * 
  * This data pipeline class is intended to chunk individual steps into "data
- * loading specs" with single responsibilities. Data populated from previous
+ * pipeline steps" with single responsibilities. Data populated from previous
  * steps is still accessible via a "progressive storage" object that is passed
- * through each data loading spec's `run` function. However, it becomes easier
+ * through each data pipeline step's `run` function. However, it becomes easier
  * to tell when a step relies on previously-acquired data by its usage of the
  * `progressiveStorage` object.
  * 
- * For example, if an AcquireDataSpec's `acquireDataFn` uses
+ * For example, if an AcquireDataStep's `acquireDataFn` uses
  * `progressiveStorage.profile`, a developer can easily ensure that the
- * appropriate data loading spec that populates the `profile` key in progressive
- * storage is kept in the pipeline as a spec that runs before the example
- * AcquireDataSpec is run.
+ * appropriate data pipeline step that populates the `profile` key in progressive
+ * storage is kept in the pipeline as a step that runs before the example
+ * AcquireDataStep is run.
  * 
  * @example
  * @TODO Add example here
@@ -35,13 +35,13 @@ class DataLoadingPipeline {
      * Constructs the data loading pipeline.
      * @constructor
      * 
-     * @param {DataLoadingSpec[]} dataLoadingSpecs Array of data loading specs;
-     * all values in the array should be instances of classes which inherit from
-     * DataLoadingSpec
+     * @param {DataPipelineStep[]} dataPipelineSteps Array of data pipeline
+     * steps; all values in the array should be instances of classes which
+     * inherit from DataPipelineStep
      */
-    constructor(dataLoadingSpecs) {
-        this._ensureAllSpecsInArrayAreActuallySpecs(dataLoadingSpecs);
-        this.dataLoadingSpecs = dataLoadingSpecs;
+    constructor(dataPipelineSteps) {
+        this._ensureAllStepsInArrayAreActuallySteps(dataPipelineSteps);
+        this.dataPipelineSteps = dataPipelineSteps;
 
         this.progressiveStorage = {};
     }
@@ -65,12 +65,12 @@ class DataLoadingPipeline {
             resolve();
         });
 
-        // Iterate through all of the data loading specs and perform their
+        // Iterate through all of the data pipeline steps and perform their
         // corresponding operations
-        forEach(this.dataLoadingSpecs, (dataLoadingSpec) => {
+        forEach(this.dataPipelineSteps, (dataPipelineStep) => {
             loopingPromise = loopingPromise
                 .then(() => {
-                    return dataLoadingSpec.run(this.progressiveStorage);
+                    return dataPipelineStep.run(this.progressiveStorage);
                 });
         });
 
@@ -87,17 +87,17 @@ class DataLoadingPipeline {
 
     /**
      * Perform error checking to ensure all values being passed in the
-     * `dataLoadingSpecs` array are DataLoadingSpec instances.
+     * `dataPipelineSteps` array are DataPipelineStep instances.
      * @private
      * @function
      * 
-     * @param {*[]} dataLoadingSpecs Array of values to ensure are instances of
-     * DataLoadingSpec
+     * @param {*[]} dataPipelineSteps Array of values to ensure are instances of
+     * DataPipelineStep
      */
-    _ensureAllSpecsInArrayAreActuallySpecs(dataLoadingSpecs) {
-        for (let dataLoadingSpec of dataLoadingSpecs) {
-            if (!dataLoadingSpec instanceof DataLoadingSpec) {
-                throw new Error('Non-DataLoadingSpec passed in `dataLoadingSpecs` array.');
+    _ensureAllStepsInArrayAreActuallySteps(dataPipelineSteps) {
+        for (let dataPipelineStep of dataPipelineSteps) {
+            if (!dataPipelineStep instanceof DataPipelineStep) {
+                throw new Error('Non-DataPipelineStep passed in `dataPipelineSteps` array.');
             }
         }
     }

@@ -1,7 +1,9 @@
 import DataLoadingPipeline from './data-loading-pipeline';
-import AcquireDataSpec from './data-loading-specs/acquire-data-spec';
+import AcquireDataStep from './data-loading-steps/acquire-data-step';
+import PopulateDataStep from './data-loading-steps/populate-data-step';
 
 export {
     DataLoadingPipeline,
-    AcquireDataSpec,
+    AcquireDataStep,
+    PopulateDataStep,
 };

@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 import {
     DataLoadingPipeline,
-    AcquireDataSpec
+    AcquireDataStep
 } from '../../data-loading-pipeline';
 
 describe('Data Loading Pipeline', () => {
     
-    it ('is able to be used with a single data loading spec', async () => {
-        const acquireDataSpec = new AcquireDataSpec(
+    it ('is able to be used with a single data pipeline step', async () => {
+        const acquireDataStep = new AcquireDataStep(
             'testVar',
             (progressiveStorage) => {
                 return new Promise((resolve, reject) => {
@@ -17,15 +17,15 @@ describe('Data Loading Pipeline', () => {
         );
 
         const dataLoadingPipeline = new DataLoadingPipeline([
-            acquireDataSpec
+            acquireDataStep
         ]);
         
         const results = await dataLoadingPipeline.run();
         expect(results.testVar).to.equal(5);
     });
 
-    it ('is able to be used with multiple data loading specs', async () => {
-        const acquireDataSpec1 = new AcquireDataSpec(
+    it ('is able to be used with multiple data pipeline steps', async () => {
+        const acquireDataStep1 = new AcquireDataStep(
             'testVar1',
             (progressiveStorage) => {
                 return new Promise((resolve, reject) => {
@@ -36,7 +36,7 @@ describe('Data Loading Pipeline', () => {
                 return data + 1;
             }
         );
-        const acquireDataSpec2 = new AcquireDataSpec(
+        const acquireDataStep2 = new AcquireDataStep(
             'testVar2',
             (progressiveStorage) => {
                 return new Promise((resolve, reject) => {
@@ -49,8 +49,8 @@ describe('Data Loading Pipeline', () => {
         );
 
         const dataLoadingPipeline = new DataLoadingPipeline([
-            acquireDataSpec1,
-            acquireDataSpec2,
+            acquireDataStep1,
+            acquireDataStep2,
         ]);
         
         const results = await dataLoadingPipeline.run();
