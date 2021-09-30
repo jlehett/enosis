@@ -3,9 +3,7 @@ import DataPipelineStep from './data-pipeline-step.abstract';
 /**
  * Defines a step where data is asynchronously acquired and stored in
  * progressive storage.
- * @class
  * 
- * @description
  * This data pipeline step will run the `acquireDataFn` and obtain the results
  * from the promise. It will then store those results in the data loading
  * pipeline's "progressive storage" object under the `dataStorageKey` to be used
@@ -33,6 +31,7 @@ import DataPipelineStep from './data-pipeline-step.abstract';
  *      }
  * );
  * 
+ * @example
  * // Create an AcquireDataStep that loads a profile from a database, and only stores
  * // the profile's `displayName` property in the data pipeline's "progressive storage"
  * // under the key "profileDisplayName"
@@ -45,23 +44,17 @@ import DataPipelineStep from './data-pipeline-step.abstract';
  *          return profile.displayName;
  *      }
  * );
+ * 
+ * @param {string} dataStorageKey The key to store the results of this data
+ * pipeline step under
+ * @param {acquireDataFn} acquireDataFn The async function to run to acquire the data
+ * asynchronously; should return the desired result as a promise (or the
+ * function itself should be async and return the desired result)
+ * @param {postProcessingFn} [postProcessingFn] If the raw value from the async
+ * fetching function should be modified in a synchronous manner before being
+ * stored in the pipeline, an optional post-processing function will be run
  */
 class AcquireDataStep extends DataPipelineStep {
-
-    /**
-     * A data pipeline step for acquiring data asynchronously, then storing it
-     * in the progressive storage of the pipeline for later use.
-     * @constructor
-     * 
-     * @param {string} dataStorageKey The key to store the results of this data
-     * pipeline step under
-     * @param {function} acquireDataFn The async function to run to acquire the data
-     * asynchronously; should return the desired result as a promise (or the
-     * function itself should be async and return the desired result)
-     * @param {function} [postProcessingFn] If the raw value from the async
-     * fetching function should be modified in a synchronous manner before being
-     * stored in the pipeline, an optional post-processing function will be run
-     */
     constructor(dataStorageKey, acquireDataFn, postProcessingFn) {
         super();
         this.acquireDataFn = acquireDataFn;

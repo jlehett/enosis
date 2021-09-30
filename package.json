@@ -1,11 +1,12 @@
 {
   "name": "enosis",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Enosis is a library aiming to provide consistent, easy-to-read interfaces of solutions for a wide variety of web development problems.",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "mocha --require esm --recursive \"./**/tests/**/*.spec.js\""
+    "test": "mocha --require esm --recursive \"./**/tests/**/*.spec.js\"",
+    "document": "documentation readme index.js -s \"API Docs\" --github --config documentation.yml"
   },
   "author": "J. T. Lehett",
   "license": "ISC",

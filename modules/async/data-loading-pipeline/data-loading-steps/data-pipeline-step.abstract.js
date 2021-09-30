@@ -1,6 +1,7 @@
 
 /**
  * Abstract class that any data pipeline step classes should inherit from.
+ * @abstract
  */
 class DataPipelineStep {
 

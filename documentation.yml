@@ -1,0 +1,28 @@
+toc:
+  - name: Async
+    children:
+      - Deferred
+      - DataLoadingPipeline
+      - DataPipelineStep
+      - AcquireDataStep
+      - PopulateDataStep
+      - ClearDataStep
+      - name: Type Defs
+        children:
+          - acquireDataFn
+          - postProcessingFn
+          - populateDataFn
+  - name: Categorized Error
+    children:
+      - CategorizedErrorFactory
+      - name: Type Defs
+        children:
+          - CategorizedError
+          - InCategoryFn
+          - CategorizedErrorReferenceEnums
+          - ErrorDef
+          - ID_ReferenceEnum
+          - Factory_ReferenceEnum
+          - Category_ReferenceEnum
+          - ErrorFactory
+          

@@ -1,27 +1,26 @@
 import DataPipelineStep from './data-pipeline-step.abstract';
 
+
 /**
  * Defines a step where data is cleared from the progressive storage in the
  * data pipeline.
- * @class
  * 
- * @description
  * This data pipeline step will clear the data in progressive storage that
  * exists under any of the keys in `dataStorageKeys`.
  * 
  * This is useful if, for example, you need data from step 1 to exist only long
  * enough for it to be used by step 3. At that point, you no longer need the
  * results of step 1 in memory, and so you can clear memory with this step.
+ * 
+ * @example
+ * // Create a clear data step to clear the `profileDisplayName` data from
+ * // progressive storage
+ * const clearDisplayNameStep = new ClearDataStep(['profileDisplayName']);
+ * 
+ * @param {string[]} dataStorageKeys The keys to clear the data from in
+ * progressive storage
  */
 class ClearDataStep extends DataPipelineStep {
-
-    /**
-     * A data pipeline step for clearing data from progressive storage.
-     * @constructor
-     * 
-     * @param {string[]} dataStorageKeys The keys to clear the data from in
-     * progressive storage
-     */
     constructor(dataStorageKeys) {
         super();
         this.dataStorageKeys = dataStorageKeys;

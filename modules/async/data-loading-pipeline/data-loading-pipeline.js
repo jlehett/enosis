@@ -5,9 +5,7 @@ import forEach from 'lodash/forEach';
  * Class which provides a readable and maintainable system for constructing
  * async data loading pipelines that require intermediate data to be saved
  * between steps.
- * @class
- *
- * @description
+ * 
  * Typical data loading pipelines tend to be hard to refactor, as it is
  * difficult to parse what data from previous steps may be required in future
  * steps. This means re-ordering, removing, or adding any data loading steps can
@@ -27,18 +25,53 @@ import forEach from 'lodash/forEach';
  * AcquireDataStep is run.
  * 
  * @example
- * @TODO Add example here
+ * // Create an acquire data step to fetch a profile from a database and store
+ * // its `displayName` property for a future step in the pipeline
+ * const acquireProfileStep = new AcquireDataStep(
+ *      // Result will be stored under `profileDisplayName`
+ *      'profileDisplayName',
+ *      // Function defining how to get the profile data asynchronously
+ *      (progressiveStorage) => {
+ *          return Profile.fetchProfileByEmailAddress('test@gmail.com');
+ *      },
+ *      // Post-processing step to only save the `displayName` property to
+ *      // progressive storage
+ *      (progressiveStorage, profile) => {
+ *          return profile.displayName;
+ *      }
+ * );
+ * 
+ * // Create a populate data step to store the profile name + a suffix of '-test'
+ * // in a new slot of progressive storage
+ * const populateDisplayNameWithSuffixStep = new PopulateDataStep(
+ *      // Result will be stored under `displayNameWithSuffix`
+ *      'displayNameWithSuffix',
+ *      // Function defining what should be populated in storage
+ *      (progressiveStorage) => {
+ *          return progressiveStorage.profileDisplayName + '-test';
+ *      }
+ * );
+ * 
+ * // Create a clear data step to clear the `profileDisplayName` data from
+ * // progressive storage since it is no longer needed
+ * const clearDisplayNameStep = new ClearDataStep(['profileDisplayName']);
+ * 
+ * // Create the data loading pipeline with the given steps
+ * const dataLoadingPipeline = new DataLoadingPipeline([
+ *      acquireProfileStep,
+ *      populateDisplayNameWithSuffixStep,
+ *      clearDisplayNameStep,
+ * ]);
+ * 
+ * // Run the pipeline and obtain the results that were stored in progressive
+ * // storage by the end of the pipeline
+ * const results = await dataLoadingPipeline.run();
+ * 
+ * @param {DataPipelineStep[]} dataPipelineSteps Array of data pipeline
+ * steps; all values in the array should be instances of classes which
+ * inherit from DataPipelineStep
  */
 class DataLoadingPipeline {
-
-    /**
-     * Constructs the data loading pipeline.
-     * @constructor
-     * 
-     * @param {DataPipelineStep[]} dataPipelineSteps Array of data pipeline
-     * steps; all values in the array should be instances of classes which
-     * inherit from DataPipelineStep
-     */
     constructor(dataPipelineSteps) {
         this._ensureAllStepsInArrayAreActuallySteps(dataPipelineSteps);
         this.dataPipelineSteps = dataPipelineSteps;

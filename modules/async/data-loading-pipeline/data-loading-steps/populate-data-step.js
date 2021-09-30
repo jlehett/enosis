@@ -3,9 +3,7 @@ import DataPipelineStep from './data-pipeline-step.abstract';
 /**
  * Data spec defining a step where data is synchronously populated into the
  * progressive storage.
- * @class
  * 
- * @description
  * This data loading spec will run the `populateDataFn` to obtain the result
  * that should be stored in progressive storage under the `dataStorageKey` to be
  * used in future data loading specs.
@@ -23,6 +21,7 @@ import DataPipelineStep from './data-pipeline-step.abstract';
  *      }
  * );
  * 
+ * @example
  * // Create a PopulateDataSpec that populates the progressive storage with a
  * // string that combines something already stored in progressive storage with
  * // a suffix of "-New"
@@ -32,20 +31,14 @@ import DataPipelineStep from './data-pipeline-step.abstract';
  *          return progressiveStorage.someOtherString + '-New';
  *      }
  * );
+ * 
+ * @param {string} dataStorageKey The key to store the results of this data
+ * loading spec under
+ * @param {populateDataFn} populateDataFn The synchronous function to run to
+ * populate the data synchronously; should NOT return a promise unless
+ * storing a promise itself in the progressive storage is desired
  */
 class PopulateDataStep extends DataPipelineStep {
-
-    /**
-     * A data loading spec for populating data synchronously in the progressive
-     * storage of the pipeline for later use.
-     * @constructor
-     * 
-     * @param {string} dataStorageKey The key to store the results of this data
-     * loading spec under
-     * @param {function} populateDataFn The synchronous function to run to
-     * populate the data synchronously; should NOT return a promise unless
-     * storing a promise itself in the progressive storage is desired
-     */
     constructor(dataStorageKey, populateDataFn) {
         super();
         this.dataStorageKey = dataStorageKey;
