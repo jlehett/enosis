@@ -1,6 +1,6 @@
 {
   "name": "enosis",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Enosis is a library aiming to provide consistent, easy-to-read interfaces of solutions for a wide variety of web development problems.",
   "main": "index.js",
   "type": "module",
