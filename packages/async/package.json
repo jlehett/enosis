@@ -21,6 +21,11 @@
     "test": "npm run build && mocha -r esm __tests__",
     "prepublishOnly": "npm run test"
   },
+  "dependencies": {
+    "core-js": "3.18.2",
+    "lodash": "4.17.21",
+    "regenerator-runtime": "0.13.9"
+  },
   "devDependencies": {
     "@babel/cli": "7.15.7",
     "@babel/core": "7.15.8",
