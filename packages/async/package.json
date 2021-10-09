@@ -1,0 +1,30 @@
+{
+  "name": "@unifire-js/async",
+  "version": "0.0.2",
+  "description": "Uniform solutions for async operations.",
+  "author": "Tanner Lehett <johntannerlehett@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "npx babel src --out-dir lib",
+    "test": "npm run build && mocha -r esm __tests__",
+    "prepublishOnly": "npm run test"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.15.7",
+    "@babel/core": "7.15.8",
+    "@babel/preset-env": "7.15.8",
+    "esm": "3.2.25"
+  }
+}
