@@ -36,5 +36,10 @@ async function test() {
 | Property | Type | Description |
 | --- | --- | --- |
 | promise | Promise | The native Javascript promise stored by <b>`Deferred`</b>. |
-| resolve | function | The native Javascript `promise.resolve` function used to resolve the native promise stored by <b>`Deferred`</b>.
-| reject | function | The native Javascript `promise.reject` function used to reject the native promise stoed by <b>`Deferred`</b>
+
+### `Deferred` Methods
+
+| Method | Description |
+| --- | --- |
+| resolve(*) | The native Javascript `promise.resolve` function used to resolve the native promise stored by <b>`Deferred`</b>.
+| reject(*) | The native Javascript `promise.reject` function used to reject the native promise stored by <b>`Deferred`</b>.
