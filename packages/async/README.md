@@ -1,9 +1,8 @@
 # `@unifire-js/async`
 
-### <b>Uniform solutions for async operations.</b>
+#### <b>Uniform solutions for async operations.</b>
 
 ## Installation
----
 
 Install the `@unifire/async` NPM module:
 ```
@@ -11,6 +10,5 @@ $ npm install @unifire/async
 ```
 
 ## Documentation Links
----
 
-* [Deferred](/docs/deferred.md)
+* [Deferred](/packages/async/docs/deferred.md)
