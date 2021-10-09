@@ -10,7 +10,7 @@ a reference to the created `Deferred` object.
 
 ### Example Usage
 
-```
+```js
 import { Deferred } from '@unifire/async';
 
 async function test() {
