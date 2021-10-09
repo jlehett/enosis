@@ -1,6 +1,9 @@
 {
   "name": "root",
   "private": true,
+  "scrips": {
+      "publish": "npm run test"
+  },
   "devDependencies": {
     "chai": "^4.3.4",
     "lerna": "4.0.0",
