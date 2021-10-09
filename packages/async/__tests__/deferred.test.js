@@ -20,7 +20,7 @@ describe('Deferred Object', () => {
         try {
             await deferred.promise;
         } catch (err) {
-            expect(err).to.equal(6);
+            expect(err).to.equal(5);
         }
     });
 
