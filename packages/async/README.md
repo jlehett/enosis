@@ -1,11 +1,15 @@
 # `@unifire-js/async`
 
-> TODO: description
+#### <b>Uniform solutions for async operations.</b>
 
-## Usage
+## Installation
+
+Install the `@unifire/async` NPM module:
 
 ```
-const async = require('@unifire-js/async');
-
-// TODO: DEMONSTRATE API
+$ npm install @unifire/async
 ```
+
+## Documentation Links
+
+* [Deferred](/packages/async/docs/deferred.md)

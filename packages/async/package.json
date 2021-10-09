@@ -1,6 +1,6 @@
 {
   "name": "@unifire-js/async",
-  "version": "0.0.6",
+  "version": "0.0.7-alpha.0",
   "description": "Uniform solutions for async operations.",
   "author": "Tanner Lehett <johntannerlehett@gmail.com>",
   "homepage": "",
@@ -20,6 +20,11 @@
     "build": "npx babel src --out-dir lib",
     "test": "npm run build && mocha -r esm __tests__",
     "prepublishOnly": "npm run test"
+  },
+  "dependencies": {
+    "core-js": "3.18.2",
+    "lodash": "4.17.21",
+    "regenerator-runtime": "0.13.9"
   },
   "devDependencies": {
     "@babel/cli": "7.15.7",
