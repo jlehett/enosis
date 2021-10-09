@@ -1,6 +1,4 @@
-28 error Error: Command failed with exit code 1: git add -- packages/async/package.json packages/async/package-lock.json lerna.json
-28 error The following paths are ignored by one of your .gitignore files:
-28 error packages/async/package-lock.json
-28 error Use -f if you really want to add them.
-28 error     at makeError (/Users/jlehett/Development/tools/unifire-js/node_modules/execa/lib/error.js:60:11)
-28 error     at handlePromise (/Users/jlehett/Development/tools/unifire-js/node_modules/execa/index.js:118:26)
+37 error Error: Command failed with exit code 128: git tag v0.0.5 -m v0.0.5
+37 error fatal: tag 'v0.0.5' already exists
+37 error     at makeError (/Users/jlehett/Development/tools/unifire-js/node_modules/execa/lib/error.js:60:11)
+37 error     at handlePromise (/Users/jlehett/Development/tools/unifire-js/node_modules/execa/index.js:118:26)
