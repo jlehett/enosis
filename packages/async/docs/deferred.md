@@ -1,12 +1,8 @@
 # Deferred
 
-When creating a `Promise` in Javascript, it can be helpful to `resolve` or
-`reject` that promise from outside of the created promise's scope. However,
-Javascript's built-in `Promise` API does not provide a native solution.
+When creating a `Promise` in Javascript, it can be helpful to `resolve` or `reject` that promise from outside of the created promise's scope. However, Javascript's built-in `Promise` API does not provide a native solution.
 
-`Deferred` is meant to allow developers to freely create promises and then
-`resolve` or `reject` them from anywhere in their code, as long as they have
-a reference to the created `Deferred` object.
+`Deferred` is meant to allow developers to freely create promises and then `resolve` or `reject` them from anywhere in their code, as long as they have a reference to the created `Deferred` object.
 
 ### Example Usage
 
@@ -28,3 +24,17 @@ async function test() {
     console.log(deferredResult); // 'Test'
 }
 ```
+
+### Constructor Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| <i>None</i> | <i>None</i> | <i>None</i> |
+
+### `Deferred` Properties
+
+| Property | Type | Description |
+| --- | --- | --- |
+| promise | Promise | The native Javascript promise stored by <b>`Deferred`</b>. |
+| resolve | function | The native Javascript `promise.resolve` function used to resolve the native promise stored by <b>`Deferred`</b>.
+| reject | function | The native Javascript `promise.reject` function used to reject the native promise stoed by <b>`Deferred`</b>
