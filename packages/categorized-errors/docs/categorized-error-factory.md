@@ -83,9 +83,9 @@ In short, the object passed as an argument to the categorized error factory is t
 
 The return of the factory functions stored in `CategorizedErrorFactory.factories` will be a [`CategorizedError`](#CategorizedError) instance.
 
-#### CategorizedError
+### CategorizedError
 
-##### Properties
+#### Properties
 
 | Property | Type | Description |
 | --- | --- | --- |
@@ -93,7 +93,7 @@ The return of the factory functions stored in `CategorizedErrorFactory.factories
 | message | string | The message of the error -- either taken directly from the `message` property of the related error definition, or compiled from the `lodash` template string, given the object argument to the factory. |
 | categories | Array\<string\> | Array of all of the categories the categorized error is associated with, taken from the related error definition. |
 
-##### Methods
+#### Methods
 
 | Method | Return | Description |
 | --- | --- | --- |
