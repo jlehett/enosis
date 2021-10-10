@@ -7,7 +7,7 @@
 For the full list of packages offered by `@unifire-js`, please see below:
 
 * [async](/packages/async)
-    * Uniform solutions for async operations.
+    * <i>Uniform solutions for async operations.</i>
         * [`Deferred`](/packages/async/docs/deferred.md)
 * [categorized-errors](/packages/categorized-errors)
     * <i>Uniform solutions for error handling.</i>
