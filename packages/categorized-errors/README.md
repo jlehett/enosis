@@ -7,7 +7,7 @@
 Install the `@unifire-js/categorized-errors` NPM module:
 
 ```
-$ npm install @unifire-js/async
+$ npm install @unifire-js/categorized-errors
 ```
 
 ## Documentation Links
