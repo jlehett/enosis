@@ -1,11 +1,15 @@
-# `categorized-errors`
+# `@unifire-js/categorized-errors`
 
-> TODO: description
+#### <b>Uniform solutions for error handling.</b>
 
-## Usage
+## Installation
+
+Install the `@unifire-js/categorized-errors` NPM module:
 
 ```
-const categorizedErrors = require('categorized-errors');
-
-// TODO: DEMONSTRATE API
+$ npm install @unifire-js/async
 ```
+
+## Documentation Links
+
+* [CategorizedErrorFactory](/packages/categorized-errors/docs/categorized-error-factory.md)

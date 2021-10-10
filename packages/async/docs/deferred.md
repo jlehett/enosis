@@ -7,7 +7,7 @@ When creating a `Promise` in Javascript, it can be helpful to `resolve` or `reje
 ### Example Usage
 
 ```js
-import { Deferred } from '@unifire/async';
+import { Deferred } from '@unifire-js/async';
 
 async function test() {
     // Create a deferred promise
@@ -31,15 +31,15 @@ async function test() {
 | --- | --- | --- |
 | <i>None</i> | <i>None</i> | <i>None</i> |
 
-### `Deferred` Properties
+### Properties
 
 | Property | Type | Description |
 | --- | --- | --- |
 | promise | Promise | The native Javascript promise stored by <b>`Deferred`</b>. |
 
-### `Deferred` Methods
+### Methods
 
-| Method | Description |
-| --- | --- |
-| resolve(*) | The native Javascript `promise.resolve` function used to resolve the native promise stored by <b>`Deferred`</b>.
-| reject(*) | The native Javascript `promise.reject` function used to reject the native promise stored by <b>`Deferred`</b>.
+| Method | Return | Description |
+| --- | --- | --- |
+| resolve(*) | <i>null</i> | The native Javascript `promise.resolve` function used to resolve the native promise stored by <b>`Deferred`</b>.
+| reject(*) | <i>null</i> | The native Javascript `promise.reject` function used to reject the native promise stored by <b>`Deferred`</b>.
