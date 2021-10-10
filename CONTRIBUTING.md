@@ -4,7 +4,8 @@ As of right now, there is only one person working on `@unifire-js`. However, any
 
 Here are some guidelines for contributing to the project:
 
-* Found an Issue?
+* [Found an Issue?](#found-an-issue?)
+* [Submission Guidelines](#submission-guidelines)
 
 ## Found an Issue?
 
