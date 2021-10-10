@@ -56,7 +56,7 @@ noFilesSelectedErr.id === categorizedErrors.ids.NO_FILES_SELECTED; // true
 | Property | Type | Description |
 | --- | --- | --- |
 | ids | Object\<string, string\> | Reference enum where the key equals the value, with each pair representing the ID of an error definition that was passed to the constructor. |
-| factories | Object\<string, function\> | Object mapping an error's ID to the factory function that can be used to create instances of the specified categorized error. |
+| factories | Object\<string, function\> | Object mapping an error's ID to the [factory function](#Factory\ Functions) that can be used to create instances of the specified categorized error. |
 | categories | Object\<string, string\> | Reference enum where the key equals the value, with each pair representing one of all of the unique categories specified by any of the error definitions passed to the constructor. |
 
 ### Factory Functions
