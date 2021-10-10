@@ -1,7 +1,7 @@
 {
-  "name": "@unifire-js/async",
+  "name": "@unifire-js/categorized-errors",
   "version": "0.0.7-alpha.0",
-  "description": "Uniform solutions for async operations.",
+  "description": "Uniform solutions for error handling.",
   "author": "Tanner Lehett <johntannerlehett@gmail.com>",
   "homepage": "",
   "license": "ISC",
@@ -13,9 +13,6 @@
   "files": [
     "lib"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
     "build": "npx babel src --out-dir lib",
     "test": "npm run build && mocha -r esm __tests__",
@@ -38,6 +35,5 @@
   },
   "bugs": {
     "url": "https://github.com/jlehett/unifire-js/issues"
-  },
-  "gitHead": "a632382575ad4afca07d6368dfa452150411356f"
+  }
 }

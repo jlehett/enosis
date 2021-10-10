@@ -4,10 +4,10 @@
 
 ## Installation
 
-Install the `@unifire/async` NPM module:
+Install the `@unifire-js/async` NPM module:
 
 ```
-$ npm install @unifire/async
+$ npm install @unifire-js/async
 ```
 
 ## Documentation Links
