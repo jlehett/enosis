@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Deferred } from '../lib/index';
+import { Deferred } from '../lib';
 
 describe('Deferred Object', () => {
 

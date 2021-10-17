@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import pick from 'lodash/pick';
 import {
     CategorizedErrorFactory
-} from '..';
+} from '../lib';
 
 describe('Categorized Error Factory', () => {
     // Test Constants

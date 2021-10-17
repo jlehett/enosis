@@ -1,0 +1,40 @@
+{
+  "name": "@unifire-js/firebase",
+  "version": "0.0.7-alpha.1",
+  "description": "Uniform solutions for Firebase integrations.",
+  "author": "Tanner Lehett <johntannerlehett@gmail.com>",
+  "homepage": "https://github.com/jlehett/unifire-js#readme",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "npx babel src --out-dir lib",
+    "test": "npm run build && mocha -r esm --timeout 5000 __tests__",
+    "prepublishOnly": "npm run test"
+  },
+  "dependencies": {
+    "core-js": "3.18.2",
+    "firebase": "9.1.2",
+    "lodash": "4.17.21",
+    "regenerator-runtime": "0.13.9"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.15.7",
+    "@babel/core": "7.15.8",
+    "@babel/preset-env": "7.15.8",
+    "esm": "3.2.25"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jlehett/unifire-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jlehett/unifire-js/issues"
+  }
+}

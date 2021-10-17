@@ -3,3 +3,12 @@ lerna-debug.log
 .vscode
 
 lib
+
+.firebaserc
+firebase-debug.log
+firebase.config.js
+firebase.json
+firestore-debug.log
+firestore.indexes.json
+firestore.rules
+ui-debug.log
