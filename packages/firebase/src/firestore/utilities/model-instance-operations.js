@@ -5,7 +5,7 @@ import {
     getDocs,
     setDoc,
     query,
-    limit,
+    Firestore,
 } from 'firebase/firestore';
 import {
     concat,
@@ -50,15 +50,17 @@ class ModelInstanceOperations {
      * 
      * @param {Object} data The data to sanitize and write to the new document
      * @param {WriteToNewDocParams} [params] Various settings for the operation
-     * @returns {Promise<void>} Resolves when the document has been added to the
-     * database
+     * @returns {Promise<Object>} Resolves with the newly created document
+     * reference, populated with additional subcollection info
      */
     async writeToNewDoc(data, params) {
         const sanitizedData = this.sanitizer.getSanitizedDataToSave(
             data,
             params?.mergeWithDefaultValues
         );
-        await addDoc(this.collectionRef, sanitizedData); // ???
+        const docRef = await addDoc(this.collectionRef, sanitizedData);
+        this._attachSubmodelInstanceReferencesToDocRef(docRef);
+        return docRef;
     }
 
     /**
@@ -119,8 +121,8 @@ class ModelInstanceOperations {
      * @param {Object} data The data to sanitize and write to the specified
      * document
      * @param {WriteToIDParams} [params] Various settings for the operation
-     * @returns {Promise<void>} Resolves when the sanitized data has been
-     * written to the specified document in the database
+     * @returns {Promise<Object>} Resolves with the newly created document
+     * reference, populated with additional subcollection info
      */
     async writeToID(id, data, params) {
         const docRef = doc(this.collectionRef, id);
@@ -139,6 +141,8 @@ class ModelInstanceOperations {
                 sanitizedData,
                 { merge: params?.mergeWithExistingValues }
             );
+        this._attachSubmodelInstanceReferencesToDocRef(docRef);
+        return docRef;
     }
 
     /**
@@ -175,7 +179,7 @@ class ModelInstanceOperations {
         let sanitizedData = this.sanitizer.sanitizeFromRead(docSnap);
         // For each subcollection registered to the model instance, create
         // and attach submodel instances for reference
-        this._attachSubmodelInstanceReferences(sanitizedData);
+        this._attachSubmodelInstanceReferencesToFetchedData(sanitizedData);
         // Return the sanitized data
         return sanitizedData;
     }
@@ -190,67 +194,49 @@ class ModelInstanceOperations {
      * // Get documents matching a simple query
      * import { where } from '@firebase/firestore';
      * 
-     * const docsMatchingQuery = ProfileModel.getByQuery({
-     *      whereFns: [
-     *          where('displayName', '==', 'john')
-     *      ]
-     * });
+     * const docsMatchingQuery = ProfileModel.getByQuery([
+     *      where('displayName', '==', 'john')
+     * ]);
      * 
      * @example
      * // Get documents matching a compound query
      * import { where } from '@firebase/firestore';
      * 
-     * const docsMatchingQuery = ProfileModel.getByQuery({
-     *      whereFns: [
-     *          where('displayName', '==', 'john'),
-     *          where('email', '==', 'john@gmail.com')
-     *      ]
-     * });
+     * const docsMatchingQuery = await ProfileModel.getByQuery([
+     *      where('displayName', '==', 'john'),
+     *      where('email', '==', 'john@gmail.com'),
+     * ]);
      * 
      * @example
      * // Get documents matching a compound query, but limit results to the
      * // first 4 matches
-     * import { where } from '@firebase/firestore';
+     * import { where, limit } from '@firebase/firestore';
      * 
-     * const firstFourDocsMatchingQuery = ProfileModel.getByQuery({
-     *      whereFns: [
-     *          where('displayName', '==', 'john'),
-     *          where('email', '==', 'john@gmail.com')
-     *      ],
-     *      limit: 4
-     * });
+     * const firstFourDocsMatchingQuery = await ProfileModel.getByQuery([
+     *      where('displayName', '==', 'john'),
+     *      where('email', '==', 'john@gmail.com'),
+     *      limit(4)
+     * ]);
      * 
      * @example
      * // Get documents matching a compound query, ordered first by 'displayName'
      * // in descending order, then ordered by 'email' in ascending order
      * import { orderBy, where } from '@firebase/firestore';
      * 
-     * const orderedDocsMatchingQuery = ProfileModel.getByQuery({
-     *      whereFns: [
-     *          where('displayName', '==', 'john'),
-     *          where('email', '==', 'john@gmail.com')
-     *      ],
-     *      orderByFns: [
-     *          orderBy('displayName', 'desc'),
-     *          orderBy('email')
-     *      ]
-     * });
+     * const orderedDocsMatchingQuery = await ProfileModel.getByQuery([
+     *      where('displayName', '==', 'john'),
+     *      where('email', '==', 'john@gmail.com'),
+     *      orderBy('displayName', 'desc'),
+     *      orderBy('email')
+     * ]);
      * 
-     * @param {GetByQueryParams} params Various settings for the operation
+     * @param {function[]} queryFns Array of Firestore query functions to
+     * use in the query, e.g., `limit`, `orderBy`, and `where`
      * @returns {Promise<Object[]>} Resolves with an array of all documents in
      * the model's collection matching the specified query
      */
-    async getByQuery(params) {
-        // Validate the query params
-        this._validateGetByQueryParams(params);
-        // Construct the query function from params
-        const queryFns = concat(
-            params.whereFns,
-            params.orderByFns || []
-        );
-        if (params.limit) {
-            queryFns.push(limit(params.limit));
-        }
+    async getByQuery(queryFns) {
+        // Construct the query function
         const q = query(this.collectionRef, ...queryFns);
         // Make the query call
         const querySnapshot = await getDocs(q);
@@ -258,7 +244,7 @@ class ModelInstanceOperations {
         const sanitizedDocuments = this.sanitizer.sanitizeFromRead(querySnapshot);
         // For each document, and for each subcollection specified for the
         // model, create and attach submodel instances for reference
-        map(sanitizedDocuments, doc => this._attachSubmodelInstanceReferences(doc));
+        map(sanitizedDocuments, doc => this._attachSubmodelInstanceReferencesToFetchedData(doc));
         // Return the final result
         return sanitizedDocuments;
     }
@@ -268,24 +254,6 @@ class ModelInstanceOperations {
      *********************/
 
     /**
-     * Validate the `getByQuery` function's params object.
-     * @private
-     * @function
-     * 
-     * @param {Object} params The params object passed to the model's
-     * `getByQuery` function
-     * @throws {Error} Throws an error if the params aren't valid
-     */
-    _validateGetByQueryParams(params) {
-        if (!params) {
-            throw new Error('`params` must be specified for `getByQuery` calls.');
-        }
-        if (!params.whereFns || params.whereFns.length === 0) {
-            throw new Error('`whereFns` must be an array of `where` functions.');
-        }
-    }
-
-    /**
      * Attaches a new `subcollections` property to the specified data, which
      * contains references to submodel instances, mapped by the corresponding
      * subcollection names.
@@ -293,7 +261,7 @@ class ModelInstanceOperations {
      * @param {Object} data The sanitized data to attach submodel instance
      * references to
      */
-    _attachSubmodelInstanceReferences(data) {
+    _attachSubmodelInstanceReferencesToFetchedData(data) {
         data.subcollections = {};
         const subcollectionNames = Object.keys(this.subcollections);
         for (let subcollectionName of subcollectionNames) {
@@ -302,6 +270,26 @@ class ModelInstanceOperations {
                 data._ref
             );
             data.subcollections[subcollectionName] = submodelInstance;
+        }
+    }
+
+    /**
+     * Attaches a new `subcollections` property to the specified doc ref,
+     * which contains references to submodel instances, mapped by the
+     * corresponding subcollection names.
+     * 
+     * @param {Firestore.DocumentReference} docRef The Firestore document
+     * reference to attach subcollection info to
+     */
+    _attachSubmodelInstanceReferencesToDocRef(docRef) {
+        docRef.subcollections = {};
+        const subcollectionNames = Object.keys(this.subcollections);
+        for (let subcollectionName of subcollectionNames) {
+            const subcollection = this.subcollections[subcollectionName];
+            const submodelInstance = subcollection._createSubmodelInstance(
+                docRef
+            );
+            docRef.subcollections[subcollectionName] = submodelInstance;
         }
     }
 }

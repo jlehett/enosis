@@ -31,12 +31,10 @@ import ModelInstanceOperations from './utilities/model-instance-operations';
  * // Create reusable functions for common operations and attach them to the
  * // created profile model object
  * ProfileModel.getProfilesByEmailAndPhone = (email, phone) => (
- *      ProfileModel.getByQuery({
- *          whereFns: [
- *              where('email', '==', email),
- *              where('phone', '==', phone),
- *          ]
- *      })
+ *      ProfileModel.getByQuery([
+ *          where('email', '==', email),
+ *          where('phone', '==', phone),
+ *      ]);
  * );
  * 
  * @param {ModelParams} params The parameters to use when creating the model

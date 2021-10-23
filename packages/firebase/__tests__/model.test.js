@@ -15,6 +15,7 @@ import {
     runTransaction,
     where,
     orderBy,
+    limit
 } from '@firebase/firestore';
 import setUpEmulator from './utilities/set-up-emulator';
 import clearEmulatorData from './utilities/clear-emulator-data';
@@ -29,6 +30,10 @@ describe('Model', () => {
 
     beforeEach(async () => {
         await clearEmulatorData();
+    });
+
+    after(() => {
+        freeAppResources();
     });
 
     it('can write a document to the database with proper sanitization, and then fetch the written doc', async () => {
@@ -133,12 +138,10 @@ describe('Model', () => {
                 address: '555 Test Rd'
             }
         );
-        let result = await profileModel.getByQuery({
-            whereFns: [
-                where('displayName', '==', 'john'),
-                where('email', '==', 'john@gmail.com')
-            ]
-        });
+        let result = await profileModel.getByQuery([
+            where('displayName', '==', 'john'),
+            where('email', '==', 'john@gmail.com')
+        ]);
         result = map(result, resultValue => omit(resultValue, ['_ref']));
         expect(result).to.deep.equal([
             {
@@ -174,11 +177,9 @@ describe('Model', () => {
             displayName: 'john',
             invalidProp: 'invalid'
         });
-        const result = await profileModel.getByQuery({
-            whereFns: [
-                where('displayName', '==', 'john')
-            ]
-        });
+        const result = await profileModel.getByQuery([
+            where('displayName', '==', 'john')
+        ]);
         const resultToTest = omit(result[0], ['id', '_ref']);
         expect(resultToTest).to.deep.equal({
             displayName: 'john',
@@ -205,11 +206,9 @@ describe('Model', () => {
             },
             { mergeWithDefaultValues: true }
         );
-        const result = await profileModel.getByQuery({
-            whereFns: [
-                where('displayName', '==', 'john')
-            ]
-        });
+        const result = await profileModel.getByQuery([
+            where('displayName', '==', 'john')
+        ]);
         const resultToTest = omit(result[0], ['id', '_ref']);
         expect(resultToTest).to.deep.equal({
             displayName: 'john',
@@ -227,7 +226,7 @@ describe('Model', () => {
             ]
         });
         let transactionRunCount = 0;
-        profileModel.writeToID(
+        await profileModel.writeToID(
             'initialDoc',
             {
                 displayName: 'john'
@@ -324,17 +323,13 @@ describe('Model', () => {
             address: '111',
             phone: '999',
         });
-        const result = await profileModel.getByQuery({
-            whereFns: [
-                where('displayName', '==', 'john'),
-                where('address', '==', '111')
-            ],
-            orderByFns: [
-                orderBy('email', 'desc'),
-                orderBy('phone')
-            ],
-            limit: 4
-        });
+        const result = await profileModel.getByQuery([
+            where('displayName', '==', 'john'),
+            where('address', '==', '111'),
+            orderBy('email', 'desc'),
+            orderBy('phone'),
+            limit(4),
+        ]);
         const resultsToTest = map(result, (docData) => {
             return omit(docData, ['id', '_ref']);
         });
@@ -466,7 +461,4 @@ describe('Model', () => {
         expect(everythingIsGood).to.equal(true);
     });
 
-    after(() => {
-        freeAppResources();
-    })
 });
