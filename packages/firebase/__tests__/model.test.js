@@ -7,7 +7,7 @@ import {
 import {
     Model,
     Submodel,
-} from '../lib';
+} from '../lib/firestore';
 import SubmodelInstance from '../lib/firestore/submodel-instance';
 import { getFirebaseApp } from '../lib/firebase-app/firebase-app';
 import {

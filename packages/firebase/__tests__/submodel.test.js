@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import {
     Model,
     Submodel,
-} from '../lib';
+} from '../lib/firestore';
 import clearEmulatorData from './utilities/clear-emulator-data';
 import freeAppResources from './utilities/free-app-resources';
 import setUpEmulator from './utilities/set-up-emulator';
