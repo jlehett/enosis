@@ -11,6 +11,10 @@ import {
     concat,
     map
 } from 'lodash';
+import {
+    attachSubmodelInstanceReferencesToDocRef,
+    attachSubmodelInstanceReferencesToFetchedData,
+} from './referencing';
 
 /**
  * Class for all operations that can be performed on model "instances".
@@ -59,7 +63,7 @@ class ModelInstanceOperations {
             params?.mergeWithDefaultValues
         );
         const docRef = await addDoc(this.collectionRef, sanitizedData);
-        this._attachSubmodelInstanceReferencesToDocRef(docRef);
+        attachSubmodelInstanceReferencesToDocRef(docRef, this.subcollections);
         return docRef;
     }
 
@@ -141,7 +145,7 @@ class ModelInstanceOperations {
                 sanitizedData,
                 { merge: params?.mergeWithExistingValues }
             );
-        this._attachSubmodelInstanceReferencesToDocRef(docRef);
+        attachSubmodelInstanceReferencesToDocRef(docRef, this.subcollections);
         return docRef;
     }
 
@@ -177,9 +181,11 @@ class ModelInstanceOperations {
             : await getDoc(docRef);
         // Sanitize the data
         let sanitizedData = this.sanitizer.sanitizeFromRead(docSnap);
-        // For each subcollection registered to the model instance, create
-        // and attach submodel instances for reference
-        this._attachSubmodelInstanceReferencesToFetchedData(sanitizedData);
+        if (sanitizedData) {
+            // For each subcollection registered to the model instance, create
+            // and attach submodel instances for reference
+            attachSubmodelInstanceReferencesToFetchedData(sanitizedData, this.subcollections);
+        }
         // Return the sanitized data
         return sanitizedData;
     }
@@ -244,7 +250,10 @@ class ModelInstanceOperations {
         const sanitizedDocuments = this.sanitizer.sanitizeFromRead(querySnapshot);
         // For each document, and for each subcollection specified for the
         // model, create and attach submodel instances for reference
-        map(sanitizedDocuments, doc => this._attachSubmodelInstanceReferencesToFetchedData(doc));
+        map(
+            sanitizedDocuments,
+            doc => attachSubmodelInstanceReferencesToFetchedData(doc, this.subcollections)
+        );
         // Return the final result
         return sanitizedDocuments;
     }
@@ -252,46 +261,6 @@ class ModelInstanceOperations {
     /*********************
      * PRIVATE FUNCTIONS *
      *********************/
-
-    /**
-     * Attaches a new `subcollections` property to the specified data, which
-     * contains references to submodel instances, mapped by the corresponding
-     * subcollection names.
-     * 
-     * @param {Object} data The sanitized data to attach submodel instance
-     * references to
-     */
-    _attachSubmodelInstanceReferencesToFetchedData(data) {
-        data.subcollections = {};
-        const subcollectionNames = Object.keys(this.subcollections);
-        for (let subcollectionName of subcollectionNames) {
-            const subcollection = this.subcollections[subcollectionName];
-            const submodelInstance = subcollection._createSubmodelInstance(
-                data._ref
-            );
-            data.subcollections[subcollectionName] = submodelInstance;
-        }
-    }
-
-    /**
-     * Attaches a new `subcollections` property to the specified doc ref,
-     * which contains references to submodel instances, mapped by the
-     * corresponding subcollection names.
-     * 
-     * @param {Firestore.DocumentReference} docRef The Firestore document
-     * reference to attach subcollection info to
-     */
-    _attachSubmodelInstanceReferencesToDocRef(docRef) {
-        docRef.subcollections = {};
-        const subcollectionNames = Object.keys(this.subcollections);
-        for (let subcollectionName of subcollectionNames) {
-            const subcollection = this.subcollections[subcollectionName];
-            const submodelInstance = subcollection._createSubmodelInstance(
-                docRef
-            );
-            docRef.subcollections[subcollectionName] = submodelInstance;
-        }
-    }
 }
 
 export default ModelInstanceOperations;

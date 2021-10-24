@@ -276,7 +276,7 @@ describe('Submodel Instance', () => {
                 displayName: 'john'
             }
         );
-        johnProfile.subcollections.emails.writeToID(
+        await johnProfile.subcollections.emails.writeToID(
             'initialDoc',
             {
                 address: 'john@gmail.com',
