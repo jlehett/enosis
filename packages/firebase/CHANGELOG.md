@@ -1,6 +1,6 @@
 # @unifire-js/firebase
 
-## 0.0.1
+## 0.0.8
 
 <i>Oct 25, 2021</i>
 
