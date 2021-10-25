@@ -1,6 +1,6 @@
 {
   "name": "@unifire-js/categorized-errors",
-  "version": "0.0.7-alpha.1",
+  "version": "0.0.1",
   "description": "Uniform solutions for error handling.",
   "author": "Tanner Lehett <johntannerlehett@gmail.com>",
   "homepage": "",
@@ -35,5 +35,6 @@
   },
   "bugs": {
     "url": "https://github.com/jlehett/unifire-js/issues"
-  }
+  },
+  "gitHead": "c68682450492e222c8804b8f56d92bef0397cfad"
 }

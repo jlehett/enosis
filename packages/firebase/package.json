@@ -1,9 +1,9 @@
 {
-  "name": "@unifire-js/async",
+  "name": "@unifire-js/firebase",
   "version": "0.0.1",
-  "description": "Uniform solutions for async operations.",
+  "description": "Uniform solutions for Firebase integrations.",
   "author": "Tanner Lehett <johntannerlehett@gmail.com>",
-  "homepage": "",
+  "homepage": "https://github.com/jlehett/unifire-js#readme",
   "license": "ISC",
   "main": "lib/index.js",
   "directories": {
@@ -13,16 +13,14 @@
   "files": [
     "lib"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
     "build": "npx babel src --out-dir lib",
-    "test": "npm run build && mocha -r esm __tests__",
+    "test": "npm run build && mocha -r esm --timeout 5000 __tests__",
     "prepublishOnly": "npm run test"
   },
   "dependencies": {
     "core-js": "3.18.2",
+    "firebase": "9.1.2",
     "lodash": "4.17.21",
     "regenerator-runtime": "0.13.9"
   },

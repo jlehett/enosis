@@ -8,10 +8,10 @@ For the full list of packages offered by `@unifire-js`, please see below:
 
 * [async](/packages/async)
     * <i>Uniform solutions for async operations.</i>
-        * [`Deferred`](/packages/async/docs/deferred.md)
 * [categorized-errors](/packages/categorized-errors)
     * <i>Uniform solutions for error handling.</i>
-        * [`CategorizedErrorFactory`](/packages/categorized-errors/docs/categorized-error-factory.md)
+* [firebase](/packages/firebase)
+    * <i>Uniform solutions for Firebase integrations.</i>
 
 ## Testing
 
