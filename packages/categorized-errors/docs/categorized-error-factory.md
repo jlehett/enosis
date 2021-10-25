@@ -107,6 +107,6 @@ An error definition is an object with properties that define key characteristics
 
 | Property | Type | Description |
 | --- | --- | --- |
-| message | string \| null | The message that will be attached to all created instances of the categorized error. Does not support variables. If this isn't specified, the `messageTemplate` property must be specified -- however, both cannot be specified at the same time. |
-| messageTemplate | string \| null | A [`lodash` template string](https://lodash.com/docs/4.17.15#template) can be passed in order to defined an error message that can utilize variables in order to have slightly different messaging for each categorized error instance. |
-| categories | Array\<string\> \| null | An array containing all of the categories the categorized error is a part of. |
+| message | string | (opt.) The message that will be attached to all created instances of the categorized error. Does not support variables. If this isn't specified, the `messageTemplate` property must be specified -- however, both cannot be specified at the same time. |
+| messageTemplate | string | (opt.) A [`lodash` template string](https://lodash.com/docs/4.17.15#template) can be passed in order to defined an error message that can utilize variables in order to have slightly different messaging for each categorized error instance. |
+| categories | Array\<string\> | (opt.) An array containing all of the categories the categorized error is a part of. |

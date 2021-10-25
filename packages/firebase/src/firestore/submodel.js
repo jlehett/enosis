@@ -80,7 +80,7 @@ class Submodel {
      ********************/
 
     /**
-     * Sanitizes the specified data and writes to to a new document in the
+     * Sanitizes the specified data and writes it to a new document in the
      * given collection reference path with an auto-assigned ID.
      * @public
      * @function
