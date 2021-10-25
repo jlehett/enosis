@@ -74,7 +74,7 @@ By default, these default prop values will <i>not</i> be merged into any sanitiz
 
 Since, unlike collections, subcollections can have many different instances, each with a different parent document, `Submodel` does not expose the [`ModelInstanceOperations`](/packages/firebase/docs/api/model-instance-operations.md) API that `Model` does.
 
-To work with the `ModelInstanceOperations` API with subcollections, you would have to work with a [`SubmodelInstance`](/packages/firebase/docs/api/submodel-instance.md) object. These objects are attached automatically to any document references and sanitized document snapshots that are returned from the `ModelInstanceOperations` API methods as a `subcollections` property, which is a map of subcollection names to the corresponding `SubmodelInstance` object.
+To work with the `ModelInstanceOperations` API with subcollections, you would have to work with a [`SubmodelInstance`](/packages/firebase/docs/api/submodel-instance.md) object. These objects are attached automatically to any document references and sanitized document snapshots that are returned from the `ModelInstanceOperations` API methods or from the `Submodel` API methods as a `subcollections` property, which is a map of subcollection names to the corresponding `SubmodelInstance` object.
 
 ## API
 

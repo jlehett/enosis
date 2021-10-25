@@ -4,7 +4,7 @@ Before we can begin to use the full extent of this package's API, we must declar
 
 Typically, the Firebase app is initialized in it's own file, which is imported very early in the app's codebase. We can add a few lines to set the `@unifire-js/firebase` package to use the initialized app:
 
-```
+```js
 import { initializeApp } from 'firebase/app';
 import { setFirebaseApp } from '@unifire-js/firebase';
 
