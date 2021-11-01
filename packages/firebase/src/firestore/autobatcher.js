@@ -1,0 +1,138 @@
+import isInteger from 'lodash/isInteger';
+import { getDB } from './utilities/referencing';
+import {
+    writeBatch
+} from 'firebase/firestore';
+import { Deferred } from '@unifire-js/async';
+
+/**
+ * Class to automatically create batches of a specified max size, 
+ */
+class Autobatcher {
+    constructor(maxPerBatch=500) {
+        this._validateConstructorParams(maxPerBatch);
+
+        this.maxPerBatch = maxPerBatch;
+        this.numWritesInCurrentBatch = 0;
+
+        // Set up storage to track all of the batch commit promises
+        this.batchPromises = [];
+        this.currentBatchPromise = null;
+
+        // Set up the first batch
+        this._createNewBatch();
+    }
+
+    /********************
+     * PUBLIC FUNCTIONS *
+     ********************/
+
+    /**
+     * Add a set operation to the current batch. If the batch is maxed out in
+     * capacity, commit the batch.
+     * @public
+     * @function
+     * 
+     * @param {Firestore.DocumentReference} docRef The reference to the document
+     * to call the set operation on
+     * @param {Object} data The data to use in the set operation
+     * @param {SetParams} [params] Various settings for the operation
+     */
+    set(docRef, data, params) {
+        if (!this.currentBatch) {
+            this._createNewBatch();
+        }
+        this.currentBatch.set(docRef, data, params);
+        this._commitBatchIfNeeded();
+    }
+
+    /**
+     * Add a delete operation to the current batch. If the batch is maxed out
+     * in capacity, commit the branch.
+     * @public
+     * @function
+     * 
+     * @param {Firestore.DocumentReference} docRef The reference to the document
+     * to delete
+     */
+    delete(docRef) {
+        if (!this.currentBatch) {
+            this._createNewBatch();
+        }
+        this.currentBatch.delete(docRef);
+        this._commitBatchIfNeeded();
+    }
+
+    /**
+     * Commit the current batch, and update its promise.
+     * @public
+     * @function
+     * 
+     * @returns {Promise<void>} Returns a promise that resolves once the single
+     * commit has resolved
+     */
+    commit() {
+        return this.currentBatch.commit()
+            .then(() => {
+                this.currentBatchPromise.resolve();
+            })
+            .catch((err) => {
+                this.currentBatchPromise.reject(err);
+            });
+    }
+
+    /**
+     * Return a promise that resolves once all current batch promises have
+     * resolved.
+     * @public
+     * @function
+     * 
+     * @returns {Promise<void>} Resolves once all current batch promises have
+     * resolved
+     */
+    allBatchesFinalized() {
+        return Promise.all(this.batchPromises);
+    }
+
+    /*********************
+     * PRIVATE FUNCTIONS *
+     *********************/
+
+    /**
+     * Validates the Autobatcher constructor's params object.
+     * @private
+     * @function
+     * 
+     * @param {*} maxPerBatch The `maxPerBatch` param given to the constructor
+     */
+    _validateConstructorParams(maxPerBatch) {
+        if (maxPerBatch <= 0 && !isInteger(maxPerBatch)) {
+            throw new Error(
+                `maxPerBatch must be a positive integer; given value was ${maxPerBatch}`
+            );
+        }
+    }
+
+    /**
+     * If the batch is maxed-out, commit it, then create a new batch.
+     * @private
+     * @function
+     */
+    _commitBatchIfNeeded() {
+        if (++this.numWritesInCurrentBatch >= this.maxPerBatch) {
+            this.commit();
+        }
+    }
+
+    /**
+     * Create a new batch, and track the new batch promise in storage.
+     * @private
+     * @function
+     */
+    _createNewBatch() {
+        this.currentBatch = writeBatch(getDB());
+        const newBatchPromise = new Deferred();
+        this.batchPromises.push(newBatchPromise);
+        this.currentBatchPromise = newBatchPromise;
+    }
+}

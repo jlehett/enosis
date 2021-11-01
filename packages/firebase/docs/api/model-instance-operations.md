@@ -67,8 +67,8 @@ If the `mergeWithDefaultValues` flag is not set, any default values specified by
 | id | string | The ID of the document to write the sanitized data to. |
 | data | Object | The data to sanitize and write to the specified document. |
 | params | Object | (opt.) Object specifying various settings for the operation. |
-| params.mergeWithExistingValues | boolean | (opt.) If set to true, any data already found in the specified document will be merged with the new data. |
-| params.mergeWithDefaultValues | boolean | (opt.) If set to true, any data that is missing from either `data`, or the existing data if `mergeWithExistingValues` is set to true, will be set to use the corresponding collection property default value specified by the `propDefaults` property in the `Model` or `Submodel` constructor. |
+| params.mergeWithExistingValues | boolean | (opt.) If set to true, any data already found in the specified document will be merged with the new data. This applies after `mergeWithDefaultValues` does, if both are set. |
+| params.mergeWithDefaultValues | boolean | (opt.) If set to true, any data that is missing from `data` will be set to use the corresponding collection property default value specified by the `propDefaults` property in the `Model` or `Submodel` constructor. |
 | params.transaction | [Firestore.Transaction](https://firebase.google.com/docs/reference/js/firestore_.transaction) | (opt.) A Firestore transaction for the operation to use. |
 
 #### Return Value
@@ -95,8 +95,8 @@ const johnDocRef = await ProfileModel.writeToID(
  * Write to a new document with ID, `welcome`, in the `groups` subcollection
  * of a document with ID, `john`, in the `profiles` root-level collection.
  * 
- * Also, merge in any existing values in the document (if it already exists),
- * and then merge the default values for missing data.
+ * Also, merge in any default values for missing data in `data`, and then
+ * merge in any existing data in the document (if it already exists).
  */
 const welcomeDocRef = await johnDocRef.subcollections.groups.writeToID(
     'welcome',

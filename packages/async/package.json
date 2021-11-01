@@ -18,7 +18,7 @@
   },
   "scripts": {
     "build": "npx babel src --out-dir lib",
-    "test": "npm run build && mocha -r esm __tests__",
+    "test": "npm run build && mocha -r @babel/register __tests__",
     "prepublishOnly": "npm run test"
   },
   "dependencies": {
@@ -30,7 +30,8 @@
     "@babel/cli": "7.15.7",
     "@babel/core": "7.15.8",
     "@babel/preset-env": "7.15.8",
-    "esm": "3.2.25"
+    "@babel/register": "7.16.0",
+    "mocha": "9.1.3"
   },
   "repository": {
     "type": "git",
