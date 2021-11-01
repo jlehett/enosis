@@ -6,7 +6,12 @@ import {
 import { Deferred } from '@unifire-js/async';
 
 /**
- * Class to automatically create batches of a specified max size, 
+ * Class to automatically create batches of a specified max size, commit them when
+ * their capacity is maxed-out, and create new batches when they are needed.
+ * 
+ * @param {Number} [maxPerBatch=500] Defines the maximum capacity of each batch; the
+ * maximum batch size supported by Firestore as of 10/31/21 is 500 writes, thus that
+ * value is selected as the default
  */
 class Autobatcher {
     constructor(maxPerBatch=500) {
@@ -136,3 +141,5 @@ class Autobatcher {
         this.currentBatchPromise = newBatchPromise;
     }
 }
+
+export default Autobatcher;
