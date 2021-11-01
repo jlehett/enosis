@@ -81,7 +81,7 @@ class Submodel {
         this._verifyPathIncludesSubmodelCollectionName(path);
 
         const collectionRef = createCollectionRefWithPath(path);
-        const docRef = collectionRef.doc();
+        const docRef = doc(collectionRef);
         const pathWithID = `${path}/${docRef.id}`;
         
         return this.writeToPath(pathWithID, data, params);

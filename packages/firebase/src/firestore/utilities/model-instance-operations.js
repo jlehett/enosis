@@ -37,7 +37,7 @@ class ModelInstanceOperations {
      * reference, populated with additional subcollection info
      */
     async writeToNewDoc(data, params) {
-        const docRef = this.collectionRef.doc();
+        const docRef = doc(this.collectionRef);
         return this.writeToID(docRef.id, data, params);
     }
 
