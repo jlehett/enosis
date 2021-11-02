@@ -1,4 +1,5 @@
 import isInteger from 'lodash/isInteger';
+import map from 'lodash/map';
 import { getDB } from './utilities/referencing';
 import {
     writeBatch
@@ -22,10 +23,6 @@ class Autobatcher {
 
         // Set up storage to track all of the batch commit promises
         this.batchPromises = [];
-        this.currentBatchPromise = null;
-
-        // Set up the first batch
-        this._createNewBatch();
     }
 
     /********************
@@ -72,18 +69,19 @@ class Autobatcher {
      * Commit the current batch, and update its promise.
      * @public
      * @function
-     * 
-     * @returns {Promise<void>} Returns a promise that resolves once the single
-     * commit has resolved
      */
     commit() {
-        return this.currentBatch.commit()
+        const numPromises = this.batchPromises.length;
+        this.currentBatch.commit()
             .then(() => {
-                this.currentBatchPromise.resolve();
+                this.batchPromises[numPromises-1].resolve();
             })
             .catch((err) => {
-                this.currentBatchPromise.reject(err);
+                this.batchPromises[numPromises-1].reject(err);
             });
+
+        this.currentBatch = null;
+        this.numWritesInCurrentBatch = 0;
     }
 
     /**
@@ -96,7 +94,10 @@ class Autobatcher {
      * resolved
      */
     allBatchesFinalized() {
-        return Promise.all(this.batchPromises);
+        const promisesFromDeferred = map(this.batchPromises, (batchPromise) => {
+            return batchPromise.promise;
+        });
+        return Promise.all(promisesFromDeferred);
     }
 
     /*********************
@@ -138,7 +139,6 @@ class Autobatcher {
         this.currentBatch = writeBatch(getDB());
         const newBatchPromise = new Deferred();
         this.batchPromises.push(newBatchPromise);
-        this.currentBatchPromise = newBatchPromise;
     }
 }
 
