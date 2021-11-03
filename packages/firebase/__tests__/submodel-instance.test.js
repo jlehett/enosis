@@ -354,4 +354,44 @@ describe('Submodel Instance', () => {
         });
     });
 
+    it('can delete a document in a subcollection correctly', async () => {
+        const results = {};
+
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [ 'displayName' ],
+        });
+        const ProfileEmailsModel = new Submodel({
+            collectionName: 'emails',
+            parent: ProfileModel,
+            collectionProps: [ 'address' ],
+        });
+
+        const johnProfile = await ProfileModel.writeToID('john', { displayName: 'John' });
+        await johnProfile
+            .subcollections
+            .emails
+            .writeToID('gmail', { address: 'john@gmail.com' });
+        results.firstReading = Boolean(
+            await johnProfile
+                .subcollections
+                .emails
+                .getByID('gmail')
+        );
+        await johnProfile
+            .subcollections
+            .emails
+            .deleteByID('gmail');
+        results.secondReading = Boolean(
+            await johnProfile
+                .subcollections
+                .emails
+                .getByID('gmail')
+        );
+        expect(results).to.deep.equal({
+            firstReading: true,
+            secondReading: false
+        });
+    })
+
 });

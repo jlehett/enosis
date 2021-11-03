@@ -151,10 +151,11 @@ class ModelInstanceOperations {
      * @function
      * 
      * @param {string} id The ID of the document to delete from the database
+     * @param {DeleteByIDParams} [params] Various settings for the operation
      * @returns {Promise<void>} Resolves once the document has been deleted
      * (if not using an autobatcher)
      */
-    async deleteByID(id) {
+    async deleteByID(id, params) {
         const docRef = doc(this.collectionRef, id);
 
         // Delete from the database using either a transaction, autobatcher,

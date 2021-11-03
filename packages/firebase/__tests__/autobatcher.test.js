@@ -101,4 +101,33 @@ describe('Autobatcher', () => {
         expect(reading.length).to.equal(0);
     });
 
+    it('will automatically commit the current batch when `allBatchesFinalized` is called', async () => {
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [ 'displayName' ],
+        });
+        const autobatcher = new Autobatcher(3);
+
+        ProfileModel.writeToID(
+            'john',
+            { displayName: 'Hello' },
+            { autobatcher }
+        );
+
+        await autobatcher.allBatchesFinalized();
+        const result = Boolean(await ProfileModel.getByID('john'));
+        expect(result).to.equal(true);
+    });
+
+    it('will not trigger an error if `commit` is called when there is no current batch', async () => {
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [ 'displayName' ]
+        });
+        const autobatcher = new Autobatcher(3);
+
+        autobatcher.commit();
+        expect(true).to.equal(true);
+    });
+
 });

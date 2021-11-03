@@ -17,6 +17,9 @@ If the `mergeWithDefaultValues` flag is not set, any default values specified by
 | data | Object | The data to write to the new document. |
 | params | Object | (opt.) Object specifying various settings for the operation. |
 | params.mergeWithDefaultValues | boolean | (opt.) If set to true, any data that is missing from `data` will be set to use the corresponding collection property default value specified by the `propDefaults` property in the corresponding `Model` or `Submodel` constructor. |
+| params.transaction | [Firestore.Transaction](https://firebase.google.com/docs/reference/js/firestore_.transaction) | (opt.) A Firestore transaction for the operation to use. |
+| params.autobatcher | [Autobatcher](/packages/firebase/docs/api/autobatcher.md) | (opt.) An autobatcher used to automatically batch Firestore write operations into set chunk sizes. |
+
 
 #### Return Value
 
@@ -25,6 +28,8 @@ This function always returns a promise which resolves with the [`Firestore.Docum
 | Property | Type | Description |
 | --- | --- | --- |
 | subcollections | Object\<string, SubmodelInstance\> | Map of names of subcollections that the document supports to their corresponding `SubmodelInstance` objects. |
+
+Note that if an `autobatcher` is used, this document may not yet be created.
 
 #### Example
 
@@ -70,6 +75,7 @@ If the `mergeWithDefaultValues` flag is not set, any default values specified by
 | params.mergeWithExistingValues | boolean | (opt.) If set to true, any data already found in the specified document will be merged with the new data. This applies after `mergeWithDefaultValues` does, if both are set. |
 | params.mergeWithDefaultValues | boolean | (opt.) If set to true, any data that is missing from `data` will be set to use the corresponding collection property default value specified by the `propDefaults` property in the `Model` or `Submodel` constructor. |
 | params.transaction | [Firestore.Transaction](https://firebase.google.com/docs/reference/js/firestore_.transaction) | (opt.) A Firestore transaction for the operation to use. |
+| params.autobatcher | [Autobatcher](/packages/firebase/docs/api/autobatcher.md) | (opt.) An autobatcher used to automatically batch Firestore write operations into set chunk sizes. |
 
 #### Return Value
 
@@ -78,6 +84,8 @@ This function always returns a promise which resolves with the [`Firestore.Docum
 | Property | Type | Description |
 | --- | --- | --- |
 | subcollections | Object\<string, SubmodelInstance\> | Map of names of subcollections that the document supports to their corresponding `SubmodelInstance` objects. |
+
+Note that if an `autobatcher` is used, this document may not yet be created or updated.
 
 #### Example
 
@@ -198,4 +206,38 @@ const matchingProfiles = await ProfileModel.getByQuery([
 const matchingGroups = await johnProfile.subcollections.groups.getByQuery([
     where('name', '==', 'Welcome Group')
 ]);
+```
+
+### deleteByID(id, params)
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| id | string | The ID of the document to delete from the database. |
+| params | Object | (opt.) Object specifying various settings for the operation. |
+| params.transaction | [Firestore.Transaction](https://firebase.google.com/docs/reference/js/firestore_.transaction) | (opt.) A Firestore transaction for the operation to use. |
+| params.autobatcher | [Autobatcher](/packages/firebase/docs/api/autobatcher.md) | (opt.) An autobatcher used to automatically batch Firestore write operations into set chunk sizes. |
+
+#### Return Value
+
+This function always returns a promise. That promise will either resolve once the document has been deleted if an `autobatcher` is not used, or it will resolve when the operation has been added to the batch if an `autobatcher` is used.
+
+#### Example
+
+```js
+import {
+    Autobatcher
+} from '@unifire-js/firebase/firestore';
+
+/**
+ * Delete the specified document from the database.
+ */
+ProfileModel.deleteByID('john');
+
+/**
+ * Delete the specified document from the database using an autobatcher.
+ */
+const autobatcher = new Autobatcher();
+ProfileModel.deleteByID('john', { autobatcher });
 ```

@@ -20,6 +20,7 @@ class Autobatcher {
 
         this.maxPerBatch = maxPerBatch;
         this.numWritesInCurrentBatch = 0;
+        this.currentBatchCommitted = true;
 
         // Set up storage to track all of the batch commit promises
         this.batchPromises = [];
@@ -30,9 +31,53 @@ class Autobatcher {
      ********************/
 
     /**
+     * Commit the current batch, and update its promise.
+     * @public
+     * @function
+     */
+    commit() {
+        if (!this.currentBatch) {
+            return;
+        }
+
+        const numPromises = this.batchPromises.length;
+        this.currentBatch.commit()
+            .then(() => {
+                this.batchPromises[numPromises-1].resolve();
+            })
+            .catch((err) => {
+                this.batchPromises[numPromises-1].reject(err);
+            });
+
+        this.currentBatch = null;
+        this.numWritesInCurrentBatch = 0;
+        this.currentBatchCommitted = true;
+    }
+
+    /**
+     * Return a promise that resolves once all batch promises have resolved.
+     * @public
+     * @function
+     * 
+     * @returns {Promise<void>} Resolves once all current batch promises have
+     * resolved
+     */
+    allBatchesFinalized() {
+        this.commit();
+        const promisesFromDeferred = map(this.batchPromises, (batchPromise) => {
+            return batchPromise.promise;
+        });
+        return Promise.all(promisesFromDeferred);
+    }
+
+    /***********************
+     * PROTECTED FUNCTIONS *
+     ***********************/
+
+    /**
      * Add a set operation to the current batch. If the batch is maxed out in
      * capacity, commit the batch.
-     * @public
+     * @protected
      * @function
      * 
      * @param {Firestore.DocumentReference} docRef The reference to the document
@@ -51,7 +96,7 @@ class Autobatcher {
     /**
      * Add a delete operation to the current batch. If the batch is maxed out
      * in capacity, commit the branch.
-     * @public
+     * @protected
      * @function
      * 
      * @param {Firestore.DocumentReference} docRef The reference to the document
@@ -63,41 +108,6 @@ class Autobatcher {
         }
         this.currentBatch.delete(docRef);
         this._commitBatchIfNeeded();
-    }
-
-    /**
-     * Commit the current batch, and update its promise.
-     * @public
-     * @function
-     */
-    commit() {
-        const numPromises = this.batchPromises.length;
-        this.currentBatch.commit()
-            .then(() => {
-                this.batchPromises[numPromises-1].resolve();
-            })
-            .catch((err) => {
-                this.batchPromises[numPromises-1].reject(err);
-            });
-
-        this.currentBatch = null;
-        this.numWritesInCurrentBatch = 0;
-    }
-
-    /**
-     * Return a promise that resolves once all current batch promises have
-     * resolved.
-     * @public
-     * @function
-     * 
-     * @returns {Promise<void>} Resolves once all current batch promises have
-     * resolved
-     */
-    allBatchesFinalized() {
-        const promisesFromDeferred = map(this.batchPromises, (batchPromise) => {
-            return batchPromise.promise;
-        });
-        return Promise.all(promisesFromDeferred);
     }
 
     /*********************
@@ -139,6 +149,7 @@ class Autobatcher {
         this.currentBatch = writeBatch(getDB());
         const newBatchPromise = new Deferred();
         this.batchPromises.push(newBatchPromise);
+        this.currentBatchCommitted = false;
     }
 }
 

@@ -227,7 +227,7 @@ class Submodel {
      * @returns {Promise<void>} Resolves once the document has been deleted
      * (if not using an autobatcher)
      */
-    async deleteByPath(path) {
+    async deleteByPath(path, params) {
         this._verifyPathIncludesSubmodelCollectionName(path);
 
         // Retrieve the doc ref
@@ -237,7 +237,7 @@ class Submodel {
 
         // Delete from the database using either a transaction, autobatcher, or
         // with a vanilla delete operation, as specified in params
-        if (param?.transaction) {
+        if (params?.transaction) {
             await params.transaction.delete(docRef);
         } else if (params?.autobatcher) {
             params.autobatcher.delete(docRef);
