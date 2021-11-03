@@ -276,6 +276,38 @@ describe('Submodel', () => {
             address: 'joey@gmail.com-updated',
             transactionRunCount: 2
         });
-    })
+    });
+
+    it('can delete a document in a subcollection correctly', async () => {
+        const results = {};
+
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [ 'displayName' ],
+        });
+        const ProfileEmailsModel = new Submodel({
+            collectionName: 'emails',
+            parent: ProfileModel,
+            collectionProps: [ 'address' ]
+        });
+
+        await ProfileEmailsModel.writeToPath(
+            'profiles/john/emails/gmail',
+            { address: 'john@gmail.com' }
+        );
+        results.firstReading = Boolean(
+            await ProfileEmailsModel.getByPath('profiles/john/emails/gmail')
+        );
+        await ProfileEmailsModel.deleteByPath(
+            'profiles/john/emails/gmail'
+        );
+        results.secondReading = Boolean(
+            await ProfileEmailsModel.getByPath('profiles/john/emails/gmail')
+        );
+        expect(results).to.deep.equal({
+            firstReading: true,
+            secondReading: false
+        });
+    });
 
 })

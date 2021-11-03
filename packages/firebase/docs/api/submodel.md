@@ -109,6 +109,8 @@ If the `mergeWithDefaultValues` flag is not set, any default values specified by
 | data | Object | The data to write to the new document. |
 | params | Object | (opt.) Object specifying various settings for the operation. |
 | params.mergeWithDefaultValues | boolean | (opt.) If set to true, any data that is missing from `data` will be set to use the corresponding collection property default value specified by the `propDefaults` property in the `Submodel` constructor. |
+| params.transaction | [Firestore.Transaction](https://firebase.google.com/docs/reference/js/firestore_.transaction) | (opt.) A Firestore transaction for the operation to use. |
+| params.autobatcher | [Autobatcher](/packages/firebase/docs/api/autobatcher.md) | (opt.) An autobatcher used to automatically batch Firestore write operations into set chunk sizes. |
 
 ##### Return Value
 
@@ -117,6 +119,8 @@ This function always returns a promise which resolves with the [`Firestore.Docum
 | Property | Type | Description |
 | --- | --- | --- |
 | subcollections | Object\<string, SubmodelInstance\> | Map of names of subcollections that the document supports to their corresponding `SubmodelInstance` objects. |
+
+Note that if an `autobatcher` is used, this document may not yet be created.
 
 ##### Example
 
@@ -173,9 +177,10 @@ If the `mergeWithDefaultValues` flag is not set, any default values specified by
 | path | string | The path to the document in Firestore to write the data to. |
 | data | Object | The data to write to the document. |
 | params | Object | (opt.) Object specifying various settings for the operation. |
-| params.mergeWithExistingValues | boolean | (opt.) If set to true, any data already found in the specified document will be merged with the new data. |
-| params.mergeWithDefaultValues | boolean | (opt.) If set to true, any data that is missing from either `data`, or the existing data if `mergeWithExistingValues` is set to true, will be set to use the corresponding collection property default value specified by the `propDefaults` property in the `Submodel` constructor. |
+| params.mergeWithExistingValues | boolean | (opt.) If set to true, any data already found in the specified document will be merged with the new data. This applies after `mergeWithDefaultValues` does, if both are set. |
+| params.mergeWithDefaultValues | boolean | (opt.) If set to true, any data that is missing from `data` will be set to use the corresponding collection property default value specified by the `propDefaults` property in the `Submodel` constructor. |
 | params.transaction | [Firestore.Transaction](https://firebase.google.com/docs/reference/js/firestore_.transaction) | (opt.) A Firestore transaction for the operation to use. |
+| params.autobatcher | [Autobatcher](/packages/firebase/docs/api/autobatcher.md) | (opt.) An autobatcher used to automatically batch Firestore write operations into set chunk sizes. |
 
 ##### Return Value
 
@@ -185,6 +190,8 @@ This function always returns a promise which resolves with the [`Firestore.Docum
 | --- | --- | --- |
 | subcollections | Object\<string, SubmodelInstance\> | Map of names of subcollections that the document supports to their corresponding `SubmodelInstance` objects. |
 
+Note that if an `autobatcher` is used, this document may not yet be created.
+
 ##### Example
 
 ```js
@@ -192,8 +199,8 @@ This function always returns a promise which resolves with the [`Firestore.Docum
  * Write to a new document with ID, `welcome`, in the `groups` subcollection
  * of a document with ID, `john`, in the `profiles` root-level collection.
  * 
- * Also, merge in any existing values found in the document (if it already
- * exists), and then merge the default values for missing data.
+ * Also, merge in any default values for missing data in `data`, and then
+ * merge in any existing data in the document (if it already exists).
  */
 const docRef = await ProfileGroupsModel.writeToPath(
     'profiles/john/groups/welcome',
@@ -309,4 +316,40 @@ const matchingGroups = await ProfileGroupsModel.getByQueryInInstance(
         limit(4),
     ]
 );
+```
+
+#### deleteByPath(path, params)
+
+Deletes a document from the database, given the path to the document.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| path | string | The path to the document to delete. |
+| params | Object | (opt.) Object specifying various settings for the operation. |
+| params.transaction | [Firestore.Transaction](https://firebase.google.com/docs/reference/js/firestore_.transaction) | (opt.) A Firestore transaction for the operation to use. |
+| params.autobatcher | [Autobatcher](/packages/firebase/docs/api/autobatcher.md) | (opt.) An autobatcher used to automatically batch Firestore write operations into set chunk sizes. |
+
+##### Return Value
+
+This function always returns a promise. That promise will either resolve once the document has been deleted if an `autobatcher` is not used, or it will resolve when the operation has been added to the batch if an `autobatcher` is used.
+
+##### Example
+
+```js
+import {
+    Autobatcher
+} from '@unifire-js/firebase/firestore';
+
+/**
+ * Delete the specified document from the database.
+ */
+ProfileEmailsModel.deleteByPath('profiles/john/emails/gmail');
+
+/**
+ * Delete the specified document from the database using an autobatcher.
+ */
+const autobatcher = new Autobatcher();
+ProfileEmailsModel.deleteByPath('profiles/john/emails/gmail', { autobatcher });
 ```

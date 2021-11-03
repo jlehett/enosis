@@ -8,12 +8,12 @@ import Sanitizer from './utilities/sanitization';
 import SubmodelInstance from './submodel-instance';
 import Model from './model';
 import {
-    addDoc,
     getDoc,
     setDoc,
     doc,
     getDocs,
     query,
+    deleteDoc,
 } from 'firebase/firestore';
 import { map } from 'lodash';
 
@@ -32,21 +32,6 @@ import { map } from 'lodash';
  * Each Model (or SubmodelInstance) will contain references to its direct
  * SubmodelInstance children, which can be used for interacting with specific
  * instances of Firestore subcollections.
- * 
- * @example
- * // Given an existing "Profile" model for Firestore, create a new
- * // "Email" submodel for "Profile" model instances.
- * const ProfileEmailModel = new Submodel({
- *      collectionName: 'emails',
- *      collectionProps: [
- *          'address',
- *          'isValid',
- *      ],
- *      propDefaults: {
- *          address: 'john@gmail.com',
- *          isValid: true
- *      }
- * });
  * 
  * @param {SubmodelParams} params The parameters to use when creating the
  * submodel
@@ -95,19 +80,11 @@ class Submodel {
     async writeToNewDoc(path, data, params) {
         this._verifyPathIncludesSubmodelCollectionName(path);
 
-        // Sanitize the data
-        const sanitizedData = this.sanitizer.getSanitizedDataToSave(
-            data,
-            params?.mergeWithDefaultValues
-        );
-
-        // Write the doc, and get the doc ref
         const collectionRef = createCollectionRefWithPath(path);
-        const docRef = await addDoc(collectionRef, sanitizedData);
+        const docRef = doc(collectionRef);
+        const pathWithID = `${path}/${docRef.id}`;
         
-        // Attach additional info to doc ref and return
-        attachSubmodelInstanceReferencesToDocRef(docRef, this.subcollections);
-        return docRef;
+        return this.writeToPath(pathWithID, data, params);
     }
 
     /**
@@ -145,18 +122,20 @@ class Submodel {
         const collectionRef = createCollectionRefWithPath(collectionPath);
         const docRef = doc(collectionRef, id);
 
-        // Write the data
-        params?.transaction
-            ? await params.transaction.set(
-                docRef,
-                sanitizedData,
-                { merge: params?.mergeWithExistingValues }
-            )
-            : await setDoc(
-                docRef,
-                sanitizedData,
-                { merge: params?.mergeWithExistingValues }
-            );
+        // Write to the database using either a transaction, autobatcher, or
+        // with a vanilla write operation, as specified in params
+        const writeArgs = [
+            docRef,
+            sanitizedData,
+            { merge: params?.mergeWithExistingValues }
+        ];
+        if (params?.transaction) {
+            await params.transaction.set(...writeArgs);
+        } else if (params?.autobatcher) {
+            params.autobatcher.set(...writeArgs);
+        } else {
+            await setDoc(...writeArgs);
+        }
         
         // Attach additional info to doc ref and return
         attachSubmodelInstanceReferencesToDocRef(docRef, this.subcollections);
@@ -237,6 +216,34 @@ class Submodel {
 
         // Return the final results
         return sanitizedDocuments;
+    }
+
+    /**
+     * Deletes a document from the database, given the path to the document.
+     * @public
+     * @function
+     * 
+     * @param {string} path The path to the document to delete
+     * @returns {Promise<void>} Resolves once the document has been deleted
+     * (if not using an autobatcher)
+     */
+    async deleteByPath(path, params) {
+        this._verifyPathIncludesSubmodelCollectionName(path);
+
+        // Retrieve the doc ref
+        const { id, collectionPath } = this._getCollectionPathAndIDFromPath(path);
+        const collectionRef = createCollectionRefWithPath(collectionPath);
+        const docRef = doc(collectionRef, id);
+
+        // Delete from the database using either a transaction, autobatcher, or
+        // with a vanilla delete operation, as specified in params
+        if (params?.transaction) {
+            await params.transaction.delete(docRef);
+        } else if (params?.autobatcher) {
+            params.autobatcher.delete(docRef);
+        } else {
+            await deleteDoc(docRef);
+        }
     }
 
     /***********************

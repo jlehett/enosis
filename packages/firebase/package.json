@@ -13,12 +13,16 @@
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "npx babel src --out-dir lib",
-    "test": "npm run build && mocha -r esm --timeout 5000 __tests__",
+    "test": "npm run build && mocha -r @babel/register --timeout 5000 __tests__",
     "prepublishOnly": "npm run test"
   },
   "dependencies": {
+    "@unifire-js/async": "0.0.8",
     "core-js": "3.18.2",
     "firebase": "9.1.2",
     "lodash": "4.17.21",
@@ -28,7 +32,8 @@
     "@babel/cli": "7.15.7",
     "@babel/core": "7.15.8",
     "@babel/preset-env": "7.15.8",
-    "esm": "3.2.25"
+    "@babel/register": "7.16.0",
+    "mocha": "9.1.3"
   },
   "repository": {
     "type": "git",
@@ -37,5 +42,5 @@
   "bugs": {
     "url": "https://github.com/jlehett/unifire-js/issues"
   },
-  "gitHead": "c68682450492e222c8804b8f56d92bef0397cfad"
+  "gitHead": "531bacc6ec1a51937d9e0059cb4c70d768971a0a"
 }

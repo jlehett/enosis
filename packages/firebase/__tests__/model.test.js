@@ -461,4 +461,27 @@ describe('Model', () => {
         expect(everythingIsGood).to.equal(true);
     });
 
+    it('can delete a document', async () => {
+        const results = {};
+
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [
+                'displayName'
+            ]
+        });
+
+        await ProfileModel.writeToID(
+            'john',
+            { displayName: 'John' }
+        );
+        results.firstReading = Boolean(await ProfileModel.getByID('john'));
+        await ProfileModel.deleteByID('john');
+        results.secondReading = Boolean(await ProfileModel.getByID('john'));
+        expect(results).to.deep.equal({
+            firstReading: true,
+            secondReading: false,
+        });
+    });
+
 });

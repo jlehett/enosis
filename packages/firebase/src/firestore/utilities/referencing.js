@@ -5,6 +5,16 @@ import {
 import { getFirebaseApp } from '../../firebase-app/firebase-app';
 
 /**
+ * Returns the Firestore database reference.
+ * 
+ * @returns {Firestore.FirestoreInstance} The Firestore database instance
+ * reference
+ */
+export function getDB() {
+    return getFirestore(getFirebaseApp());
+}
+
+/**
  * Registers the given child as a subcollection.
  * 
  * @param {Object<string, Submodel} subcollections Map of subcollection names
@@ -26,7 +36,7 @@ export function registerSubcollection(subcollections, childModel) {
  * in the Model or SubmodelInstance
  */
 export function createCollectionRef(collectionName, parentDocRef) {
-    const db = getFirestore(getFirebaseApp());
+    const db = getDB();
     if (!parentDocRef) {
         return collection(db, collectionName);
     } else {
@@ -42,7 +52,7 @@ export function createCollectionRef(collectionName, parentDocRef) {
  * @returns {Firestore.CollectionReference} The collection reference to use
  */
 export function createCollectionRefWithPath(path) {
-    const db = getFirestore(getFirebaseApp());
+    const db = getDB();
     return collection(db, path);
 }
 
