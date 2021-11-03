@@ -1,6 +1,6 @@
 # Autobatcher
 
-An `Autobatcher` is an automated solution for chunking operations into chunks of a specified maximum size, comitting chunks when they are maxed-out, and creating promises that resolve once all created chunks have resolved.
+An `Autobatcher` is an automated solution for chunking operations into chunks of a specified maximum size, committing chunks when they are maxed-out, and creating promises that resolve once all created chunks have resolved.
 
 ## API
 
