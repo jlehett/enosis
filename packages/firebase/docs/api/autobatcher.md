@@ -10,6 +10,8 @@ An `Autobatcher` is an automated solution for chunking operations into chunks of
 | --- | --- | --- | --- |
 | maxPerBatch | Number | `500` | Defines the maximum size of each batch of operations. The maximum batch size set by Firebase is `500`, thus the default value for `maxPerBatch` is set to `500`. |
 
+### Methods
+
 #### commit()
 
 Commits the current batch, if the current batch exists. Otherwise, does nothing. This will be called automatically when `allBatchesFinalized` is called to prevent indefinite asynchronous `await`s.
