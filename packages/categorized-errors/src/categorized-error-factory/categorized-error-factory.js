@@ -16,41 +16,6 @@ import includes from 'lodash/includes';
  * generated if the error definition uses a `messageTemplate` property as
  * opposed to a plaintext `message` property.
  * 
- * @example
- * // Create the reference enums for some error definitions
- * var categorizedErrors = new CategorizedErrorFactory({
- *      NO_FILES_SELECTED: {
- *          message: 'No files selected!',
- *          categories: ['SAFE', 'HARMLESS'],
- *      },
- *      ONE_FILE_SELECTED: {
- *          messageTemplate: '<%= filename %> selected!',
- *          categories: ['SAFE']
- *      },
- *      QUESTIONABLE_ERROR: {
- *          message: 'This is very useful, I promise!'
- *      }
- * });
- * 
- * // Generate some errors
- * var noFilesSelectedErr = categorizedErrors.factories.NO_FILES_SELECTED();
- * 
- * var oneFileSelectedErr = categorizedErrors.factories.ONE_FILE_SELECTED({
- *      filename: 'Test File.csv'
- * });
- * 
- * var questionableErr = categorizedErrors.factories.QUESTIONABLE_ERROR();
- * 
- * // Test to see if the errors are part of a category
- * noFilesSelectedErr.inCategory(categorizedErrors.categories.HARMLESS); // true
- * 
- * oneFileSelectedErr.inCategory(categorizedErrors.categories.HARMLESS); // false
- * 
- * questionableErr.inCategory(categorizedErrors.categories.SAFE); // false
- * 
- * // Test to see if an error is a specific Categorized Error
- * var errorMatches = noFilesSelectedErr.id === categorizedErrors.ids.NO_FILES_SELECTED; // true
- * 
  * @param {Object<string, ErrorDef>} errorDefs Map of IDs to their error
  * definitions
  */

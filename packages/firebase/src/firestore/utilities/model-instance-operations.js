@@ -1,14 +1,12 @@
 import {
-    addDoc,
     doc,
     getDoc,
     getDocs,
     setDoc,
     query,
-    Firestore,
+    deleteDoc,
 } from 'firebase/firestore';
 import {
-    concat,
     map
 } from 'lodash';
 import {
@@ -33,38 +31,14 @@ class ModelInstanceOperations {
      * @public
      * @function
      * 
-     * @example
-     * // Write data to a new document
-     * ProfileModel.writeToNewDoc({
-     *      displayName: 'john',
-     *      email: 'john@gmail.com',
-     *      address: '111 Test Rd',
-     *      phone: '555-555-5555',
-     * });
-     * 
-     * @example
-     * // Write data to a new document and specify that default values
-     * // should be used for properties where no value was specified
-     * ProfileModel.writeToNewDoc(
-     *      {
-     *          displayName: 'john',
-     *      },
-     *      { mergeWithDefaultValues: true }
-     * );
-     * 
      * @param {Object} data The data to sanitize and write to the new document
      * @param {WriteToNewDocParams} [params] Various settings for the operation
      * @returns {Promise<Object>} Resolves with the newly created document
      * reference, populated with additional subcollection info
      */
     async writeToNewDoc(data, params) {
-        const sanitizedData = this.sanitizer.getSanitizedDataToSave(
-            data,
-            params?.mergeWithDefaultValues
-        );
-        const docRef = await addDoc(this.collectionRef, sanitizedData);
-        attachSubmodelInstanceReferencesToDocRef(docRef, this.subcollections);
-        return docRef;
+        const docRef = doc(this.collectionRef);
+        return this.writeToID(docRef.id, data, params);
     }
 
     /**
@@ -82,45 +56,6 @@ class ModelInstanceOperations {
      * @public
      * @function
      * 
-     * @example
-     * // Write data to a specified document
-     * ProfileModel.writeToID(
-     *      'testProfile',
-     *      {
-     *          displayName: 'john',
-     *          email: 'john@gmail.com',
-     *          address: '111 Test Rd',
-     *          phone: '555-555-5555'
-     *      }
-     * );
-     * 
-     * @example
-     * // Write data to a specified document and specify that default values
-     * // should be used for properties where no value was specified
-     * ProfileModel.writeToID(
-     *      'testProfile',
-     *      {
-     *          displayName: 'john'
-     *      },
-     *      { mergeWithDefaultValues: true }
-     * );
-     * 
-     * @example
-     * // Use a transaction for the write operation and specify that default
-     * // values should be used for properties where no value was specified
-     * runTransaction(db, (transaction) => {
-     *      ProfileModel.writeToID(
-     *          'testProfile',
-     *          {
-     *              displayName: 'john'
-     *          },
-     *          {
-     *              transaction,
-     *              mergeWithDefaultValues: true
-     *          }
-     *      );
-     * });
-     * 
      * @param {string} id The ID of the document to write the sanitized data to
      * @param {Object} data The data to sanitize and write to the specified
      * document
@@ -134,17 +69,22 @@ class ModelInstanceOperations {
             data,
             params?.mergeWithDefaultValues
         );
-        params?.transaction
-            ? await params.transaction.set(
-                docRef,
-                sanitizedData,
-                { merge: params?.mergeWithExistingValues }
-            )
-            : await setDoc(
-                docRef,
-                sanitizedData,
-                { merge: params?.mergeWithExistingValues }
-            );
+
+        // Write to the database using either a transaction, autobatcher,
+        // or with a vanilla write operation, as specified in params
+        const writeArgs = [
+            docRef,
+            sanitizedData,
+            { merge: params?.mergeWithExistingValues }
+        ];
+        if (params?.transaction) {
+            await params.transaction.set(...writeArgs);
+        } else if (params?.autobatcher) {
+            params.autobatcher.set(...writeArgs);
+        } else {
+            await setDoc(...writeArgs);
+        }
+
         attachSubmodelInstanceReferencesToDocRef(docRef, this.subcollections);
         return docRef;
     }
@@ -153,19 +93,6 @@ class ModelInstanceOperations {
      * Retrieves the specified document's data from the database, if it exists.
      * @public
      * @function
-     * 
-     * @example
-     * // Get a document given an ID
-     * const doc = ProfileModel.getByID('testProfile');
-     * 
-     * @example
-     * // Get a document given an ID using a transaction
-     * runTransaction(db, (transaction) => {
-     *      ProfileModel.getByID(
-     *          'testProfile',
-     *          { transaction }
-     *      );
-     * });
      * 
      * @param {string} id The ID of the document to fetch from the database
      * @param {GetByIDParams} [params] Various settings for the operation
@@ -196,46 +123,6 @@ class ModelInstanceOperations {
      * @public
      * @function
      * 
-     * @example
-     * // Get documents matching a simple query
-     * import { where } from '@firebase/firestore';
-     * 
-     * const docsMatchingQuery = ProfileModel.getByQuery([
-     *      where('displayName', '==', 'john')
-     * ]);
-     * 
-     * @example
-     * // Get documents matching a compound query
-     * import { where } from '@firebase/firestore';
-     * 
-     * const docsMatchingQuery = await ProfileModel.getByQuery([
-     *      where('displayName', '==', 'john'),
-     *      where('email', '==', 'john@gmail.com'),
-     * ]);
-     * 
-     * @example
-     * // Get documents matching a compound query, but limit results to the
-     * // first 4 matches
-     * import { where, limit } from '@firebase/firestore';
-     * 
-     * const firstFourDocsMatchingQuery = await ProfileModel.getByQuery([
-     *      where('displayName', '==', 'john'),
-     *      where('email', '==', 'john@gmail.com'),
-     *      limit(4)
-     * ]);
-     * 
-     * @example
-     * // Get documents matching a compound query, ordered first by 'displayName'
-     * // in descending order, then ordered by 'email' in ascending order
-     * import { orderBy, where } from '@firebase/firestore';
-     * 
-     * const orderedDocsMatchingQuery = await ProfileModel.getByQuery([
-     *      where('displayName', '==', 'john'),
-     *      where('email', '==', 'john@gmail.com'),
-     *      orderBy('displayName', 'desc'),
-     *      orderBy('email')
-     * ]);
-     * 
      * @param {function[]} queryFns Array of Firestore query functions to
      * use in the query, e.g., `limit`, `orderBy`, and `where`
      * @returns {Promise<Object[]>} Resolves with an array of all documents in
@@ -256,6 +143,30 @@ class ModelInstanceOperations {
         );
         // Return the final result
         return sanitizedDocuments;
+    }
+
+    /**
+     * Deletes a document from the database, given its ID.
+     * @public
+     * @function
+     * 
+     * @param {string} id The ID of the document to delete from the database
+     * @param {DeleteByIDParams} [params] Various settings for the operation
+     * @returns {Promise<void>} Resolves once the document has been deleted
+     * (if not using an autobatcher)
+     */
+    async deleteByID(id, params) {
+        const docRef = doc(this.collectionRef, id);
+
+        // Delete from the database using either a transaction, autobatcher,
+        // or with a vanilla delete operation, as specified in params
+        if (params?.transaction) {
+            await params.transaction.delete(docRef);
+        } else if (params?.autobatcher) {
+            params.autobatcher.delete(docRef);
+        } else {
+            await deleteDoc(docRef);
+        }
     }
 
     /*********************

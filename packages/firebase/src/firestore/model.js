@@ -12,31 +12,6 @@ import ModelInstanceOperations from './utilities/model-instance-operations';
  * Before models are constructed, the firebase app in use should be tracked via
  * the `setFirebaseApp` function from this package.
  * 
- * @example
- * // Create a "Profile" model for Firestore
- * const ProfileModel = new Model({
- *      collectionName: 'profiles',
- *      collectionProps: [
- *          'displayName',
- *          'email',
- *          'phone',
- *          'address'
- *      ],
- *      propDefaults: {
- *          displayName: 'No Name',
- *          email: 'No Email'
- *      },
- * });
- * 
- * // Create reusable functions for common operations and attach them to the
- * // created profile model object
- * ProfileModel.getProfilesByEmailAndPhone = (email, phone) => (
- *      ProfileModel.getByQuery([
- *          where('email', '==', email),
- *          where('phone', '==', phone),
- *      ]);
- * );
- * 
  * @param {ModelParams} params The parameters to use when creating the model
  */
 class Model extends ModelInstanceOperations {
