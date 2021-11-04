@@ -1,14 +1,12 @@
 import { expect } from 'chai';
 import {
     Model,
-    Submodel
+    Submodel,
+    runTransaction,
 } from '../lib/firestore';
-import { getFirebaseApp } from '../lib/firebase-app/firebase-app';
 import {
-    getFirestore,
     where,
     orderBy,
-    runTransaction,
 } from 'firebase/firestore';
 import {
     omit,
@@ -282,11 +280,10 @@ describe('Submodel Instance', () => {
                 address: 'john@gmail.com',
             }
         );
-        const db = getFirestore(getFirebaseApp());
         await new Promise(async (parentResolve, parentReject) => {
             let interruptingPromise = new Deferred();
             let initialPromise = new Deferred();
-            runTransaction(db, async (transaction) => {
+            runTransaction(async (transaction) => {
                 transactionRunCount++;
                 const initialDoc = await johnProfile.subcollections.emails.getByID(
                     'initialDoc',

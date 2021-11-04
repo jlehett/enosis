@@ -1,6 +1,6 @@
 import isInteger from 'lodash/isInteger';
 import map from 'lodash/map';
-import { getDB } from './utilities/referencing';
+import { getDB } from './referencing';
 import {
     writeBatch
 } from 'firebase/firestore';

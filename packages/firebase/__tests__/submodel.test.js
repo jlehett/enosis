@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import {
     Model,
     Submodel,
+    runTransaction,
 } from '../lib/firestore';
 import clearEmulatorData from './utilities/clear-emulator-data';
 import freeAppResources from './utilities/free-app-resources';
@@ -14,10 +15,7 @@ import {
 import {
     where,
     orderBy,
-    getFirestore,
-    runTransaction,
 } from 'firebase/firestore';
-import { getFirebaseApp } from '../lib/firebase-app/firebase-app';
 import { Deferred } from '../../async/lib';
 
 describe('Submodel', () => {
@@ -244,11 +242,10 @@ describe('Submodel', () => {
             'profiles/john/emails/initialDoc',
             { address: 'john@gmail.com' }
         );
-        const db = getFirestore(getFirebaseApp());
         await new Promise(async (parentResolve, parentReject) => {
             let interruptingPromise = new Deferred();
             let initialPromise = new Deferred();
-            runTransaction(db, async (transaction) => {
+            runTransaction(async (transaction) => {
                 transactionRunCount++;
                 const initialDoc = await ProfileEmailsModel.getByPath(
                     'profiles/john/emails/initialDoc',
