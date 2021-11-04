@@ -7,12 +7,10 @@ import {
 import {
     Model,
     Submodel,
+    runTransaction,
 } from '../lib/firestore';
 import SubmodelInstance from '../lib/firestore/submodel-instance';
-import { getFirebaseApp } from '../lib/firebase-app/firebase-app';
 import {
-    getFirestore,
-    runTransaction,
     where,
     orderBy,
     limit
@@ -232,11 +230,10 @@ describe('Model', () => {
                 displayName: 'john'
             }
         );
-        const db = getFirestore(getFirebaseApp());
         await new Promise(async (parentResolve, parentReject) => {
             let interruptingPromise = new Deferred();
             let initialPromise = new Deferred();
-            runTransaction(db, async (transaction) => {
+            runTransaction(async (transaction) => {
                 transactionRunCount++;
                 const initialDoc = await profileModel.getByID(
                     'initialDoc',
