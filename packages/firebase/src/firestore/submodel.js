@@ -3,6 +3,7 @@ import {
     createCollectionRefWithPath,
     attachSubmodelInstanceReferencesToDocRef,
     attachSubmodelInstanceReferencesToFetchedData,
+    getDB,
 } from './utilities/referencing';
 import Sanitizer from './utilities/sanitization';
 import SubmodelInstance from './submodel-instance';
@@ -14,6 +15,7 @@ import {
     getDocs,
     query,
     deleteDoc,
+    collectionGroup,
 } from 'firebase/firestore';
 import { map } from 'lodash';
 
@@ -208,6 +210,41 @@ class Submodel {
         const sanitizedDocuments = this.sanitizer.sanitizeFromRead(querySnapshot);
 
         // For each document, and for each subcolleciton specified for the model,
+        // create and attach submodel instances for reference
+        map(
+            sanitizedDocuments,
+            doc => attachSubmodelInstanceReferencesToFetchedData(doc, this.subcollections)
+        );
+
+        // Return the final results
+        return sanitizedDocuments;
+    }
+
+    /**
+     * Retrieves all documents from the database matching the specified query
+     * parameters, in the given subcollection group.
+     * @public
+     * @function
+     * 
+     * @param {function[]} queryFns Array of Firestore query functions to use
+     * in the query, e.g., 'limi', 'orderBy', and 'where'
+     * @returns {Promise<Object[]>} Resolves with an array of all documents in
+     * the subcollection group matching the specified query
+     */
+    async getByQuery(queryFns) {
+        // Get the collection group reference
+        const collectionGroupRef = collectionGroup(getDB(), this.collectionName);
+
+        // Construct the query  function
+        const q = query(collectionGroupRef, ...queryFns);
+
+        // Make the query call
+        const querySnapshot = await getDocs(q);
+
+        // Sanitize the documents
+        const sanitizedDocuments = this.sanitizer.sanitizeFromRead(querySnapshot);
+
+        // For each document, and for each subcollection specified for the model,
         // create and attach submodel instances for reference
         map(
             sanitizedDocuments,
