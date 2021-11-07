@@ -318,6 +318,45 @@ const matchingGroups = await ProfileGroupsModel.getByQueryInInstance(
 );
 ```
 
+#### getByQuery(queryFns)
+
+Retrieves all documents from the database matching the specified query parameters, in the given subcollection group -- not tied to a specific subcollection instance.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. |
+
+##### Return Value
+
+This function always returns a promise that resolves with an array of all sanitized documents matching the query in the subcollection group (will be empty if none match), with each individual sanitized document containing some additional properties:
+
+| Property | Type | Description |
+| --- | --- | --- |
+| _ref | [Firestore.DocumentReference](https://firebase.google.com/docs/reference/js/firestore_.documentreference) | The document reference for the document at the specified path. |
+| id | string | The ID of the document fetched. |
+| subcollections | Object\<string, SubmodelInstance\> | Map of names of subcollections that the document supports to their corresponding `SubmodelInstance` objects. |
+
+##### Example
+
+```js
+import {
+    limit,
+    orderBy,
+    where,
+} from 'firebase/firestore';
+
+/**
+ * Find all groups that match the given query.
+ */
+const matchingGroups = await ProfileGroupsModel.getByQuery([
+        where('name', '==', 'Welcome Group'),
+        orderBy('description', 'desc'),
+        limit(4),
+]);
+```
+
 #### deleteByPath(path, params)
 
 Deletes a document from the database, given the path to the document.
