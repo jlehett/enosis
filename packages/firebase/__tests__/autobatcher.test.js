@@ -63,7 +63,7 @@ describe('Autobatcher', () => {
         const autobatcher = new Autobatcher(2);
 
         for (let i = 0; i < 8; i++) {
-            ProfileModel.writeToNewDoc(
+            await ProfileModel.writeToNewDoc(
                 { displayName: 'Hello' },
                 { autobatcher }
             );
