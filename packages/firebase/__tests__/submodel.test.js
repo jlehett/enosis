@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import {
     Model,
     Submodel,
+    runTransaction,
 } from '../lib/firestore';
 import clearEmulatorData from './utilities/clear-emulator-data';
 import freeAppResources from './utilities/free-app-resources';
@@ -14,10 +15,7 @@ import {
 import {
     where,
     orderBy,
-    getFirestore,
-    runTransaction,
 } from 'firebase/firestore';
-import { getFirebaseApp } from '../lib/firebase-app/firebase-app';
 import { Deferred } from '../../async/lib';
 
 describe('Submodel', () => {
@@ -244,11 +242,10 @@ describe('Submodel', () => {
             'profiles/john/emails/initialDoc',
             { address: 'john@gmail.com' }
         );
-        const db = getFirestore(getFirebaseApp());
         await new Promise(async (parentResolve, parentReject) => {
             let interruptingPromise = new Deferred();
             let initialPromise = new Deferred();
-            runTransaction(db, async (transaction) => {
+            runTransaction(async (transaction) => {
                 transactionRunCount++;
                 const initialDoc = await ProfileEmailsModel.getByPath(
                     'profiles/john/emails/initialDoc',
@@ -308,6 +305,158 @@ describe('Submodel', () => {
             firstReading: true,
             secondReading: false
         });
+    });
+
+    it('can use `getByQuery` on first-level subcollection groups', async () => {
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [ 'displayName' ],
+        });
+        const ProfileEmailsModel = new Submodel({
+            collectionName: 'emails',
+            parent: ProfileModel,
+            collectionProps: [ 'address', 'domain' ]
+        });
+
+        await ProfileEmailsModel.writeToPath(
+            'profiles/john/emails/gmail',
+            { address: 'john@gmail.com', domain: 'gmail' }
+        );
+        await ProfileEmailsModel.writeToPath(
+            'profiles/john/emails/outlook',
+            { address: 'john@outlook.com', domain: 'outlook' }
+        );
+        await ProfileEmailsModel.writeToPath(
+            'profiles/joey/emails/gmail',
+            { address: 'joey@gmail.com', domain: 'gmail' }
+        );
+
+        const queryResults = await ProfileEmailsModel.getByQuery([
+            where('domain', '==', 'gmail'),
+            orderBy('address')
+        ]);
+        const results = map(queryResults, 'address');
+
+        expect(results).to.deep.equal([
+            'joey@gmail.com',
+            'john@gmail.com',
+        ]);
+    });
+
+    it('can use `getByQuery` on second-level subcollection groups', async () => {
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [ 'displayName' ],
+        });
+        const ProfileContactInfo = new Submodel({
+            collectionName: 'contactInfo',
+            parent: ProfileModel,
+            collectionProps: [ 'has' ],
+        });
+        const ProfileEmailsModel = new Submodel({
+            collectionName: 'emails',
+            parent: ProfileContactInfo,
+            collectionProps: [ 'address', 'domain' ]
+        });
+
+        await ProfileEmailsModel.writeToPath(
+            'profiles/john/contactInfo/1/emails/gmail',
+            { address: 'john@gmail.com', domain: 'gmail' },
+        );
+        await ProfileEmailsModel.writeToPath(
+            'profiles/john/contactInfo/2/emails/outlook',
+            { address: 'john@outlook.com', domain: 'outlook' },
+        );
+        await ProfileEmailsModel.writeToPath(
+            'profiles/joey/contactInfo/1/emails/gmail',
+            { address: 'joey@gmail.com', domain: 'gmail' },
+        );
+
+        const queryResults = await ProfileEmailsModel.getByQuery([
+            where('domain', '==', 'gmail'),
+            orderBy('address')
+        ]);
+        const results = map(queryResults, 'address');
+
+        expect(results).to.deep.equal([
+            'joey@gmail.com',
+            'john@gmail.com'
+        ]);
+    });
+
+    it('can use `getByQuery` on a mix of levels for a subcollection group', async () => {
+        const EmailsModel = new Model({
+            collectionName: 'emails',
+            collectionProps: [ 'address', 'domain' ],
+        });
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [ 'displayName' ],
+        });
+        const ProfileEmailsModel = new Submodel({
+            collectionName: 'emails',
+            parent: ProfileModel,
+            collectionProps: [ 'address', 'domain' ],
+        });
+        const ContactInfoModel = new Submodel({
+            collectionName: 'contactInfo',
+            parent: ProfileModel,
+            collectionProps: [ 'has' ],
+        });
+        const ContactInfoEmailsModel = new Submodel({
+            collectionName: 'emails',
+            parent: ContactInfoModel,
+            collectionProps: [ 'address', 'domain' ],
+        });
+
+        await EmailsModel.writeToNewDoc({
+            address: 'blank@gmail.com',
+            domain: 'gmail',
+        });
+        await EmailsModel.writeToNewDoc({
+            address: 'blank@outlook.com',
+            domain: 'outlook',
+        });
+        await ProfileEmailsModel.writeToPath(
+            'profiles/john/emails/gmail',
+            {
+                address: 'john@gmail.com',
+                domain: 'gmail'
+            }
+        );
+        await ProfileEmailsModel.writeToPath(
+            'profiles/john/emails/outlook',
+            {
+                address: 'john@outlook.com',
+                domain: 'outlook',
+            }
+        );
+        await ContactInfoEmailsModel.writeToPath(
+            'profiles/joey/contactInfo/1/emails/gmail',
+            {
+                address: 'joey@gmail.com',
+                domain: 'gmail',
+            }
+        );
+        await ContactInfoEmailsModel.writeToPath(
+            'profiles/joey/contactInfo/1/emails/outlook',
+            {
+                address: 'joey@outlook.com',
+                domain: 'outlook',
+            }
+        );
+
+        const queryResults = await ProfileEmailsModel.getByQuery([
+            where('domain', '==', 'gmail'),
+            orderBy('address')
+        ]);
+        const results = map(queryResults, 'address');
+
+        expect(results).to.deep.equal([
+            'blank@gmail.com',
+            'joey@gmail.com',
+            'john@gmail.com'
+        ]);
     });
 
 })

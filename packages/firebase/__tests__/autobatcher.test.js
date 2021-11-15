@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import {
     Model,
-    Submodel,
     Autobatcher,
 } from '../lib/firestore';
 import freeAppResources from './utilities/free-app-resources';
