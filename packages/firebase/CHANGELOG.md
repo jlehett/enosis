@@ -1,6 +1,12 @@
 # @unifire-js/firebase
 
-## 1.0.0
+## 1.0.0-alpha.1
+
+<i>Nov 20, 2021</i>
+
+* 🔧 Updated npm keywords and home page.
+
+## 1.0.0-alpha.0
 
 <i>Nov 14, 2021</i>
 
