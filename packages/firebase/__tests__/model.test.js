@@ -481,4 +481,165 @@ describe('Model', () => {
         });
     });
 
+    it('can subscribe to changes on a specific document', async () => {
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [
+                'displayName',
+            ]
+        });
+
+        ProfileModel.addListenerByID(
+            'TestListener',
+            'john',
+            (doc) => {
+                if (doc?.displayName === 'Joey') {
+                    ProfileModel.removeListener('TestListener');
+                    expect(true).to.equal(true);
+                }
+            }
+        );
+
+        await ProfileModel.writeToID(
+            'john',
+            { displayName: 'John' }
+        );
+
+        await ProfileModel.writeToID(
+            'john',
+            { displayName: 'Joey' }
+        );
+    });
+
+    it('can remove a registered listener', async () => {
+        const readings = {};
+
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [
+                'displayName',
+            ]
+        });
+
+        readings.first = Boolean(ProfileModel.listeners.TestListener);
+
+        ProfileModel.addListenerByID(
+            'TestListener',
+            'john',
+            (doc) => {}
+        );
+
+        readings.second = Boolean(ProfileModel.listeners.TestListener);
+
+        ProfileModel.removeListener('TestListener');
+
+        readings.third = Boolean(ProfileModel.listeners.TestListener);
+
+        expect(readings).to.deep.equal({
+            first: false,
+            second: true,
+            third: false,
+        });
+    });
+
+    it('can remove all registered listeners', async () => {
+        const readings = {};
+
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [
+                'displayName',
+            ]
+        });
+
+        readings.first = Object.keys(ProfileModel.listeners).length;
+
+        ProfileModel.addListenerByID(
+            'test1',
+            'john',
+            (doc) => {}
+        );
+        ProfileModel.addListenerByID(
+            'test2',
+            'joey',
+            (doc) => {}
+        );
+        ProfileModel.addListenerByID(
+            'test3',
+            'david',
+            (doc) => {}
+        );
+
+        readings.second = Object.keys(ProfileModel.listeners).length;
+
+        ProfileModel.removeAllListeners();
+
+        readings.third = Object.keys(ProfileModel.listeners).length;
+
+        expect(readings).to.deep.equal({
+            first: 0,
+            second: 3,
+            third: 0,
+        });
+    });
+
+    it('can register query listeners', async () => {
+        const readings = [];
+
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [
+                'displayName',
+                'partOfTest',
+                'reallyPartOfTest',
+            ]
+        });
+
+        ProfileModel.addListenerByQuery(
+            'TestListener',
+            [
+                where('partOfTest', '==', true),
+                where('reallyPartOfTest', '==', true),
+                orderBy('displayName'),
+            ],
+            (docs) => {
+                readings.push(map(docs, 'displayName'));
+                if (readings.length === 4) {
+                    expect(readings).to.deep.equal([
+                        [],
+                        ['john'],
+                        ['john', 'joey'],
+                        ['joey'],
+                    ]);
+                }
+            }
+        );
+
+        await ProfileModel.writeToID(
+            'john',
+            {
+                displayName: 'john',
+                partOfTest: true,
+                reallyPartOfTest: true
+            }
+        );
+        await ProfileModel.writeToID(
+            'david',
+            {
+                displayName: 'david',
+                partOfTest: false,
+                reallyPartOfTest: true,
+            }
+        );
+        await ProfileModel.writeToID(
+            'joey',
+            {
+                displayName: 'joey',
+                partOfTest: true,
+                reallyPartOfTest: true
+            }
+        );
+        await ProfileModel.deleteByID('john');
+    });
+
 });
