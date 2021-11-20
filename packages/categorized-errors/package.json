@@ -3,7 +3,15 @@
   "version": "0.0.9",
   "description": "Uniform solutions for error handling.",
   "author": "Tanner Lehett <johntannerlehett@gmail.com>",
-  "homepage": "",
+  "homepage": "https://github.com/jlehett/unifire-js/blob/master/packages/categorized-errors/README.md",
+  "keywords": [
+    "error-handling",
+    "categorized-errors",
+    "error",
+    "exception",
+    "debug",
+    "utility"
+  ],
   "license": "ISC",
   "main": "lib/index.js",
   "directories": {

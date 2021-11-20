@@ -3,7 +3,12 @@
   "version": "1.0.0-alpha.0",
   "description": "Uniform solutions for Firebase integrations.",
   "author": "Tanner Lehett <johntannerlehett@gmail.com>",
-  "homepage": "https://github.com/jlehett/unifire-js#readme",
+  "homepage": "https://github.com/jlehett/unifire-js/blob/master/packages/firebase/README.md",
+  "keywords": [
+    "firebase",
+    "firestore",
+    "utility"
+  ],
   "license": "ISC",
   "main": "lib/index.js",
   "directories": {
