@@ -1,6 +1,6 @@
 {
   "name": "@unifire-js/firebase",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0",
   "description": "Uniform solutions for Firebase integrations.",
   "author": "Tanner Lehett <johntannerlehett@gmail.com>",
   "homepage": "https://github.com/jlehett/unifire-js/blob/master/packages/firebase/README.md",
