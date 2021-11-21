@@ -1,16 +1,12 @@
 # @unifire-js/firebase
 
-## 1.0.0-alpha.1
-
-<i>Nov 20, 2021</i>
-
-* 🔧 Updated npm keywords and home page.
-
-## 1.0.0-alpha.0
+## 1.0.0
 
 <i>Nov, 21, 2021</i>
 
 **🎉 @unifire-js/firebase v1.0.0 released! 🎉**
+
+### `@unifire-js/firebase/firestore`
 
 * 👂 Added support for defining realtime listeners for models, submodels, and submodel instances!
 
@@ -18,19 +14,7 @@
 
 <i>Nov 20, 2021</i>
 
-* 🔧 Updated npm keywords and home page.
-
-## 1.0.0-alpha.0
-
-<i>Nov, 21, 2021</i>
-
-**🎉 @unifire-js/firebase v1.0.0 released! 🎉**
-
-* 👂 Added support for defining realtime listeners for models, submodels, and submodel instances!
-
-## 1.0.0-alpha.1
-
-<i>Nov 20, 2021</i>
+### `@unifire-js/firebase/firestore`
 
 * 🔧 Updated npm keywords and home page.
 
