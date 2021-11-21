@@ -190,6 +190,7 @@ class ModelInstanceOperations {
      * document (with `_ref` and `subcollections` attached to it) as its param
      */
     addListenerByID(nameOfListener, id, fn) {
+        this._validateListenerNameNotTaken(nameOfListener);
         // Create the document reference
         const docRef = doc(this.collectionRef, id);
         // Register the listener
@@ -223,6 +224,7 @@ class ModelInstanceOperations {
      * param
      */
     addListenerByQuery(nameOfListener, queryFns, fn) {
+        this._validateListenerNameNotTaken(nameOfListener);
         // Construct the query function
         const q = query(this.collectionRef, ...queryFns);
         // Register the listener
@@ -272,6 +274,19 @@ class ModelInstanceOperations {
     /*********************
      * PRIVATE FUNCTIONS *
      *********************/
+
+    /**
+     * Validates that the listener name is not already taken by another active listener.
+     * @private
+     * @function
+     * 
+     * @param {string} nameOfListener The listener name to validate
+     */
+    _validateListenerNameNotTaken(nameOfListener) {
+        if (this.listeners[nameOfListener]) {
+            throw new Error(`Listener with name, ${nameOfListener}, already exists.`);
+        }
+    }
 }
 
 export default ModelInstanceOperations;

@@ -389,6 +389,234 @@ describe('Submodel Instance', () => {
             firstReading: true,
             secondReading: false
         });
-    })
+    });
+
+    it('can subscribe to changes on a specific document', async () => {
+        const deferred = new Deferred();
+
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [
+                'displayName',
+            ]
+        });
+        
+        const MessagesModel = new Submodel({
+            collectionName: 'messages',
+            parent: ProfileModel,
+            collectionProps: [
+                'content'
+            ]
+        });
+
+        const john = await ProfileModel.writeToID('john', { displayName: 'John' });
+        john.subcollections.messages.addListenerByID(
+            'TestListener',
+            '1',
+            (doc) => {
+                if (doc?.content === 'Test') {
+                    john.subcollections.messages.removeListener('TestListener');
+                    deferred.resolve();
+                }
+            }
+        );
+
+        await john.subcollections.messages.writeToID('1', { content: 'Test' });
+
+        await deferred.promise;
+        expect(true).to.equal(true);
+    });
+
+    it('can remove a registered listener', async () => {
+        const readings = {};
+
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [
+                'displayName',
+            ]
+        });
+
+        const MessagesModel = new Submodel({
+            collectionName: 'messages',
+            parent: ProfileModel,
+            collectionProps: [
+                'content'
+            ]
+        });
+
+        const john = await ProfileModel.writeToID('john', { displayName: 'John' });
+
+        readings.first = Boolean(john.subcollections.messages.listeners.TestListener);
+
+        john.subcollections.messages.addListenerByID(
+            'TestListener',
+            '1',
+            (doc) => {}
+        );
+
+        readings.second = Boolean(john.subcollections.messages.listeners.TestListener);
+
+        john.subcollections.messages.removeListener('TestListener');
+        
+        readings.third = Boolean(john.subcollections.messages.listeners.TestListener);
+
+        expect(readings).to.deep.equal({
+            first: false,
+            second: true,
+            third: false,
+        });
+    });
+
+    it('can remove all registered listeners', async () => {
+        const readings = {};
+
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [
+                'displayName',
+            ]
+        });
+
+        const MessagesModel = new Submodel({
+            collectionName: 'messages',
+            parent: ProfileModel,
+            collectionProps: [
+                'content',
+            ]
+        });
+
+        const john = await ProfileModel.writeToID('john', { displayName: 'John' });
+
+        readings.first = Object.keys(john.subcollections.messages.listeners).length;
+
+        john.subcollections.messages.addListenerByID(
+            'test1',
+            '1',
+            (doc) => {}
+        );
+        john.subcollections.messages.addListenerByID(
+            'test2',
+            '1',
+            (doc) => {}
+        );
+        john.subcollections.messages.addListenerByID(
+            'test3',
+            '1',
+            (doc) => {}
+        );
+
+        readings.second = Object.keys(john.subcollections.messages.listeners).length;
+
+        john.subcollections.messages.removeAllListeners();
+
+        readings.third = Object.keys(john.subcollections.messages.listeners).length;
+
+        expect(readings).to.deep.equal({
+            first: 0,
+            second: 3,
+            third: 0,
+        });
+    });
+
+    it('can register query listeners', async () => {
+        const deferred = new Deferred();
+        const readings = [];
+
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [
+                'displayName',
+            ]
+        });
+
+        const MessagesModel = new Submodel({
+            collectionName: 'messages',
+            parent: ProfileModel,
+            collectionProps: [
+                'content',
+                'partOfTest',
+                'reallyPartOfTest',
+            ]
+        });
+
+        const john = await ProfileModel.writeToID('john', { displayName: 'John' });
+
+        john.subcollections.messages.addListenerByQuery(
+            'TestListener',
+            [
+                where('partOfTest', '==', true),
+                where('reallyPartOfTest', '==', true),
+                orderBy('content'),
+            ],
+            (docs) => {
+                readings.push(map(docs, 'content'));
+                if (readings.length === 3) {
+                    john.subcollections.messages.removeAllListeners();
+                    deferred.resolve();
+                }
+            }
+        );
+
+        await john.subcollections.messages.writeToID(
+            '1',
+            {
+                content: 'test1',
+                partOfTest: true,
+                reallyPartOfTest: true,
+            }
+        );
+        await john.subcollections.messages.writeToID(
+            'invalid',
+            {
+                content: 'test3',
+                partOfTest: true,
+                reallyPartOfTest: false,
+            }
+        )
+        await john.subcollections.messages.writeToID(
+            '2',
+            {
+                content: 'test2',
+                partOfTest: true,
+                reallyPartOfTest: true
+            }
+        );
+        await john.subcollections.messages.deleteByID('1');
+
+        await deferred.promise;
+        expect(readings).to.deep.equal([
+            ['test1'],
+            ['test1', 'test2'],
+            ['test2']
+        ]);
+    });
+
+    it('throws an error if a listener name is already taken when attempting to create a new listener', async () => {
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [
+                'displayName',
+            ]
+        });
+
+        const MessagesModel = new Submodel({
+            collectionName: 'messages',
+            parent: ProfileModel,
+            collectionProps: [
+                'content'
+            ]
+        });
+        
+        const john = await ProfileModel.writeToID('john', { displayName: 'john' });
+
+        john.subcollections.messages.addListenerByID('TestListener', 'john', (doc) => {});
+        try {
+            john.subcollections.messages.addListenerByID('TestListener', 'john', (doc) => {});
+            expect(false).to.equal(true);
+        } catch (err) {
+            expect(true).to.equal(true);
+        }
+    });
 
 });

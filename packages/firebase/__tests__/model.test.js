@@ -482,6 +482,8 @@ describe('Model', () => {
     });
 
     it('can subscribe to changes on a specific document', async () => {
+        const deferred = new Deferred();
+
         const ProfileModel = new Model({
             collectionName: 'profiles',
             collectionProps: [
@@ -495,7 +497,7 @@ describe('Model', () => {
             (doc) => {
                 if (doc?.displayName === 'Joey') {
                     ProfileModel.removeListener('TestListener');
-                    expect(true).to.equal(true);
+                    deferred.resolve();
                 }
             }
         );
@@ -509,6 +511,9 @@ describe('Model', () => {
             'john',
             { displayName: 'Joey' }
         );
+
+        await deferred.promise;
+        expect(true).to.equal(true);
     });
 
     it('can remove a registered listener', async () => {
@@ -584,6 +589,7 @@ describe('Model', () => {
     });
 
     it('can register query listeners', async () => {
+        const deferred = new Deferred();
         const readings = [];
 
         const ProfileModel = new Model({
@@ -604,13 +610,9 @@ describe('Model', () => {
             ],
             (docs) => {
                 readings.push(map(docs, 'displayName'));
-                if (readings.length === 4) {
-                    expect(readings).to.deep.equal([
-                        [],
-                        ['john'],
-                        ['john', 'joey'],
-                        ['joey'],
-                    ]);
+                if (readings.length === 3) {
+                    ProfileModel.removeAllListeners();
+                    deferred.resolve();
                 }
             }
         );
@@ -640,6 +642,30 @@ describe('Model', () => {
             }
         );
         await ProfileModel.deleteByID('john');
+
+        await deferred.promise;
+        expect(readings).to.deep.equal([
+            ['john'],
+            ['joey', 'john'],
+            ['joey'],
+        ]);
+    });
+
+    it('throws an error if a listener name is already taken when attempting to create a new listener', async () => {
+        const ProfileModel = new Model({
+            collectionName: 'profiles',
+            collectionProps: [
+                'displayName',
+            ]
+        });
+
+        ProfileModel.addListenerByID('TestListener', 'john', (doc) => {});
+        try {
+            ProfileModel.addListenerByID('TestListener', 'john', (doc) => {});
+            expect(false).to.equal(true);
+        } catch (err) {
+            expect(true).to.equal(true);
+        }
     });
 
 });
