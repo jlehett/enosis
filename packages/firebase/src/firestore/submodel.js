@@ -16,6 +16,7 @@ import {
     query,
     deleteDoc,
     collectionGroup,
+    onSnapshot,
 } from 'firebase/firestore';
 import { map } from 'lodash';
 
@@ -44,6 +45,7 @@ class Submodel {
 
         // Create class variables
         this.subcollections = {};
+        this.listeners = {};
 
         // Store some info for the SubmodelInstance factory function
         this.collectionName = params.collectionName;
@@ -283,6 +285,143 @@ class Submodel {
         }
     }
 
+    /**
+     * Register a listener for a specific document. The listener is stored on the model or submodel
+     * itself, and can be removed by calling either the `removeListener` or `removeAllListeners`
+     * functions.
+     * @public
+     * @function
+     * 
+     * @param {string} nameOfListener The name to give to the listener during registration; used to
+     * reference the listener when you need to delete it later
+     * @param {string} path The path to the document to register the listener for
+     * @param {function} fn The callback function for the listener; should accept the sanitized
+     * document (with `_ref` and `subcollections` attached to it) as its param
+     */
+    addListenerByPath(nameOfListener, path, fn) {
+        this._validateListenerNameNotTaken(nameOfListener);
+        this._verifyPathIncludesSubmodelCollectionName(path);
+        // Create the document reference
+        const { id, collectionPath } = this._getCollectionPathAndIDFromPath(path);
+        const collectionRef = createCollectionRefWithPath(collectionPath);
+        const docRef = doc(collectionRef, id);
+        // Register the listener
+        this.listeners[nameOfListener] = onSnapshot(
+            docRef,
+            (docSnapshot) => {
+                const sanitizedData = this.sanitizer.sanitizeFromRead(docSnapshot);
+                if (sanitizedData) {
+                    // For each subcollection registered to the model instance, create
+                    // and attach submodel instances for reference
+                    attachSubmodelInstanceReferencesToFetchedData(sanitizedData, this.subcollections);
+                }
+                fn(sanitizedData);
+            }
+        );
+    }
+
+    /**
+     * Register a listener for multiple documents in a specific subcollection instance, given a query.
+     * The listener is stored on the model or submodel itself, and can be removed by calling either the
+     * `removeListener` or `removeAllListeners` functions.
+     * @public
+     * @function
+     * 
+     * @param {string} nameOfListener The name to give to the listener during registration; used to
+     * reference the listener when you need to delete it later
+     * @param {string} path The path to the specific subcollection instance to register the listener for
+     * @param {function[]} queryFns Array of Firestore query functions to use in the query, e.g., `limit`,
+     * `orderBy`, and `where`
+     * @param {function} fn The callback function for the listener; should accept the sanitized document
+     * array (with `_ref` and `subcollections` attached to each sanitized document in the array) as its
+     * param
+     */
+    addListenerByQueryInInstance(nameOfListener, path, queryFns, fn) {
+        this._validateListenerNameNotTaken(nameOfListener);
+        this._verifyPathIncludesSubmodelCollectionName(path);
+        // Create the query function
+        const collectionRef = createCollectionRefWithPath(path);
+        const q = query(collectionRef, ...queryFns);
+        // Register the listener
+        this.listeners[nameOfListener] = onSnapshot(
+            q,
+            (querySnapshot) => {
+                const sanitizedDocuments = this.sanitizer.sanitizeFromRead(querySnapshot);
+                // For each document, and for each subcollection specified for the model, create and
+                // attach submodel instances for reference
+                map(
+                    sanitizedDocuments,
+                    doc => attachSubmodelInstanceReferencesToFetchedData(doc, this.subcollections)
+                );
+                fn(sanitizedDocuments);
+            }
+        );
+    }
+
+    /**
+     * Register a listener for multiple documents in a subcollection group, given a query. The listener
+     * is stored on the model or submodel itself, and can be removed by calling either the
+     * `removeListener` or `removeAllListeners` functions.
+     * @public
+     * @function
+     * 
+     * @param {string} nameOfListener The name to give to the listener during registration; used to
+     * reference the listener when you need to delete it later
+     * @param {function[]} queryFns Array of Firestore query functions to use in the query, e.g., `limit`,
+     * `orderBy`, and `where`
+     * @param {function} fn The callback function for the listener; should accept the sanitized document
+     * array (with `_ref` and `subcollections` attached to each sanitized document in the array) as its
+     * param
+     */
+    addListenerByQuery(nameOfListener, queryFns, fn) {
+        this._validateListenerNameNotTaken(nameOfListener);
+        // Create the query function
+        const collectionGroupRef = collectionGroup(getDB(), this.collectionName);
+        const q = query(collectionGroupRef, ...queryFns);
+        // Register the listener
+        this.listeners[nameOfListener] = onSnapshot(
+            q,
+            (querySnapshot) => {
+                const sanitizedDocuments = this.sanitizer.sanitizeFromRead(querySnapshot);
+                // For each document, and for each subcollection specified for the model, create and
+                // attach submodel instances for reference
+                map(
+                    sanitizedDocuments,
+                    doc => attachSubmodelInstanceReferencesToFetchedData(doc, this.subcollections)
+                );
+                fn(sanitizedDocuments);
+            }
+        );
+    }
+
+    /**
+     * Removes a specified listener from the submodel.
+     * @public
+     * @function
+     * 
+     * @param {string} nameOfListener The name of the listener to remove from the submodel
+     * @throws {Error} Thrown if a non-existent listener is attempted to be removed 
+     */
+    removeListener(nameOfListener) {
+        if (this.listeners[nameOfListener]) {
+            this.listeners[nameOfListener]();
+            delete this.listeners[nameOfListener];
+        } else {
+            throw new Error(`Attempted to remove non-existent listener, ${nameOfListener}.`);
+        }
+    }
+
+    /**
+     * Removes all listeners from the submodel.
+     * @public
+     * @function
+     */
+    removeAllListeners() {
+        for (let nameOfListener of Object.keys(this.listeners)) {
+            this.removeListener(nameOfListener);
+        }
+    }
+
     /***********************
      * PROTECTED FUNCTIONS *
      ***********************/
@@ -375,6 +514,19 @@ class Submodel {
             id,
             collectionPath
         };
+    }
+
+    /**
+     * Validates that the listener name is not already taken by another active listener.
+     * @private
+     * @function
+     * 
+     * @param {string} nameOfListener The listener name to validate
+     */
+    _validateListenerNameNotTaken(nameOfListener) {
+        if (this.listeners[nameOfListener]) {
+            throw new Error(`Listener with name, ${nameOfListener}, already exists.`);
+        }
     }
 }
 
