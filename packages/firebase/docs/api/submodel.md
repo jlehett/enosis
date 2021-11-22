@@ -392,3 +392,147 @@ ProfileEmailsModel.deleteByPath('profiles/john/emails/gmail');
 const autobatcher = new Autobatcher();
 ProfileEmailsModel.deleteByPath('profiles/john/emails/gmail', { autobatcher });
 ```
+
+#### addListenerByPath(nameOfListener, path, fn)
+
+Register a listener for a specific document. The listener is stored on the submodel itself, and can be removed by calling either the `removeListener` or `removeAllListeners` functions for this submodel class instance.
+
+Throws an error if the name for the listener is already taken by another active listener on the submodel class instance.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
+| path | string | The path to the document to register the listener for. |
+| fn | function | The callback function for the listener; should accept the sanitized document (with `_ref` and `subcollections` attached to it) as its param. |
+
+##### Example
+
+```js
+/**
+ * Registers a listener on the document at path, `profiles/john/messages/1`. The listener callback
+ * specifies that we want to log the new `displayName` for the doc.
+ */
+MessagesModel.addListenerByPath(
+    'TestListener',
+    'profiles/john/messages/1',
+    (doc) => {
+        console.log(doc.content);
+    }
+);
+```
+
+#### addListenerByQueryInInstance(nameOfListener, path, queryFns, fn)
+
+Register a listener for multiple documents in a specific subcollection instance, given a query. The listener is stored on the submodel itself, and can be removed by calling either the `removeListener` or `removeAllListeners` functions.
+
+Throws an error if the name for the listener is already taken by another active listener on the submodel class instance.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
+| path | string | The path to the specific subcollection instance to register the listener for. |
+| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. |
+| fn | function | The callback function for the listener; should accept the sanitized document array (with `_ref` and `subcollections` attached to each sanitized document in the array) as its param. |
+
+##### Example
+
+```js
+/**
+ * Registers a query listener for the subcollection instance at path, `profiles/john/messages`. The
+ * listener callback specifies that we want to log all docs matching the query whenever ANY doc matching
+ * that query is added, removed, or changed.
+ */
+MessagesModel.addListenerByQueryInInstance(
+    'TestListener',
+    'profiles/john/messages',
+    [
+        where('posted', '==', true),
+        where('content', '==', 'Hello World!'),
+        orderBy('userPosted'),
+    ],
+    (docs) => {
+        for (let doc of docs) {
+            console.log(`${doc.id}`);
+        }
+    }
+);
+```
+
+#### addListenerByQuery(nameOfListener, queryFns, fn)
+
+Register a listener for multiple documents in a subcollection group, given a query. The listener is stored on the submodel itself, and can be removed by calling either the `removeListener` or `removeAllListeners` functions.
+
+Throws an error if the name for the listener is already taken by another active listener on the submodel class instance.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
+| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. |
+| fn | function | The callback function for the listener; should accept the sanitized document array (with `_ref` and `subcollections` attached to each sanitized document in the array) as its param. |
+
+##### Example
+
+```js
+/**
+ * Registers a query listener for the subcollection as a whole. The listener callback specifies that we
+ * want to log all docs matching the query whenever ANY doc matching that query is added, removed, or
+ * changed.
+ */
+MessagesModel.addListenerByQuery(
+    'TestListener',
+    [
+        where('posted', '==', true),
+        where('content', '==', 'Hello World!'),
+        orderBy('userPosted'),
+    ],
+    (docs) => {
+        for (let doc of docs) {
+            console.log(`${doc.id}`);
+        }
+    }
+);
+```
+
+#### removeListener(nameOfListener)
+
+Removes a specified listener from the submodel. Throws an error if the listener does not exist.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name of the listener to remove. |
+
+##### Example
+
+```js
+/**
+ * Removes the `TestListener` listener from the Messages submodel, if it exists.
+ */
+MessagesModel.removeListener('TestListener');
+```
+
+#### removeAllListeners()
+
+Removes all listeners from the submodel.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| \- | \- | \- |
+
+##### Example
+
+```js
+/**
+ * Removes all listeners from the Messages model.
+ */
+MessagesModel.removeAllListeners();
+```

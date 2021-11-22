@@ -210,6 +210,8 @@ const matchingGroups = await johnProfile.subcollections.groups.getByQuery([
 
 ### deleteByID(id, params)
 
+Deletes a document from Firestore, given its ID.
+
 #### Arguments
 
 | Argument | Type | Description |
@@ -240,4 +242,111 @@ ProfileModel.deleteByID('john');
  */
 const autobatcher = new Autobatcher();
 ProfileModel.deleteByID('john', { autobatcher });
+```
+
+### addListenerByID(nameOfListener, id, fn)
+
+Add a realtime listener for changes on a specific document, given an ID. The listener references are stored in the model or submodel class instance, and can be removed via the `removeListener` or `removeAllListeners` functions on that model or submodel class instance.
+
+Throws an error if the name for the listener is already taken by another active listener on the model or submodel class instance.
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener| string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
+| id | string | The ID of the document to register the listener for. |
+| fn | function | The callback function for the listener; should accept the sanitized document (with `_ref` and `subcollections` attached to it) as its param. |
+
+#### Example
+
+```js
+/**
+ * Registers a listener on the Profile model for any changes on a document with ID, `john`, in the
+ * profiles collection. The listener callback specifies that we want to log the new `displayName` for the
+ * doc.
+ */
+ProfileModel.addListenerByID(
+    'TestListener',
+    'john',
+    (doc) => {
+        console.log(doc.displayName);
+    }
+);
+```
+
+### addListenerByQuery(nameOfListener, queryFns, fn)
+
+Add a realtime listener for changes on any documents in the collection or subcollection instance matching the specified query functions. The listener references are stored in the model or submodel class instance, and can be removed via the `removeListener` or `removeAllListeners` functions on that model or submodel class instance.
+
+Throws an error if the name of the listener is already taken by another active listener on the model or submodel class instance.
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener| string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. 
+| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. |
+| fn | function | The callback function for the listener; should accept the sanitized document (with `_ref` and `subcollections` attached to it) as its param. |
+
+#### Example
+
+```js
+/**
+ * Registers a listener on the Profile model for any changes on documents in the profiles collection
+ * where the display name is equal to `John` and its `active` property is set to `true`. The listener
+ * callback specifies that we want to log the IDs of all docs matching the query whenever ANY docs that
+ * match that query are added, removed, or changed.
+ */
+ProfileModel.addListenerByQuery(
+    'TestListener',
+    [
+        where('displayName', '==', 'John'),
+        where('active', '==', true),
+        orderBy('displayName'),
+    ],
+    (docs) => {
+        for (let doc of docs) {
+            console.log(`${doc.id}`);
+        }
+    }
+);
+```
+
+### removeListener(nameOfListener)
+
+Removes a specified listener from the model. Throws an error if the listener does not exist.
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name of the listener to remove. |
+
+#### Example
+
+```js
+/**
+ * Removes the `TestListener` listener from the Profile model, if it exists.
+ */
+ProfileModel.removeListener('TestListener');
+```
+
+### removeAllListeners()
+
+Removes all listeners from the model.
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| \- | \- | \- |
+
+#### Example
+
+```js
+/**
+ * Removes all listeners from the Profile model.
+ */
+ProfileModel.removeAllListeners();
 ```
