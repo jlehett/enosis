@@ -12,6 +12,7 @@
   "license": "ISC",
   "main": "lib/index.js",
   "exports": {
+    ".": "./lib/index.js",
     "./firestore": "./lib/firestore/index.js"
   },
   "directories": {
@@ -30,7 +31,7 @@
     "prepublishOnly": "npm run test"
   },
   "dependencies": {
-    "@unifire-js/async": "^0.0.11-alpha.0",
+    "@unifire-js/async": "0.0.11",
     "core-js": "3.18.2",
     "firebase": "9.1.2",
     "lodash": "4.17.21",
@@ -50,5 +51,5 @@
   "bugs": {
     "url": "https://github.com/jlehett/unifire-js/issues"
   },
-  "gitHead": "b59c5a7188e3722da94b0d5af255cd725b708f1b"
+  "gitHead": "4f3904b0ba99f1860b12dcf521d80a93e4b42f5f"
 }

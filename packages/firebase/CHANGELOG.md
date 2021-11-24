@@ -1,5 +1,11 @@
 # @unifire-js/firebase
 
+## 1.0.2
+
+<i>Nov 24, 2021</i>
+
+* 🛠️ REALLY fixed the package exports!
+
 ## 1.0.1
 
 <i>Nov 24, 2021</i>
