@@ -1,6 +1,6 @@
 {
   "name": "@unifire-js/firebase",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Uniform solutions for Firebase integrations.",
   "author": "Tanner Lehett <johntannerlehett@gmail.com>",
   "homepage": "https://github.com/jlehett/unifire-js/blob/master/packages/firebase/README.md",
@@ -30,7 +30,7 @@
     "prepublishOnly": "npm run test"
   },
   "dependencies": {
-    "@unifire-js/async": "^0.0.10",
+    "@unifire-js/async": "^0.0.11-alpha.0",
     "core-js": "3.18.2",
     "firebase": "9.1.2",
     "lodash": "4.17.21",
