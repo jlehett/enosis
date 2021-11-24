@@ -1,8 +1,14 @@
 # @unifire-js/firebase
 
+## 1.0.1
+
+<i>Nov 24, 2021</i>
+
+* 🛠️ Fixed package exports to properly export the `@unifire-js/firebase/firestore` route!
+
 ## 1.0.0
 
-<i>Nov, 21, 2021</i>
+<i>Nov 21, 2021</i>
 
 **🎉 @unifire-js/firebase v1.0.0 released! 🎉**
 
