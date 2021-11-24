@@ -1,5 +1,11 @@
 # @unifire-js/categorized-errors
 
+## 0.0.11
+
+<i>Nov 24, 2021</i>
+
+* 🛠️ Fixed some package imports!
+
 ## 0.0.10
 
 <i>Nov 20, 2021</i>

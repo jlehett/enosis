@@ -1,6 +1,6 @@
 {
   "name": "@unifire-js/categorized-errors",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Uniform solutions for error handling.",
   "author": "Tanner Lehett <johntannerlehett@gmail.com>",
   "homepage": "https://github.com/jlehett/unifire-js/blob/master/packages/categorized-errors/README.md",
@@ -48,5 +48,5 @@
   "bugs": {
     "url": "https://github.com/jlehett/unifire-js/issues"
   },
-  "gitHead": "531bacc6ec1a51937d9e0059cb4c70d768971a0a"
+  "gitHead": "4f3904b0ba99f1860b12dcf521d80a93e4b42f5f"
 }
