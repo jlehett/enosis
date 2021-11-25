@@ -1,0 +1,49 @@
+{
+  "name": "@unifire-js/storybook-utils",
+  "version": "0.0.1",
+  "description": "Uniform solutions for Storybook utilities.",
+  "keywords": [
+    "storybook",
+    "utility",
+    "reusable-components",
+    "ui"
+  ],
+  "author": "Tanner Lehett <johntannerlehett@gmail.com>",
+  "homepage": "https://github.com/jlehett/unifire-js#readme",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+      "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jlehett/unifire-js.git"
+  },
+  "scripts": {
+    "build": "npx babel src --out-dir lib",
+    "test": "npm run build && mocha -r @babel/register __tests__",
+    "prepublishOnly": "npm run test"
+  },
+  "bugs": {
+    "url": "https://github.com/jlehett/unifire-js/issues"
+  },
+  "dependencies": {
+    "core-js": "3.18.2",
+    "lodash": "4.17.21",
+    "regenerator-runtime": "0.13.9"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.15.7",
+    "@babel/core": "7.15.8",
+    "@babel/preset-env": "7.15.8",
+    "@babel/register": "7.16.0",
+    "mocha": "9.1.3"
+  }
+}
