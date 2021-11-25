@@ -13,3 +13,5 @@ setFirebaseApp(firebaseApp);
 ```
 
 We can now freely use the `@unifire-js/firebase` package throughout our app! It will automatically pull in the set Firebase app when it needs it.
+
+**Note**: It is very important that the version of the Firebase SDK used in your project, and this package, are the same. Make sure to verify this during installation and setup!
