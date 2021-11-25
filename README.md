@@ -12,6 +12,8 @@ For the full list of packages offered by `@unifire-js`, please see below:
     * <i>Uniform solutions for error handling.</i>
 * [firebase](/packages/firebase)
     * <i>Uniform solutions for Firebase integrations.</i>
+* [storybook-utils](/packages/storybook-utils)
+    * <i>Uniform solutions for Storybook utilities.</i>
 
 ## Testing
 
