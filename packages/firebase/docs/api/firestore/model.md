@@ -63,7 +63,7 @@ By default, these default prop values will <i>not</i> be merged into any sanitiz
 
 ### Model Instance Operations
 
-Models inherit from the [`ModelInstanceOperations`](/packages/firebase/docs/api/model-instance-operations.md) class, which exposes an API for writing and reading data from the collection the model represents.
+Models inherit from the [`ModelInstanceOperations`](/packages/firebase/docs/api/firestore/model-instance-operations.md) class, which exposes an API for writing and reading data from the collection the model represents.
 
 ## API
 
@@ -84,4 +84,4 @@ Models inherit from the [`ModelInstanceOperations`](/packages/firebase/docs/api/
 
 ### Methods
 
-See the [`ModelInstanceOperations`](/packages/firebase/docs/api/model-instance-operations.md) API for additional methods that `Model` inherits.
+See the [`ModelInstanceOperations`](/packages/firebase/docs/api/firestore/model-instance-operations.md) API for additional methods that `Model` inherits.

@@ -9,7 +9,7 @@ import {
     Submodel,
     runTransaction,
 } from '../lib/firestore';
-import SubmodelInstance from '../lib/firestore/submodel-instance';
+import SubmodelInstance from '../lib/firestore/submodel-instance/submodel-instance';
 import {
     where,
     orderBy,
@@ -18,7 +18,7 @@ import {
 import setUpEmulator from './utilities/set-up-emulator';
 import clearEmulatorData from './utilities/clear-emulator-data';
 import freeAppResources from './utilities/free-app-resources';
-import { Deferred } from '../../async/lib';
+import { Deferred } from '@unifire-js/async';
 
 describe('Model', () => {
 

@@ -1,16 +1,16 @@
-import Sanitizer from './utilities/sanitization';
+import Sanitizer from '../utilities/sanitization';
 import {
     registerSubcollection,
     createCollectionRef,
-} from './utilities/referencing';
-import ModelInstanceOperations from './utilities/model-instance-operations';
+} from '../utilities/referencing';
+import ModelInstanceOperations from '../utilities/model-instance-operations';
 
 /**
  * Class which provides a streamlined approach for creating Firestore model
  * objects with various simplified read and write operations.
  * 
- * Before models are constructed, the firebase app in use should be tracked via
- * the `setFirebaseApp` function from this package.
+ * Before models are constructed, the Unifire Firebase app should be created via
+ * the `createUnifireFirebaseApp` function from this package.
  * 
  * @param {ModelParams} params The parameters to use when creating the model
  */

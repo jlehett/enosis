@@ -1,7 +1,7 @@
 import {
     createCollectionRef
-} from './utilities/referencing';
-import ModelInstanceOperations from './utilities/model-instance-operations';
+} from '../utilities/referencing';
+import ModelInstanceOperations from '../utilities/model-instance-operations';
 
 /**
  * Class which should ONLY be constructed via the Submodel's factory function.

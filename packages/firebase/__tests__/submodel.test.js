@@ -16,7 +16,7 @@ import {
     where,
     orderBy,
 } from 'firebase/firestore';
-import { Deferred } from '../../async/lib';
+import { Deferred } from '@unifire-js/async';
 
 describe('Submodel', () => {
 

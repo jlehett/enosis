@@ -72,9 +72,9 @@ By default, these default prop values will <i>not</i> be merged into any sanitiz
 
 ### Working with Submodels Directly
 
-Since, unlike collections, subcollections can have many different instances, each with a different parent document, `Submodel` does not expose the [`ModelInstanceOperations`](/packages/firebase/docs/api/model-instance-operations.md) API that `Model` does.
+Since, unlike collections, subcollections can have many different instances, each with a different parent document, `Submodel` does not expose the [`ModelInstanceOperations`](/packages/firebase/docs/api/firestore/model-instance-operations.md) API that `Model` does.
 
-To work with the `ModelInstanceOperations` API with subcollections, you would have to work with a [`SubmodelInstance`](/packages/firebase/docs/api/submodel-instance.md) object. These objects are attached automatically to any document references and sanitized document snapshots that are returned from the `ModelInstanceOperations` API methods or from the `Submodel` API methods as a `subcollections` property, which is a map of subcollection names to the corresponding `SubmodelInstance` object.
+To work with the `ModelInstanceOperations` API with subcollections, you would have to work with a [`SubmodelInstance`](/packages/firebase/docs/api/firestore/submodel-instance.md) object. These objects are attached automatically to any document references and sanitized document snapshots that are returned from the `ModelInstanceOperations` API methods or from the `Submodel` API methods as a `subcollections` property, which is a map of subcollection names to the corresponding `SubmodelInstance` object.
 
 ## API
 
@@ -110,7 +110,7 @@ If the `mergeWithDefaultValues` flag is not set, any default values specified by
 | params | Object | (opt.) Object specifying various settings for the operation. |
 | params.mergeWithDefaultValues | boolean | (opt.) If set to true, any data that is missing from `data` will be set to use the corresponding collection property default value specified by the `propDefaults` property in the `Submodel` constructor. |
 | params.transaction | [Firestore.Transaction](https://firebase.google.com/docs/reference/js/firestore_.transaction) | (opt.) A Firestore transaction for the operation to use. |
-| params.autobatcher | [Autobatcher](/packages/firebase/docs/api/autobatcher.md) | (opt.) An autobatcher used to automatically batch Firestore write operations into set chunk sizes. |
+| params.autobatcher | [Autobatcher](/packages/firebase/docs/api/firestore/autobatcher.md) | (opt.) An autobatcher used to automatically batch Firestore write operations into set chunk sizes. |
 
 ##### Return Value
 
@@ -180,7 +180,7 @@ If the `mergeWithDefaultValues` flag is not set, any default values specified by
 | params.mergeWithExistingValues | boolean | (opt.) If set to true, any data already found in the specified document will be merged with the new data. This applies after `mergeWithDefaultValues` does, if both are set. |
 | params.mergeWithDefaultValues | boolean | (opt.) If set to true, any data that is missing from `data` will be set to use the corresponding collection property default value specified by the `propDefaults` property in the `Submodel` constructor. |
 | params.transaction | [Firestore.Transaction](https://firebase.google.com/docs/reference/js/firestore_.transaction) | (opt.) A Firestore transaction for the operation to use. |
-| params.autobatcher | [Autobatcher](/packages/firebase/docs/api/autobatcher.md) | (opt.) An autobatcher used to automatically batch Firestore write operations into set chunk sizes. |
+| params.autobatcher | [Autobatcher](/packages/firebase/docs/api/firestore/autobatcher.md) | (opt.) An autobatcher used to automatically batch Firestore write operations into set chunk sizes. |
 
 ##### Return Value
 
@@ -283,7 +283,7 @@ Retrieves all documents from the database matching the specified query parameter
 | Argument | Type | Description |
 | --- | --- | --- |
 | path | string | The path to the specific subcollection instance to run the query inside of. |
-| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. |
+| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
 
 ##### Return Value
 
@@ -302,7 +302,7 @@ import {
     limit,
     orderBy,
     where,
-} from 'firebase/firestore';
+} from '@unifire-js/firebase/firestore';
 
 /**
  * Find all groups that match the given query in the document with ID,
@@ -326,7 +326,7 @@ Retrieves all documents from the database matching the specified query parameter
 
 | Argument | Type | Description |
 | --- | --- | --- |
-| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. |
+| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
 
 ##### Return Value
 
@@ -345,7 +345,7 @@ import {
     limit,
     orderBy,
     where,
-} from 'firebase/firestore';
+} from '@unifire-js/firebase/firestore';
 
 /**
  * Find all groups that match the given query.
@@ -368,7 +368,7 @@ Deletes a document from the database, given the path to the document.
 | path | string | The path to the document to delete. |
 | params | Object | (opt.) Object specifying various settings for the operation. |
 | params.transaction | [Firestore.Transaction](https://firebase.google.com/docs/reference/js/firestore_.transaction) | (opt.) A Firestore transaction for the operation to use. |
-| params.autobatcher | [Autobatcher](/packages/firebase/docs/api/autobatcher.md) | (opt.) An autobatcher used to automatically batch Firestore write operations into set chunk sizes. |
+| params.autobatcher | [Autobatcher](/packages/firebase/docs/api/firestore/autobatcher.md) | (opt.) An autobatcher used to automatically batch Firestore write operations into set chunk sizes. |
 
 ##### Return Value
 
@@ -435,12 +435,17 @@ Throws an error if the name for the listener is already taken by another active 
 | --- | --- | --- |
 | nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
 | path | string | The path to the specific subcollection instance to register the listener for. |
-| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. |
+| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
 | fn | function | The callback function for the listener; should accept the sanitized document array (with `_ref` and `subcollections` attached to each sanitized document in the array) as its param. |
 
 ##### Example
 
 ```js
+import {
+    where,
+    orderBy
+} from '@unifire-js/firebase/firestore';
+
 /**
  * Registers a query listener for the subcollection instance at path, `profiles/john/messages`. The
  * listener callback specifies that we want to log all docs matching the query whenever ANY doc matching
@@ -473,12 +478,17 @@ Throws an error if the name for the listener is already taken by another active 
 | Argument | Type | Description |
 | --- | --- | --- |
 | nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
-| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. |
+| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
 | fn | function | The callback function for the listener; should accept the sanitized document array (with `_ref` and `subcollections` attached to each sanitized document in the array) as its param. |
 
 ##### Example
 
 ```js
+import {
+    where,
+    orderBy
+} from '@unifire-js/firebase/firestore';
+
 /**
  * Registers a query listener for the subcollection as a whole. The listener callback specifies that we
  * want to log all docs matching the query whenever ANY doc matching that query is added, removed, or

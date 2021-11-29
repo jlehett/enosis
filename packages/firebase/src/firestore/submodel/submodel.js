@@ -4,10 +4,10 @@ import {
     attachSubmodelInstanceReferencesToDocRef,
     attachSubmodelInstanceReferencesToFetchedData,
     getDB,
-} from './utilities/referencing';
-import Sanitizer from './utilities/sanitization';
-import SubmodelInstance from './submodel-instance';
-import Model from './model';
+} from '../utilities/referencing';
+import Sanitizer from '../utilities/sanitization';
+import SubmodelInstance from '../submodel-instance/submodel-instance';
+import Model from '../model/model';
 import {
     getDoc,
     setDoc,
@@ -24,8 +24,8 @@ import { map } from 'lodash';
  * Class which provides a streamlined approach for creating Firestore
  * submodel objects with various simplified read and write operations.
  * 
- * Before submodels are constructed, the firebase app in use should be
- * tracked via the `setFirebaseApp` function from this package.
+ * Before submodels are constructed, the Unifire Firebase app should be created via
+ * the `createUnifireFirebaseApp` function from this package.
  * 
  * Submodels are unique in that each instance associates a particular
  * document as its parent. For this reason, the `Submodel` class is

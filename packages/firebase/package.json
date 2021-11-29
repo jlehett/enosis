@@ -13,7 +13,8 @@
   "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js",
-    "./firestore": "./lib/firestore/index.js"
+    "./firestore": "./lib/firestore/index.js",
+    "./auth": "./lib/auth/index.js"
   },
   "directories": {
     "lib": "lib",
@@ -41,8 +42,12 @@
     "@babel/cli": "7.15.7",
     "@babel/core": "7.15.8",
     "@babel/preset-env": "7.15.8",
+    "@babel/preset-react": "7.16.0",
     "@babel/register": "7.16.0",
     "mocha": "9.1.3"
+  },
+  "peerDependencies": {
+    "react": "17.x"
   },
   "repository": {
     "type": "git",
