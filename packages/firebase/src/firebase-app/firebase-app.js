@@ -1,51 +1,30 @@
-let _this;
+import { initializeApp } from 'firebase/app';
 
 /**
- * Stores the Firebase App reference to use throughout the @unifire-js/firebase
- * package.
+ * Storage of the Unifire Firebase app.
+ * @type {Firebase.App | null}
  */
-class FirebaseAppUnifireConfig {
-    constructor() {
-        this.firebaseApp = null;
-        _this = this;
-    }
+let unifireFirebaseApp = null;
 
-    /**
-     * Set the firebase app reference to use in all of the utility functions
-     * provided by this package.
-     * @public
-     * @function
-     * 
-     * @param {FirebaseApp} firebaseApp The firebase reference to use in all of the
-     * utility functions provided by this package
-     */
-    setFirebaseApp(firebaseApp) {
-        _this.firebaseApp = firebaseApp;
-    }
-
-    /**
-     * Get the firebase app reference to use in all of the utility functions
-     * provided by this package.
-     * @public
-     * @function
-     * 
-     * @returns {FirebaseApp} The firebase reference to use in all of the utility
-     * functions provided by this package
-     * @throws {Error} Throws error if `firebaseApp` has not been set via
-     * `setFirebaseApp` yet
-     */
-    getFirebaseApp() {
-        if (_this.firebaseApp) {
-            return _this.firebaseApp;
-        } else {
-            throw new Error('`firebaseApp` needs to be set via `setFirebaseApp` before any utilities can be used from @unifire/firebase');
-        }
-    }
+/**
+ * Function to create the Unifire Firebase App for use throughout the package.
+ * 
+ * @param {Object} FIREBASE_CONFIG Object defining the necessary keys for the Firebase App to be created
+ */
+export function createUnifireFirebaseApp(FIREBASE_CONFIG) {
+    unifireFirebaseApp = initializeApp(FIREBASE_CONFIG);
 }
 
-const firebaseAppUnifireConfig = new FirebaseAppUnifireConfig();
-const setFirebaseApp = firebaseAppUnifireConfig.setFirebaseApp;
-const getFirebaseApp = firebaseAppUnifireConfig.getFirebaseApp;
-
-export { setFirebaseApp };
-export { getFirebaseApp };
+/**
+ * Returns the current Unifire Firebase app, if one has been created. Otherwise, throws an error.
+ * 
+ * @returns {Firebase.App} Returns the current Unifire Firebase app
+ * @throws {Error} Thrown if a Unifire Firebase App has not been created yet
+ */
+export function getUnifireFirebaseApp() {
+    if (unifireFirebaseApp) {
+        return unifireFirebaseApp;
+    } else {
+        throw new Error('The Unifire Firebase App needs to be created via `createUnifireFirebaseApp` before any utilities can be used from @unifire/firebase');
+    }
+}

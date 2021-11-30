@@ -1,17 +1,17 @@
 # Setting Up
 
-Before we can begin to use the full extent of this package's API, we must declare the Firebase app we are using.
+Before we can begin to use the full extent of this package's API, we must first create a new Firebase app for this package to use. This avoids any peer dependency headaches caused by the way Firebase register Firestore components.
 
-Typically, the Firebase app is initialized in it's own file, which is imported very early in the app's codebase. We can add a few lines to set the `@unifire-js/firebase` package to use the initialized app:
+Typically, the Firebase app is initialized in its own file, which is imported very early in the app's codebase. We can add a few lines to create the Unifire Firebase app as well:
 
 ```js
 import { initializeApp } from 'firebase/app';
-import { setFirebaseApp } from '@unifire-js/firebase';
+import { createUnifireFirebaseApp } from '@unifire-js/firebase';
 
 const firebaseApp = initializeApp(FIREBASE_CONFIG);
-setFirebaseApp(firebaseApp);
+createUnifireFirebaseApp(FIREBASE_CONFIG);
 ```
 
 We can now freely use the `@unifire-js/firebase` package throughout our app! It will automatically pull in the set Firebase app when it needs it.
 
-**Note**: It is very important that the version of the Firebase SDK used in your project, and this package, are the same. Make sure to verify this during installation and setup!
+As a note, if you find that you do not need any functionality from the base `firebase` package, you can skip the initialization of the local reference and just create the Unifire Firebase app reference!s
