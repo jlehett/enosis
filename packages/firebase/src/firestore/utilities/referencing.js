@@ -2,7 +2,7 @@ import {
     collection,
     getFirestore
 } from 'firebase/firestore';
-import { getFirebaseApp } from '../../firebase-app/firebase-app';
+import { getUnifireFirebaseApp } from '../../firebase-app/firebase-app';
 
 /**
  * Returns the Firestore database reference.
@@ -11,7 +11,7 @@ import { getFirebaseApp } from '../../firebase-app/firebase-app';
  * reference
  */
 export function getDB() {
-    return getFirestore(getFirebaseApp());
+    return getFirestore(getUnifireFirebaseApp());
 }
 
 /**

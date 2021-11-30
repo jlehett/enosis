@@ -1,5 +1,24 @@
 # @unifire-js/firebase
 
+## 2.0.0
+
+<i>Nov 29, 2021</i>
+
+**🎉 @unifire-js/firebase v2.0.0 released! 🎉**
+
+* **\[!BREAKING CHANGES!\]** 🔧 Developer now create a separate "Unifire" Firebase app reference as opposed to passing an already-created reference to the package.
+    * This fixed issues caused by `firebase/firestore` registration logic.
+
+### `unifire-js/firebase/auth`
+
+* 🚀 `auth` submodule released!
+* 🧍 React hooks for creating and using an automatically updating auth user context added!
+* 📦 Support for defining middleware to keep other values in the auth user context updated automatically on auth changes added!
+
+### `unifire-js/firebase/firestore`
+
+* **\[!BREAKING CHANGES!\]** 🔧 Updated the `firestore` submodule to utilize the new separate "Unifire Firebase app" reference concept.
+
 ## 1.0.2
 
 <i>Nov 24, 2021</i>
@@ -45,9 +64,9 @@
 
 ### `@unifire-js/firebase/firestore`
 
-* 🤖 🎁 Add [`Autobatch`](/packages/firebase/docs/api/autobatcher.md) support!
-* 🗑 Add document deletion methods to the [`ModelInstanceOperations` API](/packages/firebase/docs/api/model-instance-operations.md) and to [`Submodel`](/packages/firebase/docs/api/submodel.md).
-* 🤝 Modify the `writeToNewDoc` methods for both the [`ModelInstanceOperations` API](/packages/firebase/docs/api/model-instance-operations.md) and [`Submodel`](/packages/firebase/docs/api/submodel.md) to support Firestore transactions.
+* 🤖 🎁 Add [`Autobatch`](/packages/firebase/docs/api/firestore/autobatcher.md) support!
+* 🗑 Add document deletion methods to the [`ModelInstanceOperations` API](/packages/firebase/docs/api/firestore/model-instance-operations.md) and to [`Submodel`](/packages/firebase/docs/api/firestore/submodel.md).
+* 🤝 Modify the `writeToNewDoc` methods for both the [`ModelInstanceOperations` API](/packages/firebase/docs/api/firestore/model-instance-operations.md) and [`Submodel`](/packages/firebase/docs/api/firestore/submodel.md) to support Firestore transactions.
 
 ## 0.0.8
 

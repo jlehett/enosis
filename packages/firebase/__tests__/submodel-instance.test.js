@@ -16,7 +16,7 @@ import {
 import clearEmulatorData from './utilities/clear-emulator-data';
 import setUpEmulator from './utilities/set-up-emulator';
 import freeAppResources from './utilities/free-app-resources';
-import { Deferred } from '../../async/lib';
+import { Deferred } from '@unifire-js/async';
 
 describe('Submodel Instance', () => {
 
