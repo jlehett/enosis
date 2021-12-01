@@ -1,8 +1,8 @@
 # @unifire-js/firebase
 
-## 2.1.0
+## 2.1.0-alpha.0
 
-<i>Unreleased</i>
+<i>Dec 1, 2021</i>
 
 ### `unifire-js/firebase/auth`
 
