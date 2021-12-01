@@ -1,6 +1,6 @@
 # @unifire-js/firebase
 
-## 2.1.0-alpha.0
+## 2.1.0
 
 <i>Dec 1, 2021</i>
 
