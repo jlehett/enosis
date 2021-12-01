@@ -28,7 +28,7 @@ const ExampleComponent = () => {
     // Redirect to the /unauthorized-access route whenever the user is
     // not signed in. This check will only be run once the user context
     // is fully loaded to prevent inaccurate results.
-    useRedirectOnAuthCondition(
+    const authorizationChecked = useRedirectOnAuthCondition(
         '/unauthorized-access',
         (userContext) => {
             // Return true if the user is not signed in; this will 
@@ -37,10 +37,12 @@ const ExampleComponent = () => {
         }
     );
 
-    return (
-        <div>
-            Example content.
-        </div>
-    );
+    // We want to display a loading state until the user's access has
+    // been authenticated
+    if (!authorizationChecked) {
+        return <div>Verifying...</div>;
+    } else {
+        return <div>Example content since you are verified!</div>;
+    }
 };
 ```
