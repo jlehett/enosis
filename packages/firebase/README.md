@@ -22,6 +22,7 @@ $ npm install @unifire-js/firebase
 
 * Auth
     * [User Context](/packages/firebase/docs/api/auth/user-context.md)
+    * [useRedirectOnAuthCondition](/packages/firebase/docs/api/auth/use-redirect-on-auth-condition.md)
     * [Middleware](/packages/firebase/docs/api/auth/middleware.md)
 * Firestore
     * [Model](/packages/firebase/docs/api/firestore/model.md)
