@@ -1,3 +1,4 @@
+export { default as useRedirectOnAuthCondition } from './auth-redirect/auth-redirect';
 export {
     useUserContextProvider,
     useUserContext,
