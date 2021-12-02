@@ -1,4 +1,3 @@
-
 /**
  * Exposes an interface for declaring middleware to be used during auth
  * state changes.
