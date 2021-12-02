@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 2.1.0
+
+<i>Dec 1, 2021</i>
+
+### `unifire-js/firebase/auth`
+
+* 🚂 Added the `useRedirectOnAuthCondition` React hook for automatic redirects based on auth user context changes.
+
 ## 2.0.0
 
 <i>Nov 29, 2021</i>
