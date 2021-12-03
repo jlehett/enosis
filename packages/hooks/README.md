@@ -12,5 +12,8 @@ $ npm install @unifire-js/hooks
 
 ## Documentation Links
 
-* [useTrackFunction](/packages/hooks/docs/use-track-function.md)
-* [useInterval](/packages/hooks/docs/use-interval.md)
+* Async
+    * [useTrackFunction](/packages/hooks/docs/async/use-track-function.md)
+    * [useInterval](/packages/hooks/docs/async/use-interval.md)
+* Redirect
+    * [useRedirectOnCondition](/packages/hooks/docs/redirect/use-redirect-on-condition.md)

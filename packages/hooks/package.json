@@ -1,6 +1,6 @@
 {
   "name": "@unifire-js/hooks",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Uniform solutions for React hooks.",
   "keywords": [
     "react",
@@ -37,7 +37,6 @@
   "dependencies": {
     "core-js": "3.18.2",
     "lodash": "4.17.21",
-    "react": "17.0.2",
     "regenerator-runtime": "0.13.9"
   },
   "devDependencies": {
@@ -46,5 +45,9 @@
     "@babel/preset-env": "7.15.8",
     "@babel/register": "7.16.0",
     "mocha": "9.1.3"
+  },
+  "peerDependencies": {
+    "react": "17.x",
+    "react-router-dom": "6.x"
   }
 }
