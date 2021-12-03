@@ -1,5 +1,17 @@
 # @unifire-js/hooks
 
+## 0.0.6
+
+<i>Dec 3, 2021</i>
+
+* 🛠️ Fix the `useRedirectOnCondition` hook.
+
+## 0.0.5
+
+<i>Dec 3, 2021</i>
+
+* ➡️ Add a `useRedirectOnCondition` hook!
+
 ## 0.0.4
 
 <i>Dec 3, 2021</i>
