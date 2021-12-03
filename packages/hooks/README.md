@@ -13,3 +13,4 @@ $ npm install @unifire-js/hooks
 ## Documentation Links
 
 * [useTrackFunction](/packages/hooks/docs/use-track-function.md)
+* [useInterval](/packages/hooks/docs/use-interval.md)
