@@ -1,6 +1,6 @@
 {
   "name": "@unifire-js/hooks",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Uniform solutions for React hooks.",
   "keywords": [
     "react",
@@ -28,7 +28,7 @@
   },
   "scripts": {
     "build": "npx babel src --out-dir lib",
-    "test": "echo \"Needs tests...\"",
+    "test": "npm run build && echo \"Needs tests...\"",
     "prepublishOnly": "npm run test"
   },
   "bugs": {
