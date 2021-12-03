@@ -6,6 +6,8 @@ import { useEffect } from 'react';
  * @property {number} period The time in milliseconds between each run of the passed-in function
  * @property {boolean} [runOnInitialization=false] Flag indicating whether the function should be run when the interval
  * is first initialized; otherwise, the first run of the function will occur after waiting for the defined period once
+ * @property {boolean} [awaitFnBeforeContinuingInterval=false] Flag indicating whether the function should be `await`'d
+ * before continuing with the interval 
  */
 
 /**
@@ -19,14 +21,35 @@ export default function(fn, config) {
     validateConfig(config);
 
     useEffect(() => {
-        // Run the function first if `runOnInitialization` is specified
+        // Track the setTimeout for clearing the active one later
+        let activeSetTimeout;
+
+        // Define the interval function
+        let intervalFn;
+        intervalFn = async () => {
+            // Run the function
+            if (config.awaitFnBeforeContinuingInterval) {
+                await fn();
+            } else {
+                fn();
+            }
+            // Set the timeout for the next run
+            activeSetTimeout = setTimeout(intervalFn, config.period);
+        };
+
+        // Either run the function immediately or after an initial timeout, depending on config
         if (config.runOnInitialization) {
-            fn();
+            intervalFn();
+        } else {
+            activeSetTimeout = setTimeout(intervalFn, config.period);
         }
-        // Create the interval
-        const interval = setInterval(fn, config.period);
-        // Return the cleanup for the interval
-        return () => clearInterval(interval);
+
+        // Return the cleanup for the interval (if an active timeout was present)
+        return () => {
+            if (activeSetTimeout) {
+                clearTimeout(activeSetTimeout);
+            }
+        };
     }, []);
 }
 

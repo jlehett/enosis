@@ -1,5 +1,12 @@
 # @unifire-js/hooks
 
+## 0.0.4
+
+<i>Dec 3, 2021</i>
+
+* 🛠️ Modify the `useInterval` hook's internal mechanism to use `setTimeout` instead of `setInterval`.
+* 🛠️ Add an additional `awaitFnBeforeContinuingInterval` config option to the `useInterval` hook.
+
 ## 0.0.3
 
 <i>Dec 3, 2021</i>
