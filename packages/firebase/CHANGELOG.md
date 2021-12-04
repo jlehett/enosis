@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 2.3.1
+
+<i>Dec 4, 2021</i>
+
+### `unifire-js/firebase/auth`
+
+* 🛠️ Wrap the `useUserContextProvider` provider function in a `useCallback` to stop unnecessary remounts.
+
 ## 2.3.0
 
 <i>Dec 4, 2021</i>

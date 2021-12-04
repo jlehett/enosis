@@ -3,6 +3,7 @@ import {
     useState,
     useContext,
     useEffect,
+    useCallback,
 } from 'react';
 import map from 'lodash/map';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -65,7 +66,7 @@ export function useUserContextProvider(middleware) {
     }, []);
 
     // Create the provider
-    const provider = ({children}) => {
+    const provider = useCallback(({children}) => {
         return (
             <UserContext.Provider
                 value={{
@@ -76,7 +77,7 @@ export function useUserContextProvider(middleware) {
                 {children}
             </UserContext.Provider>
         );
-    };
+    }, []);
 
     // Return the provider
     return provider;
