@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 2.3.4
+
+<i>Dec 4, 2021</i>
+
+### `unifire-js/firebase/auth`
+
+* 🛠️ Fix export.
+
 ## 2.3.3
 
 <i>Dec 4, 2021</i>
