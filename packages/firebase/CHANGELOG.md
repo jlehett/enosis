@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 2.2.0
+
+<i>Dec 3, 2021</i>
+
+### `unifire-js/firebase/firestore`
+
+* 👂 Add the `useListener` React hook!
+
 ## 2.1.0
 
 <i>Dec 1, 2021</i>
