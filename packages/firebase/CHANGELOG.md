@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 2.3.2
+
+<i>Dec 4, 2021</i>
+
+### `unifire-js/firebase/auth`
+
+* 🛠️ Modify the `useUserContextProvider` function to provide a different API to fix issues with constructing the Provider in a callback.
+
 ## 2.3.1
 
 <i>Dec 4, 2021</i>

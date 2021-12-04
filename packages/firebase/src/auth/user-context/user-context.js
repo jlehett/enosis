@@ -3,7 +3,6 @@ import {
     useState,
     useContext,
     useEffect,
-    useCallback,
 } from 'react';
 import map from 'lodash/map';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -34,12 +33,11 @@ const auth = getAuth(getUnifireFirebaseApp());
  ********************/
 
 /**
- * Function to create and use a UserContext provider, which
- * automatically updates the user context whenever auth state changes.
+ * Function to perform the setup necessary to construct a UserContext provider, which automatically
+ * updates the user context whenever auth state changes.
  * 
- * @returns {React.Context.Provider} The React UserContext Provider
- * which will automatically update the user context whenever an auth
- * event occurs
+ * @returns {[UserContext, userContextState, userContextSetState]} The variables necessary for
+ * constructing the UserContext Provider
  */
 export function useUserContextProvider(middleware) {
     // Create the state for the user context
@@ -65,22 +63,12 @@ export function useUserContextProvider(middleware) {
         })
     }, []);
 
-    // Create the provider
-    const provider = useCallback(({children}) => {
-        return (
-            <UserContext.Provider
-                value={{
-                    state,
-                    setState
-                }}
-            >
-                {children}
-            </UserContext.Provider>
-        );
-    }, []);
-
-    // Return the provider
-    return provider;
+    // Return the variables necessary to construct the provider
+    return [
+        UserContext,
+        state,
+        setState,
+    ];
 }
 
 /**

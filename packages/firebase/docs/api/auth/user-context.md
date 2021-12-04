@@ -8,7 +8,7 @@ Additional middleware functions can also be specified to automatically fetch and
 
 ### useUserContextProvider(middleware)
 
-Function to create and use a UserContext provider, which automatically updates the user context whenever auth state changes. Any middleware passed to this function will be applied and stored in the user context as well.
+Function to perform the setup necessary to construct a UserContext Provider, which automatically updates the user context whenever auth state changes. Any middleware passed to this function will be applied and stored in the user context as well.
 
 You will likely only need to use this function once at your app's root level once the Unifire Firebase app reference has been created.
 
@@ -20,7 +20,7 @@ You will likely only need to use this function once at your app's root level onc
 
 #### Return Value
 
-This function returns the provider component that should be used at the root level, to allow children components to utilize the created context.
+This function returns an array with the necessary variables for constructing the UserContext Provider. Please see the example below for how to utilize the return values.
 
 #### Example
 
@@ -31,12 +31,17 @@ This function returns the provider component that should be used at the root lev
 import { useUserContextProvider } from '@unifire-js/firebase/auth';
 
 const App = ({children}) => {
-    const UserContextProvider = useUserContextProvider(middleware);
+    const [UserContext, userContextState, userContextSetState] = useUserContextProvider(middleware);
 
     return (
-        <UserContextProvider>
+        <UserContext.Provider
+            value={{
+                state,
+                setState
+            }}
+        >
             {children}
-        </UserContextProvider>
+        </UserContext.Provider>
     );
 };
 ```
