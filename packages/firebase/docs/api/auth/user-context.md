@@ -6,21 +6,16 @@ Additional middleware functions can also be specified to automatically fetch and
 
 ## API
 
-### useUserContextProvider(middleware)
+### UserContextProvider({ middleware, children })
 
-Function to perform the setup necessary to construct a UserContext Provider, which automatically updates the user context whenever auth state changes. Any middleware passed to this function will be applied and stored in the user context as well.
+The React UserContext Provider which will automatically update the user context whenever an `onAuthStateChanged` event is detected. Middleware can optionally be specified which will run and store values in user context whenever an `onAuthStateChanged` event occurs as well.
 
-You will likely only need to use this function once at your app's root level once the Unifire Firebase app reference has been created.
+#### Props
 
-#### Arguments
-
-| Argument | Type | Description |
+| Property | Type | Description |
 | --- | --- | --- |
-| middleware | [Middleware](/packages/firebase/docs/api/auth/middleware.md)\[\] | *(opt.)* The array of middleware to apply and store the results of in the user context. See [the documentation for the Middleware class](/packages/firebase/docs/api/auth/middleware.md) for more information. |
-
-#### Return Value
-
-This function returns an array with the necessary variables for constructing the UserContext Provider. Please see the example below for how to utilize the return values.
+| middleware | [Middleware](/packages/firebase/docs/api/auth/middleware.md)\[\] | *(opt.)* The array of middleware to apply and store the results of iin the user context. See [the documentation for the Middleware class](/packages/firebase/docs/api/auth/middleware.md) for more information. |
+| children | React.Fragment | The children to render in the component. |
 
 #### Example
 
@@ -28,18 +23,11 @@ This function returns an array with the necessary variables for constructing the
 // Let's pretend we have some middleware definitions already in an
 // array called `middleware`...
 
-import { useUserContextProvider } from '@unifire-js/firebase/auth';
+import { UserContextProvider } from '@unifire-js/firebase/auth';
 
 const App = ({children}) => {
-    const [UserContext, userContextState, userContextSetState] = useUserContextProvider(middleware);
-
     return (
-        <UserContext.Provider
-            value={{
-                state,
-                setState
-            }}
-        >
+        <UserContext.Provider middleware={middleware}>
             {children}
         </UserContext.Provider>
     );

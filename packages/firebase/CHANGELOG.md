@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 2.3.3
+
+<i>Dec 4, 2021</i>
+
+### `unifire-js/firebase/auth`
+
+* 🛠️ Replace the `useUserContextProvider` function with a simpler `UserContextProvider` React functional component.
+
 ## 2.3.2
 
 <i>Dec 4, 2021</i>

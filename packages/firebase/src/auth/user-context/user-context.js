@@ -1,4 +1,4 @@
-import {
+import React, {
     createContext,
     useState,
     useContext,
@@ -31,6 +31,52 @@ const auth = getAuth(getUnifireFirebaseApp());
 /********************
  * PUBLIC FUNCTIONS *
  ********************/
+
+/**
+ * The UserContextProvider which will automatically update the user context whenever an
+ * `onAuthStateChanged` event is detected. Middleware can optionally be specified that will
+ * run and store values in user context whenever an `onAuthStateChanged` event occurs
+ * as well.
+ * 
+ * @param {Middleware[]} [middleware] Array of Middleware to use in the user context
+ * @param {React.Fragment} children The children to render under the provider
+ * @returns {React.Context.Provider} The Provider element for user context
+ */
+export const UserContextProvider = ({middleware, children}) => {
+    // Create the state for the user context
+    const [state, setState] = useState({
+        user: null,
+        middlewareResults: {},
+        initialLoadDone: false,
+    });
+
+    // Attach an observer to update the user context whenever an auth event occurs
+    useEffect(() => {
+        onAuthStateChanged(auth, async (user) => {
+            const middlewareResults = await applyMiddleware(
+                middleware,
+                user
+            );
+            setState({
+                user,
+                middlewareResults,
+                initialLoadDone: true
+            });
+        });
+    }, []);
+
+    // Main render
+    return (
+        <UserContext.Provider
+            value={{
+                state,
+                setState
+            }}
+        >
+            {children}
+        </UserContext.Provider>
+    );
+}
 
 /**
  * Function to perform the setup necessary to construct a UserContext provider, which automatically
