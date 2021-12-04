@@ -1,5 +1,11 @@
 # @unifire-js/firebase
 
+## 2.2.1
+
+<i>Dec 3, 2021</i>
+
+* 📃 Update documentation!
+
 ## 2.2.0
 
 <i>Dec 3, 2021</i>
