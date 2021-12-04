@@ -31,3 +31,5 @@ $ npm install @unifire-js/firebase
     * [ModelInstanceOperations](/packages/firebase/docs/api/firestore/model-instance-operations.md)
     * [Autobatcher](/packages/firebase/docs/api/firestore/autobatcher.md)
     * [Firestore Adapters](/packages/firebase/docs/api/firestore/firestore-adapters.md)
+    * Hooks
+        * [useListener](/packages/firebase/docs/api/firestore/use-listener.md)
