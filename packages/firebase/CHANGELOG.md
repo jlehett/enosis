@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 2.3.0
+
+<i>Dec 4, 2021</i>
+
+### `unifire-js/firebase/firestore`
+
+* 🛠️ Rethink the `useListener`-type hooks. They are now defined individually for each type of `addListener...` function within the `Submodel` and `ModelInstanceOperations` classes.
+
 ## 2.2.1
 
 <i>Dec 3, 2021</i>

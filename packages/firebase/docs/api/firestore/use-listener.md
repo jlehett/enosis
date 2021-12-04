@@ -7,9 +7,8 @@ React hook for creating a listener, and removing the listener when the component
 | Argument | Type | Description |
 | --- | --- | --- |
 | model | Model \| Submodel \| SubmodelInstance | The `Model`, `Submodel`, or `SubmodelInstance` to create the listener for. |
-| addListenerFn | function | The `Model`, `Submodel`, or `SubmodelInstance`'s function to call to add a listener; this may be `addListenerByQuery`, `addListenerByQueryInInstance`, `addListenerByPath`, or `addListenerByID`. |
 | listenerName | string | The name to give to the listener. |
-| remainingAddListenerFnParams | ...any | Spread of the remaining params that need to be passed to the chosen "add listener" function when called, other than `listenerName`. |
+| addListenerFn | function | The function to call to create the listener. Should use one of the `addListener...` functions from the `Model`, `Submodel`, or `SubmodelInstance` classes. |
 
 ## Examples
 
@@ -32,7 +31,7 @@ const ProfileModel = new Model({
 // Create a listener for any documents in the profiles collection matching the email, 'john@gmail.com',
 useListener(
     ProfileModel,
-    ProfileModel.addListenerByQuery,
+    'addListenerByQuery',
     'johnProfileListener',
     [ where('email', '==', 'john@gmail.com') ],
     (docs) => {
@@ -62,7 +61,7 @@ const GroupModel = new Submodel({
 // Create a listener for any documents at /profiles/john/groups/groupToListenTo
 useListener(
     GroupModel,
-    GroupModel.addListenerByPath,
+    'addListenerByPath',
     'johnGroupListener',
     'profiles/john/groups/groupToListenTo',
     (doc) => {

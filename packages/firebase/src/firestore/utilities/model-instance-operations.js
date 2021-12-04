@@ -10,6 +10,7 @@ import {
 import {
     map
 } from 'lodash';
+import { useEffect } from 'react';
 import {
     attachSubmodelInstanceReferencesToDocRef,
     attachSubmodelInstanceReferencesToFetchedData,
@@ -209,6 +210,27 @@ class ModelInstanceOperations {
     }
 
     /**
+     * React hook for adding a listener for a specific document, and the removing it once the component
+     * unmounts.
+     * @public
+     * @function
+     * 
+     * @param {string} nameOfListener The name to give to the listener during registration; used to
+     * reference the listener when you need to delete it later
+     * @param {string} id The ID of the document to register the listener for
+     * @param {function} fn The callback function for the listener; should accept the sanitized
+     * document (with `_ref` and `subcollections` attached to it) as its param
+     */
+    useListenerByID(nameOfListener, id, fn) {
+        useEffect(() => {
+            // Create the listener
+            this.addListenerByID(nameOfListener, id, fn);
+            // In the useEffect cleanup, remove the listener
+            return () => this.removeListener(nameOfListener);
+        }, []);
+    }
+
+    /**
      * Register a listener for multiple documents in a collection or subcollection, given a query. The
      * listener is stored on the model or submodel itself, and can be removed by calling either the
      * `removeListener` or `removeAllListeners` functions.
@@ -241,6 +263,29 @@ class ModelInstanceOperations {
                 fn(sanitizedDocuments);
             }
         );
+    }
+
+    /**
+     * React hook for adding a listener for multiple documents in a collection or subcollection, given a query,
+     * and then removing it once the component unmounts.
+     * @public
+     * @function
+     * 
+     * @param {string} nameOfListener The name to give to the listener during registration; used to
+     * reference the listener when you need to delete it later
+     * @param {function[]} queryFns Array of Firestore query functions to use in the query, e.g.,
+     * `limit`, `orderBy`, and `where`
+     * @param {function} fn The callback function for the listener; should accept the sanitized document
+     * array (with `_ref` and `subcollections` attached to each sanitized document in the array) as its
+     * param
+     */
+    useListenerByQuery(nameOfListener, queryFns, fn) {
+        useEffect(() => {
+            // Create the listener
+            this.addListenerByQuery(nameOfListener, queryFns, fn);
+            // In the useEffect cleanup, remove the listener
+            return () => this.removeListener(nameOfListener);
+        }, []);
     }
 
     /**

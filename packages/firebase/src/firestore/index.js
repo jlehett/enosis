@@ -7,7 +7,6 @@ export { default as Autobatcher } from './utilities/autobatcher';
 export {
     runTransaction
 } from './utilities/firestore-adapters';
-export { default as useListener } from './hooks/use-listener';
 
 /**
  * We must re-export the query functions from the internal firebase

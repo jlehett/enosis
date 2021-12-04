@@ -423,6 +423,40 @@ MessagesModel.addListenerByPath(
 );
 ```
 
+#### useListenerByPath(nameOfListener, path, fn)
+
+React hook for registering a listener for a specific document. Then, when the component unmounts, the listener will be automatically cleaned up.
+
+Throws an error if the name for the listener is already taken by another active listener on the submodel class instance.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
+| path | string | The path to the document to register the listener for. |
+| fn | function | The callback function for the listener; should accept the sanitized document (with `_ref` and `subcollections` attached to it) as its param. |
+
+##### Example
+
+```js
+// In a functional component...
+
+/**
+ * Registers a listener on the document at path, `profiles/john/messages/1`. The listener callback
+ * specifies that we want to log the new `displayName` for the doc.
+ * 
+ * This listener will automatically be cleaned up when the React component unmounts.
+ */
+MessagesModel.useListenerByPath(
+    'TestListener',
+    'profiles/john/messages/1',
+    (doc) => {
+        console.log(doc.content);
+    }
+);
+```
+
 #### addListenerByQueryInInstance(nameOfListener, path, queryFns, fn)
 
 Register a listener for multiple documents in a specific subcollection instance, given a query. The listener is stored on the submodel itself, and can be removed by calling either the `removeListener` or `removeAllListeners` functions.
@@ -467,6 +501,54 @@ MessagesModel.addListenerByQueryInInstance(
 );
 ```
 
+#### useListenerByQueryInInstance(nameOfListener, path, queryFns, fn)
+
+React hook for registering a listener for multiple documents in a specific subcollection instance, given a query. Then, when the component unmounts, the listener will automatically be cleaned up.
+
+Throws an error if the name for the listener is already taken by another active listener on the submodel class instance.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
+| path | string | The path to the specific subcollection instance to register the listener for. |
+| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| fn | function | The callback function for the listener; should accept the sanitized document array (with `_ref` and `subcollections` attached to each sanitized document in the array) as its param. |
+
+##### Example
+
+```js
+import {
+    where,
+    orderBy
+} from '@unifire-js/firebase/firestore';
+
+// In a functional component..
+
+/**
+ * Registers a query listener for the subcollection instance at path, `profiles/john/messages`. The
+ * listener callback specifies that we want to log all docs matching the query whenever ANY doc matching
+ * that query is added, removed, or changed.
+ * 
+ * This listener will automatically be cleaned up when the React component unmounts.
+ */
+MessagesModel.useListenerByQueryInInstance(
+    'TestListener',
+    'profiles/john/messages',
+    [
+        where('posted', '==', true),
+        where('content', '==', 'Hello World!'),
+        orderBy('userPosted'),
+    ],
+    (docs) => {
+        for (let doc of docs) {
+            console.log(`${doc.id}`);
+        }
+    }
+);
+```
+
 #### addListenerByQuery(nameOfListener, queryFns, fn)
 
 Register a listener for multiple documents in a subcollection group, given a query. The listener is stored on the submodel itself, and can be removed by calling either the `removeListener` or `removeAllListeners` functions.
@@ -495,6 +577,50 @@ import {
  * changed.
  */
 MessagesModel.addListenerByQuery(
+    'TestListener',
+    [
+        where('posted', '==', true),
+        where('content', '==', 'Hello World!'),
+        orderBy('userPosted'),
+    ],
+    (docs) => {
+        for (let doc of docs) {
+            console.log(`${doc.id}`);
+        }
+    }
+);
+```
+
+#### useListenerByQuery(nameOfListener, queryFns, fn)
+
+React hook for registering a listener for multiple documents in a subcollection group, given a query. Then, when the component unmounts, the listener will automatically be cleaned up.
+
+Throws an error if the name for the listener is already taken by another active listener on the submodel class instance.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
+| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| fn | function | The callback function for the listener; should accept the sanitized document array (with `_ref` and `subcollections` attached to each sanitized document in the array) as its param. |
+
+##### Example
+
+```js
+import {
+    where,
+    orderBy
+} from '@unifire-js/firebase/firestore';
+
+/**
+ * Registers a query listener for the subcollection as a whole. The listener callback specifies that we
+ * want to log all docs matching the query whenever ANY doc matching that query is added, removed, or
+ * changed.
+ * 
+ * This listener will automatically be cleaned up when the React component unmounts.
+ */
+MessagesModel.useListenerByQuery(
     'TestListener',
     [
         where('posted', '==', true),

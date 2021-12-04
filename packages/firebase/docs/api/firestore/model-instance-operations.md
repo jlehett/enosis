@@ -275,6 +275,41 @@ ProfileModel.addListenerByID(
 );
 ```
 
+### useListenerByID(nameOfListener, id, fn)
+
+React hook for adding a realtime listener for changes on a specific document, given an ID. Then, when the component unmounts, the listener will automatically be cleaned up.
+
+Throws an error if the name for the listener is already taken by another active listener on the model or submodel class instance.
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener| string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
+| id | string | The ID of the document to register the listener for. |
+| fn | function | The callback function for the listener; should accept the sanitized document (with `_ref` and `subcollections` attached to it) as its param. |
+
+#### Example
+
+```js
+// In a functional React component...
+
+/**
+ * Registers a listener on the Profile model for any changes on a document with ID, `john`, in the
+ * profiles collection. The listener callback specifies that we want to log the new `displayName` for the
+ * doc.
+ * 
+ * This listener will automatically be cleaned up when the React component unmounts.
+ */
+ProfileModel.useListenerByID(
+    'TestListener',
+    'john',
+    (doc) => {
+        console.log(doc.displayName);
+    }
+);
+```
+
 ### addListenerByQuery(nameOfListener, queryFns, fn)
 
 Add a realtime listener for changes on any documents in the collection or subcollection instance matching the specified query functions. The listener references are stored in the model or submodel class instance, and can be removed via the `removeListener` or `removeAllListeners` functions on that model or submodel class instance.
@@ -304,6 +339,53 @@ import {
  * match that query are added, removed, or changed.
  */
 ProfileModel.addListenerByQuery(
+    'TestListener',
+    [
+        where('displayName', '==', 'John'),
+        where('active', '==', true),
+        orderBy('displayName'),
+    ],
+    (docs) => {
+        for (let doc of docs) {
+            console.log(`${doc.id}`);
+        }
+    }
+);
+```
+
+### useListenerByQuery(nameOfListener, queryFns, fn)
+
+React hook for adding a realtime listener for changes on any documents in the collection or subcollection instance matching the specified query functions. Then, when the component unmounts, the listener will automatically be cleaned up.
+
+Throws an error if the name of the listener is already taken by another active listener on the model or submodel class instance.
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener| string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. 
+| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| fn | function | The callback function for the listener; should accept the sanitized document (with `_ref` and `subcollections` attached to it) as its param. |
+
+#### Example
+
+```js
+import {
+    where,
+    orderBy
+} from '@unifire-js/firebase/firestore';
+
+// In a functional component...
+
+/**
+ * Registers a listener on the Profile model for any changes on documents in the profiles collection
+ * where the display name is equal to `John` and its `active` property is set to `true`. The listener
+ * callback specifies that we want to log the IDs of all docs matching the query whenever ANY docs that
+ * match that query are added, removed, or changed.
+ * 
+ * This listener will automatically be cleaned up when the React component unmounts.
+ */
+ProfileModel.useListenerByQuery(
     'TestListener',
     [
         where('displayName', '==', 'John'),
