@@ -70,7 +70,7 @@ The following is an example of a confirm dialog built using the `useImperativeDi
  * A confirmation dialog that extends an imperative handler that allows the dialog to be controlled
  * like a promise.
  */
-const ConfirmDialog = forward(({
+const ConfirmDialog = forwardRef(({
     cancelText,
     confirmText,
     dialogText,
