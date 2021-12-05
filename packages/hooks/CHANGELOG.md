@@ -1,5 +1,11 @@
 # @unifire-js/hooks
 
+## 0.0.8
+
+<i>Dec 5, 2021</i>
+
+* 🛠️ Minor documentation updates.
+
 ## 0.0.7
 
 <i>Dec 5, 2021</i>
