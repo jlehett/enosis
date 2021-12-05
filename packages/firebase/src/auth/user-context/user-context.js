@@ -55,7 +55,8 @@ export const UserContextProvider = ({middleware, children}) => {
         onAuthStateChanged(auth, async (user) => {
             const middlewareResults = await applyMiddleware(
                 middleware,
-                user
+                user,
+                setState
             );
             setState({
                 user,
@@ -76,45 +77,6 @@ export const UserContextProvider = ({middleware, children}) => {
             {children}
         </UserContext.Provider>
     );
-}
-
-/**
- * Function to perform the setup necessary to construct a UserContext provider, which automatically
- * updates the user context whenever auth state changes.
- * 
- * @returns {[UserContext, userContextState, userContextSetState]} The variables necessary for
- * constructing the UserContext Provider
- */
-export function useUserContextProvider(middleware) {
-    // Create the state for the user context
-    const [state, setState] = useState({
-        user: null,
-        middlewareResults: {},
-        initialLoadDone: false,
-    });
-
-    // Attach an observer to update the user context whenever an auth
-    // event occurs
-    useEffect(() => {
-        onAuthStateChanged(auth, async (user) => {
-            const middlewareResults = await applyMiddleware(
-                middleware,
-                user
-            );
-            setState({
-                user,
-                middlewareResults,
-                initialLoadDone: true,
-            });
-        })
-    }, []);
-
-    // Return the variables necessary to construct the provider
-    return [
-        UserContext,
-        state,
-        setState,
-    ];
 }
 
 /**
@@ -147,17 +109,22 @@ export function useUserContext() {
  * @param {Middleware[]} middleware All of the middleware to apply
  * @param {Firebase.Auth.User} user The Firebase Auth user currently
  * active
+ * @param {function} setState The function to call to set the user context state
  * @returns {Promise<Object>} Resolves with an object containing data
  * indexed by each middleware key
  */
-async function applyMiddleware(middleware, user) {
+async function applyMiddleware(middleware, user, setState) {
     const middlewareResults = {};
     await Promise.all(
         map(
             middleware,
             async (singularMiddleware) => {
-                const result = await singularMiddleware.fetch(user);
-                middlewareResults[singularMiddleware.key] = result;
+                const result = await singularMiddleware.run(user, setState);
+                // If a key was specified for the middleware, store the results
+                // in the middlewareResults array to add to user context
+                if (singularMiddleware.key) {
+                    middlewareResults[singularMiddleware.key] = result;
+                }
             }
         )
     );

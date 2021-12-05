@@ -1,5 +1,14 @@
 # @unifire-js/firebase
 
+## 2.3.5
+
+<i>Dec 5, 2021</i>
+
+### `unifire-js/firebase/auth`
+
+* 🛠️ Rework the `Middleware` class to support `key`-less instances which can be used to set up listeners that are initialized as part of the middleware.
+* 🛠️ Remove unused code from the `user-context` file.
+
 ## 2.3.4
 
 <i>Dec 4, 2021</i>
