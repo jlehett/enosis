@@ -24,4 +24,47 @@ describe('Deferred Object', () => {
         }
     });
 
+    it('is able to accurately track the `settled` property', async () => {
+        const resultsObj = {};
+        const deferred = new Deferred();
+
+        resultsObj.firstReading = deferred.settled;
+
+        setTimeout(deferred.resolve, 250);
+        await deferred.promise;
+
+        resultsObj.secondReading = deferred.settled;
+
+        expect(resultsObj).to.deep.equal({
+            firstReading: false,
+            secondReading: true
+        });
+    });
+
+    it('is able to use the static `resolve` method', async () => {
+        const resolvedDeferred = Deferred.resolve(5);
+        const result = {
+            settled: resolvedDeferred.settled,
+            value: await resolvedDeferred.promise,
+        };
+        expect(result).to.deep.equal({
+            settled: true,
+            value: 5
+        });
+    });
+
+    it('is able to use the static `reject` method', async () => {
+        const rejectedDeferred = Deferred.reject(5);
+        const result = { settled: rejectedDeferred.settled };
+        try {
+            await rejectedDeferred.promise;
+        } catch (err) {
+            result.value = err;
+        }
+        expect(result).to.deep.equal({
+            settled: true,
+            value: 5
+        });
+    });
+
 });
