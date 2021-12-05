@@ -1,5 +1,11 @@
 # @unifire-js/hooks
 
+## 0.0.10
+
+<i>Dec 5, 2021</i>
+
+* 🛠️ Fix import causing issues with the `useImperativeDialog` hook.
+
 ## 0.0.9
 
 <i>Dec 5, 2021</i>

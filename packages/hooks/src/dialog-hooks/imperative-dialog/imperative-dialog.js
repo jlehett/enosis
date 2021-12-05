@@ -1,5 +1,5 @@
 import { useImperativeHandle } from 'react';
-import { useDialogAsPromise } from '../dialog-as-promise/dialog-as-promise';
+import useDialogAsPromise from '../dialog-as-promise/dialog-as-promise';
 
 /**
  * React hook that allows a developer to use a dialog as though it were a promise in an imperative manner. This hook
