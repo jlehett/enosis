@@ -1,6 +1,6 @@
 {
   "name": "@unifire-js/async",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Uniform solutions for async operations.",
   "author": "Tanner Lehett <johntannerlehett@gmail.com>",
   "homepage": "https://github.com/jlehett/unifire-js/blob/master/packages/async/README.md",

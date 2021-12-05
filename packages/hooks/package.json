@@ -1,6 +1,6 @@
 {
   "name": "@unifire-js/hooks",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Uniform solutions for React hooks.",
   "keywords": [
     "react",
@@ -35,7 +35,7 @@
     "url": "https://github.com/jlehett/unifire-js/issues"
   },
   "dependencies": {
-    "@unifire-js/async": "0.0.11",
+    "@unifire-js/async": "0.0.12",
     "core-js": "3.18.2",
     "lodash": "4.17.21",
     "regenerator-runtime": "0.13.9"

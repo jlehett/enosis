@@ -1,5 +1,11 @@
 # @unifire-js/hooks
 
+## 0.0.11
+
+<i>Dec 5, 2021</i>
+
+* 🛠️ Update `@unifire-js/async` dependency versioning to support new `Deferred` features used internally.
+
 ## 0.0.10
 
 <i>Dec 5, 2021</i>

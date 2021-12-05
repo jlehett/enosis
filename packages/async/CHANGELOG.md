@@ -1,5 +1,11 @@
 # @unifire-js/async
 
+## 0.0.12
+
+<i>Dec 5, 2021</i>
+
+* 🤞 Added additional `Deferred` functionality, including a `settled` property and static `resolve` and `reject` functions!
+
 ## 0.0.11
 
 <i>Nov 24, 2021</i>

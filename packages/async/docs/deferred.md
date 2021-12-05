@@ -36,6 +36,7 @@ async function test() {
 | Property | Type | Description |
 | --- | --- | --- |
 | promise | Promise | The native Javascript promise stored by <b>`Deferred`</b>. |
+| settled | boolean | Flag indicating whether the internal promise has resolved. |
 
 ### Methods
 
@@ -43,3 +44,10 @@ async function test() {
 | --- | --- | --- |
 | resolve(*) | <i>null</i> | The native Javascript `promise.resolve` function used to resolve the native promise stored by <b>`Deferred`</b>.
 | reject(*) | <i>null</i> | The native Javascript `promise.reject` function used to reject the native promise stored by <b>`Deferred`</b>.
+
+### Static Methods
+
+| Method | Return | Description |
+| --- | --- | --- |
+| resolve(*) | Deferred | Creates a new `Deferred` instance, instantly resolves it, and returns that new instance. The `Deferred` equivalent of `Promise.resolve()`. |
+| reject(*) | Deferred | Creates a new `Deferred` instance, instantly rejects it, and returns that new instance. The `Deferred` equivalent of `Promise.reject()`. |
