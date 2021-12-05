@@ -1,5 +1,11 @@
 # @unifire-js/hooks
 
+## 0.0.7
+
+<i>Dec 5, 2021</i>
+
+* ⬜ Add the `useImperativeDialog` hook!
+
 ## 0.0.6
 
 <i>Dec 3, 2021</i>
