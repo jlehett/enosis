@@ -57,7 +57,7 @@ export default class Middleware {
      * @param {Object} config The config object passed to the constructor
      */
     _validateConfigObject(config) {
-        if (!this.fn) {
+        if (!config.fn) {
             throw new Error('An `fn` property must be specified when creating a new Middleware instance.');
         }
     }

@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 2.3.6
+
+<i>Dec 5, 2021</i>
+
+### `unifire-js/firebase/auth`
+
+* 🛠️ Fix validation code in the `Middleware` class.
+
 ## 2.3.5
 
 <i>Dec 5, 2021</i>
