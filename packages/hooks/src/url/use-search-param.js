@@ -8,7 +8,5 @@ import { useLocation } from 'react-router-dom';
  * @returns {string | null} The value of the search param if it exists; otherwise, null
  */
 export default function(key) {
-    return useMemo(() => {
-        return new URLSearchParams(useLocation().search).get(key);
-    }, []);
+    return new URLSearchParams(useLocation().search).get(key);
 }

@@ -1,5 +1,11 @@
 # @unifire-js/hooks
 
+## 0.0.13
+
+<i>Dec 11, 2021</i>
+
+* 🛠️ Fix issue with `useSearchParam` hook.
+
 ## 0.0.12
 
 <i>Dec 11, 2021</i>

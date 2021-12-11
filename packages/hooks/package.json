@@ -1,6 +1,6 @@
 {
   "name": "@unifire-js/hooks",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Uniform solutions for React hooks.",
   "keywords": [
     "react",
