@@ -1,5 +1,11 @@
 # @unifire-js/hooks
 
+## 0.0.12
+
+<i>Dec 11, 2021</i>
+
+* 🔎 Add a `useSearchParam` hook for easy access to URL search params using `react-router-dom`.
+
 ## 0.0.11
 
 <i>Dec 5, 2021</i>
