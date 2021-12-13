@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 2.3.7
+
+<i>Dec 12, 2021</i>
+
+### `unifire-js/firebase/auth`
+
+* 🛠️ Fix issue with key-less middleware being overwritten during auth state changes.
+
 ## 2.3.6
 
 <i>Dec 5, 2021</i>
