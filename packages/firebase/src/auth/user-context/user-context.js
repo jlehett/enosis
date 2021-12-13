@@ -58,11 +58,15 @@ export const UserContextProvider = ({middleware, children}) => {
                 user,
                 setState
             );
-            setState({
+            setState((prevState) => ({
+                ...prevState,
                 user,
-                middlewareResults,
+                middlewareResults: {
+                    ...prevState.middlewareResults,
+                    ...middlewareResults,
+                },
                 initialLoadDone: true
-            });
+            }));
         });
     }, []);
 
