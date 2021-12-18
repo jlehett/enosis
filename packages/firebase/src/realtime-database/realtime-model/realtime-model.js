@@ -44,8 +44,7 @@ class RealtimeModel {
      ********************/
 
     /**
-     * Sanitizes the specified data and writes it to a specified document at a
-     * given path.
+     * Sanitizes the specified data and writes it to a specified path.
      * @public
      * @function
      * 

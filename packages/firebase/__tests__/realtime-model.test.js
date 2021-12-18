@@ -1,15 +1,9 @@
 import { expect } from 'chai';
-import {
-    assign,
-    omit,
-    map,
-} from 'lodash';
 import { RealtimeModel } from '../lib/realtime-database';
 import { setUpFirestoreEmulator } from './utilities/set-up-emulator';
 import { clearFirestoreEmulatorData } from './utilities/clear-emulator-data';
 import freeAppResources from './utilities/free-app-resources';
 import { Deferred } from '@unifire-js/async';
-import { Model } from '../lib/firestore';
 
 describe('Realtime Model', () => {
 
@@ -233,7 +227,7 @@ describe('Realtime Model', () => {
     it('can remove all registered listeners', async () => {
         const readings = {};
 
-        const RoomModel = new Model({
+        const RoomModel = new RealtimeModel({
             collectionName: 'rooms',
             collectionProps: [
                 'active',
@@ -272,7 +266,7 @@ describe('Realtime Model', () => {
     });
 
     it('will completely overwrite any data at the path when `writeToPath` is called', async () => {
-        const RoomModel = new Model({
+        const RoomModel = new RealtimeModel({
             collectionName: 'rooms',
             collectionProps: [
                 'active',
@@ -314,7 +308,7 @@ describe('Realtime Model', () => {
     });
 
     it('throws an error if a listener name is already taken when attempting to create a new listener', async () => {
-        const RoomModel = new Model({
+        const RoomModel = new RealtimeModel({
             collectionName: 'rooms',
             collectionProps: [
                 'active',
