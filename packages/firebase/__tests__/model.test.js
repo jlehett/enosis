@@ -15,19 +15,19 @@ import {
     orderBy,
     limit
 } from '@firebase/firestore';
-import setUpEmulator from './utilities/set-up-emulator';
-import clearEmulatorData from './utilities/clear-emulator-data';
+import { setUpFirestoreEmulator } from './utilities/set-up-emulator';
+import { clearFirestoreEmulatorData } from './utilities/clear-emulator-data';
 import freeAppResources from './utilities/free-app-resources';
 import { Deferred } from '@unifire-js/async';
 
 describe('Model', () => {
 
     before(async () => {
-        await setUpEmulator();
+        await setUpFirestoreEmulator();
     });
 
     beforeEach(async () => {
-        await clearEmulatorData();
+        await clearFirestoreEmulatorData();
     });
 
     after(() => {

@@ -5,6 +5,16 @@ import {
     isUndefined,
 } from 'lodash';
 
+/**
+ * Class which provides utility functions for sanitizing data from Firebase
+ * realtime database read operations, and for sanitizing data to write to
+ * the Firebase realtime database.
+ * 
+ * @param {string[]} collectionProps The list of properties the collection
+ * supportws
+ * @param {Object<string, *>} propDefaults Map of property keys to their default
+ * values
+ */
 class Sanitizer {
     constructor(collectionProps, propDefaults) {
         this.collectionProps = collectionProps;

@@ -4,9 +4,9 @@ import {
     Submodel,
     runTransaction,
 } from '../lib/firestore';
-import clearEmulatorData from './utilities/clear-emulator-data';
+import { clearFirestoreEmulatorData } from './utilities/clear-emulator-data';
 import freeAppResources from './utilities/free-app-resources';
-import setUpEmulator from './utilities/set-up-emulator';
+import { setUpFirestoreEmulator } from './utilities/set-up-emulator';
 import {
     assign,
     omit,
@@ -21,11 +21,11 @@ import { Deferred } from '@unifire-js/async';
 describe('Submodel', () => {
 
     before(async () => {
-        await setUpEmulator();
+        await setUpFirestoreEmulator();
     });
 
     beforeEach(async () => {
-        await clearEmulatorData();
+        await clearFirestoreEmulatorData();
     });
 
     after(() => {
