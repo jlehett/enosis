@@ -12,7 +12,7 @@ const promiseExec = util.promisify(exec);
  * Clear the Firestore emulator of all data.
  */
 export async function clearFirestoreEmulatorData() {
-    await promiseExec('curl -v -X DELETE "https://localhost:8080/emulator/v1/projects/unifire-testing/databases/(default)/documents"');
+    await promiseExec('curl -v -X DELETE "http://localhost:8080/emulator/v1/projects/unifire-testing/databases/(default)/documents"');
 }
 
 /**

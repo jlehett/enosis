@@ -40,7 +40,7 @@ class Sanitizer {
         }
         // Grab only the data specified by collection props
         const data = omitBy(
-            picker(value, this.collectionProps),
+            pick(value, this.collectionProps),
             isUndefined
         );
 

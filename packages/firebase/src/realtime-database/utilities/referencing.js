@@ -21,5 +21,5 @@ export function getRealtimeDB() {
  */
 export function getRefFromPath(path) {
     const db = getRealtimeDB();
-    return ref(getRealtimeDB, path);
+    return ref(db, path);
 }
