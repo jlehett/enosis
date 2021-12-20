@@ -16,7 +16,7 @@ import {
 /**
  * Set up the Firestore emulator for testing.
  */
-export function setUpFirestoreEmulator() {
+export async function setUpFirestoreEmulator() {
     createUnifireFirebaseApp(firebaseConfig);
     const db = getFirestore();
     connectFirestoreEmulator(db, 'localhost', 8080);
@@ -26,9 +26,9 @@ export function setUpFirestoreEmulator() {
 /**
  * Set up the Realtime Database emulator for testing.
  */
-export function setUpRealtimeDatabaseEmulator() {
+export async function setUpRealtimeDatabaseEmulator() {
     createUnifireFirebaseApp(firebaseConfig);
     const db = getDatabase();
-    connectDatabaseEmulator(db, 'localhost', 8080);
+    connectDatabaseEmulator(db, 'localhost', 9000);
     await clearRealtimeDatabaseEmulatorData();
 }

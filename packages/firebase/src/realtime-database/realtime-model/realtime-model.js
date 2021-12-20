@@ -105,7 +105,7 @@ class RealtimeModel {
     }
 
     /**
-     * React hook for adding a listener for a specific document, and then
+     * React hook for adding a listener for a specific path, and then
      * removing it once the component unmounts.
      * @public
      * @function
