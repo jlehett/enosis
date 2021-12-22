@@ -1,6 +1,6 @@
 {
   "name": "@unifire-js/firebase",
-  "version": "2.3.7",
+  "version": "2.3.8-alpha.3",
   "description": "Uniform solutions for Firebase integrations.",
   "author": "Tanner Lehett <johntannerlehett@gmail.com>",
   "homepage": "https://github.com/jlehett/unifire-js/blob/master/packages/firebase/README.md",
@@ -14,7 +14,8 @@
   "exports": {
     ".": "./lib/index.js",
     "./firestore": "./lib/firestore/index.js",
-    "./auth": "./lib/auth/index.js"
+    "./auth": "./lib/auth/index.js",
+    "./realtime-database": "./lib/realtime-database/index.js"
   },
   "directories": {
     "lib": "lib",

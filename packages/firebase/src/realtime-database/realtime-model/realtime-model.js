@@ -168,12 +168,12 @@ class RealtimeModel {
      * @param {function} onDisconnectFn One of the functions exposed by the
      * `OnDisconnect` class instance; see Firebase Realtime Database docs for
      * a list of available function
-     * @param {Array | Object} args List of args to pass to the onDisconnectFn
+     * @param {Array | Object} [args=[]] List of args to pass to the onDisconnectFn
      */
-    addOnDisconnectListenerByPath(nameOfListener, path, onDisconnectFn, args) {
+    addOnDisconnectListenerByPath(nameOfListener, path, onDisconnectFn, args=[]) {
         const ref = getRefFromPath(path);
         const onDisconnectObj = onDisconnect(ref);
-        onDisconnectObj.set({ active: false });
+        onDisconnectObj[onDisconnectFn](...args);
         this.disconnectListeners[nameOfListener] = onDisconnectObj.cancel;
     }
 

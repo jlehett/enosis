@@ -1,4 +1,8 @@
 import { expect } from 'chai';
+import {
+    connect,
+    disconnect,
+} from './utilities/connection';
 import { RealtimeModel } from '../lib/realtime-database';
 import { setUpApp, setUpFunctionsEmulator, setUpRealtimeDatabaseEmulator } from './utilities/set-up-emulator';
 import { clearRealtimeDatabaseEmulatorData } from './utilities/clear-emulator-data';
