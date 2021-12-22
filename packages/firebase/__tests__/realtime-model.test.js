@@ -1,18 +1,20 @@
 import { expect } from 'chai';
 import { RealtimeModel } from '../lib/realtime-database';
-import { setUpFirestoreEmulator } from './utilities/set-up-emulator';
-import { clearFirestoreEmulatorData } from './utilities/clear-emulator-data';
+import { setUpApp, setUpFunctionsEmulator, setUpRealtimeDatabaseEmulator } from './utilities/set-up-emulator';
+import { clearRealtimeDatabaseEmulatorData } from './utilities/clear-emulator-data';
 import freeAppResources from './utilities/free-app-resources';
 import { Deferred } from '@unifire-js/async';
 
 describe('Realtime Model', () => {
 
     before(async () => {
-        await setUpFirestoreEmulator();
+        setUpApp();
+        await setUpFunctionsEmulator();
+        await setUpRealtimeDatabaseEmulator();
     });
 
     beforeEach(async () => {
-        await clearFirestoreEmulatorData();
+        await clearRealtimeDatabaseEmulatorData();
     });
 
     after(() => {

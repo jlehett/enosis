@@ -5,7 +5,7 @@ import {
 } from '../lib/firestore';
 import freeAppResources from './utilities/free-app-resources';
 import { clearFirestoreEmulatorData } from './utilities/clear-emulator-data';
-import { setUpFirestoreEmulator } from './utilities/set-up-emulator';
+import { setUpApp, setUpFirestoreEmulator } from './utilities/set-up-emulator';
 import {
     where,
 } from 'firebase/firestore';
@@ -13,6 +13,7 @@ import {
 describe('Autobatcher', () => {
 
     before(async () => {
+        setUpApp();
         await setUpFirestoreEmulator();
     });
 

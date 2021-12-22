@@ -14,13 +14,14 @@ import {
     assign
 } from 'lodash';
 import { clearFirestoreEmulatorData } from './utilities/clear-emulator-data';
-import { setUpFirestoreEmulator } from './utilities/set-up-emulator';
+import { setUpApp, setUpFirestoreEmulator } from './utilities/set-up-emulator';
 import freeAppResources from './utilities/free-app-resources';
 import { Deferred } from '@unifire-js/async';
 
 describe('Submodel Instance', () => {
 
     before(async () => {
+        setUpApp();
         await setUpFirestoreEmulator();
     });
 

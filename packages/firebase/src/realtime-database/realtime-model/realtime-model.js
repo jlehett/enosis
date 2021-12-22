@@ -172,7 +172,8 @@ class RealtimeModel {
      */
     addOnDisconnectListenerByPath(nameOfListener, path, onDisconnectFn, args) {
         const ref = getRefFromPath(path);
-        const onDisconnectObj = onDisconnect(ref)[onDisconnectFn](...args);
+        const onDisconnectObj = onDisconnect(ref);
+        onDisconnectObj.set({ active: false });
         this.disconnectListeners[nameOfListener] = onDisconnectObj.cancel;
     }
 
@@ -194,7 +195,7 @@ class RealtimeModel {
     useOnDisconnectListenerByPath(nameOfListener, path, onDisconnectFn, args) {
         useEffect(() => {
             // Create the listener
-            const ref = this.addOnDisconnectListenerByPath(nameOfListener, path, onDisconnectFn, args);
+            this.addOnDisconnectListenerByPath(nameOfListener, path, onDisconnectFn, args);
             // In the useEffect cleanup, remove the listener
             return () => this.removeListener(nameOfListener);
         }, []);

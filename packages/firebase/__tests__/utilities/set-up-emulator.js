@@ -6,6 +6,10 @@ import {
     connectDatabaseEmulator,
     getDatabase
 } from '@firebase/database';
+import {
+    connectFunctionsEmulator,
+    getFunctions
+} from '@firebase/functions';
 import firebaseConfig from '../../firebase.config';
 import { createUnifireFirebaseApp } from '../../lib';
 import {
@@ -14,10 +18,16 @@ import {
 } from './clear-emulator-data';
 
 /**
+ * Create the Unifire Firebase app.
+ */
+export function setUpApp() {
+    createUnifireFirebaseApp(firebaseConfig);
+}
+
+/**
  * Set up the Firestore emulator for testing.
  */
 export async function setUpFirestoreEmulator() {
-    createUnifireFirebaseApp(firebaseConfig);
     const db = getFirestore();
     connectFirestoreEmulator(db, 'localhost', 8080);
     await clearFirestoreEmulatorData();
@@ -27,8 +37,15 @@ export async function setUpFirestoreEmulator() {
  * Set up the Realtime Database emulator for testing.
  */
 export async function setUpRealtimeDatabaseEmulator() {
-    createUnifireFirebaseApp(firebaseConfig);
     const db = getDatabase();
     connectDatabaseEmulator(db, 'localhost', 9000);
     await clearRealtimeDatabaseEmulatorData();
+}
+
+/**
+ * Set up the Firebase Functions emulator for testing.
+ */
+export async function setUpFunctionsEmulator() {
+    const functions = getFunctions();
+    connectFunctionsEmulator(functions, 'localhost', 5001);
 }
