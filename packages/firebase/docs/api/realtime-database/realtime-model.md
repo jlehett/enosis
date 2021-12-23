@@ -267,3 +267,131 @@ Removes all listeners from the realtime model. This does *not* include the speci
  */
 RoomModel.removeAllListeners();
 ```
+
+#### addOnDisconnectListenerByPath(nameOfListener, path, onDisconnectFn, args=[])
+
+Adds an `onDisconnect` listener to the realtime model, which will trigger a certain realtime database operation whenever the user disconnects from the database for any reason (e.g., closing the tab, turning off their computer, etc.).
+
+Due to the nature of how `onDisconnect` listeners work, sanitization will not be applied to any data passed to the `onDisconnectFn`.
+
+`onDisconnect` listeners are stored separately from regular listeners. Therefore, if you would like to delete an `onDisconnect` listener, you must use either the `removeOnDisconnectListener` or `removeAllOnDisconnectListeners` functions. The usual `removeListener` and `removeAllListeners` functions will not affect any `onDisconnect` listeners, and name collisions between `onDisconnect` listeners and regular listeners will not affect anything.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name to give to the disconnect listener during registration; used to reference the listener when you need to delete it later. |
+| path | string | The path to create an `onDisconnect` listener for. |
+| onDisconnectFn | string | The name of one of the functions exposed by the [`OnDisconnect`](https://firebase.google.com/docs/reference/js/database.ondisconnect) class instance that should be used by the `onDisconnect` listener. |
+| args | Array | (opt.) List of args to pass to the `onDisconnectFn`. |
+
+##### Example
+
+An example of using the `set` `onDisconnectFn`:
+
+```js
+// Let's say `ProfileModel` is a realtime model
+
+/**
+ * Add an `onDisconnect` listener that sets the profile's
+ * `active` status to `false` when the user disconnects.
+ */
+ProfileModel.addOnDisconnectListenerByPath(
+    'User Presence Listener',
+    'profiles/john/active',
+    'set',
+    ['false']
+);
+```
+
+An example of using the `remove` `onDisconnectFn`:
+
+```js
+// Let's say `RoomModel` is a realtime model
+
+/**
+ * Add an `onDisconnect` listener that removes the user from
+ * a room in the database when the user disconnects.
+ */
+RoomModel.addOnDisconnectListenerByPath(
+    'User Presence Listener',
+    'rooms/1/users/john',
+    'remove'
+);
+```
+
+#### useOnDisconnectListenerByPath(nameOfListener, path, onDisconectFn, args=[])
+
+React hook for adding an `onDisconnect` listener for a specific path, and then removing it once the component unmounts.
+
+The documentation from `addOnDisconnectListenerByPath` also applies to this function.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name to give to the disconnect listener during registration; used to reference the listener when you need to delete it later. |
+| path | string | The path to create an `onDisconnect` listener for. |
+| onDisconnectFn | string | The name of one of the functions exposed by the [`OnDisconnect`](https://firebase.google.com/docs/reference/js/database.ondisconnect) class instance that should be used by the `onDisconnect` listener. |
+| args | Array | (opt.) List of args to pass to the `onDisconnectFn`. |
+
+##### Example
+
+```js
+// Let's say `ProfileModel` is a realtime model, and that the
+// code below takes place in a functional React component
+
+/**
+ * Add an `onDisconnect` listener when the component mounts that
+ * sets the profile's `active` status to `false` when the user
+ * disconnects.
+ */
+ProfileModel.useOnDisconnectListenerByPath(
+    'User Presence Listener',
+    'profiles/john/active',
+    'set',
+    ['false']
+);
+```
+
+#### removeOnDisconnectListener(nameOfListener)
+
+Removes a specified `onDisconnect` listener from the model. Note that this function will only remove `onDisconnect` listeners. Regular listeners that are referenced will *not* be removed by this function.
+
+Throws an error if the `onDisconnect` listener does not exist.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name of the `onDisconnect` listener to remove from the model. |
+
+##### Example
+
+```js
+/**
+ * Remove the "User Presence Listener" `onDisconnect` listener
+ * from the Profile realtime model.
+ */
+ProfileModel.removeOnDisconnectListener('User Presence Listener');
+```
+
+#### removeAllOnDisconnectListener()
+
+Removes all `onDisconnect` listeners from the model. Note that this function only affects `onDisconnect` listeners. Any regular listeners that exist will remain untouched by this function.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| \- | \- | \- |
+
+##### Example
+
+```js
+/**
+ * Remove all `onDisconnect` listeners from the Profile realtime
+ * model.
+ */
+ProfileModel.removeAllOnDisconnectListeners();
+```

@@ -165,10 +165,10 @@ class RealtimeModel {
      * listener during registration; used to reference the listener when you
      * need to delete it later
      * @param {string} path The path to create an onDisconnect listener for
-     * @param {function} onDisconnectFn One of the functions exposed by the
+     * @param {string} onDisconnectFn One of the functions exposed by the
      * `OnDisconnect` class instance; see Firebase Realtime Database docs for
      * a list of available function
-     * @param {Array | Object} [args=[]] List of args to pass to the onDisconnectFn
+     * @param {Array} [args=[]] List of args to pass to the onDisconnectFn
      */
     addOnDisconnectListenerByPath(nameOfListener, path, onDisconnectFn, args=[]) {
         const ref = getRefFromPath(path);
@@ -190,9 +190,9 @@ class RealtimeModel {
      * @param {function} onDisconnectFn One of the functions exposed by the
      * `OnDisconnect` class instance; see Firebase Realtime Database docs for
      * a list of available function
-     * @param {Array | Object} args List of args to pass to the onDisconnectFn
+     * @param {Array} [args=[]] List of args to pass to the onDisconnectFn
      */
-    useOnDisconnectListenerByPath(nameOfListener, path, onDisconnectFn, args) {
+    useOnDisconnectListenerByPath(nameOfListener, path, onDisconnectFn, args=[]) {
         useEffect(() => {
             // Create the listener
             this.addOnDisconnectListenerByPath(nameOfListener, path, onDisconnectFn, args);
