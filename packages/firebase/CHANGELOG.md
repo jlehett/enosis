@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 2.3.8
+
+<i>Dec 22, 2021</i>
+
+### `unifire-js/firebase/realtime-database`
+
+* 🚀 Add realtime-database submodule with utilities for realtime models that emulate Firestore models!
+
 ## 2.3.7
 
 <i>Dec 12, 2021</i>
