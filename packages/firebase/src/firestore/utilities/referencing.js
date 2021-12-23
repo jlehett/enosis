@@ -23,7 +23,7 @@ export function getDB() {
  */
 export function registerSubcollection(subcollections, childModel) {
     subcollections[childModel.collectionName] = childModel;
-};
+}
 
 /**
  * Creates and returns the collection ref for a Model or SubmodelInstance.
@@ -43,7 +43,7 @@ export function createCollectionRef(collectionName, parentDocRef) {
         const fullPath = [parentDocRef.path, collectionName].join('/');
         return collection(db, fullPath);
     }
-};
+}
 
 /**
  * Creates and returns the collection ref given a Firestore path.

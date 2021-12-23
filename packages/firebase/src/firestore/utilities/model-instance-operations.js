@@ -24,7 +24,7 @@ import {
 class ModelInstanceOperations {
     constructor() {
         /**
-         * Map of listener names to their unsubscribe functions.
+         * Map of listener names to their unsubscribe function.
          */
         this.listeners = {};
     }
@@ -210,7 +210,7 @@ class ModelInstanceOperations {
     }
 
     /**
-     * React hook for adding a listener for a specific document, and the removing it once the component
+     * React hook for adding a listener for a specific document, and then removing it once the component
      * unmounts.
      * @public
      * @function

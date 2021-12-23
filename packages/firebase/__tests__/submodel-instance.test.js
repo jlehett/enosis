@@ -13,19 +13,20 @@ import {
     map,
     assign
 } from 'lodash';
-import clearEmulatorData from './utilities/clear-emulator-data';
-import setUpEmulator from './utilities/set-up-emulator';
+import { clearFirestoreEmulatorData } from './utilities/clear-emulator-data';
+import { setUpApp, setUpFirestoreEmulator } from './utilities/set-up-emulator';
 import freeAppResources from './utilities/free-app-resources';
 import { Deferred } from '@unifire-js/async';
 
 describe('Submodel Instance', () => {
 
     before(async () => {
-        await setUpEmulator();
+        setUpApp();
+        await setUpFirestoreEmulator();
     });
 
     beforeEach(async () => {
-        await clearEmulatorData();
+        await clearFirestoreEmulatorData();
     });
 
     after(() => {

@@ -59,7 +59,7 @@ const ProfileModel = new Model({
 });
 ```
 
-By default, these default prop values will <i>not</i> be merged into any sanitized data for write operations. It must be specifically set in the operation's params argument.
+By default, these default prop values will <i>not</i> be merged into any sanitized data for write operations. This feature must be specifically set in the operation's params argument.
 
 ### Model Instance Operations
 

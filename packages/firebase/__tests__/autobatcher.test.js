@@ -4,8 +4,8 @@ import {
     Autobatcher,
 } from '../lib/firestore';
 import freeAppResources from './utilities/free-app-resources';
-import clearEmulatorData from './utilities/clear-emulator-data';
-import setUpEmulator from './utilities/set-up-emulator';
+import { clearFirestoreEmulatorData } from './utilities/clear-emulator-data';
+import { setUpApp, setUpFirestoreEmulator } from './utilities/set-up-emulator';
 import {
     where,
 } from 'firebase/firestore';
@@ -13,11 +13,12 @@ import {
 describe('Autobatcher', () => {
 
     before(async () => {
-        await setUpEmulator();
+        setUpApp();
+        await setUpFirestoreEmulator();
     });
 
     beforeEach(async () => {
-        await clearEmulatorData();
+        await clearFirestoreEmulatorData();
     });
 
     after(() => {
