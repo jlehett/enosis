@@ -32,4 +32,4 @@ $ npm install @unifire-js/firebase
     * [Autobatcher](/packages/firebase/docs/api/firestore/autobatcher.md)
     * [Firestore Adapters](/packages/firebase/docs/api/firestore/firestore-adapters.md)
 * Realtime Database
-    * [RealtimeModel](/packages/firebase/docs/api/realtime-database/realtime-model.md)
+    * [RealtimeDatabaseInterface](/packages/firebase/docs/api/realtime-database/realtime-database-interface.md)

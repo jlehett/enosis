@@ -1,10 +1,18 @@
 # @unifire-js/firebase
 
+## 3.0.0
+
+<i>Dec 25, 2021</i>
+
+### `@unifire-js/firebase/realtime-database`
+
+* 🛠️ Major refactor replacing the `RealtimeModel` concept with a singleton `RealtimeDatabaseInterface` concept.
+
 ## 2.3.8
 
 <i>Dec 22, 2021</i>
 
-### `unifire-js/firebase/realtime-database`
+### `@unifire-js/firebase/realtime-database`
 
 * 🚀 Add realtime-database submodule with utilities for realtime models that emulate Firestore models!
 
@@ -12,7 +20,7 @@
 
 <i>Dec 12, 2021</i>
 
-### `unifire-js/firebase/auth`
+### `@unifire-js/firebase/auth`
 
 * 🛠️ Fix issue with key-less middleware being overwritten during auth state changes.
 
@@ -20,7 +28,7 @@
 
 <i>Dec 5, 2021</i>
 
-### `unifire-js/firebase/auth`
+### `@unifire-js/firebase/auth`
 
 * 🛠️ Fix validation code in the `Middleware` class.
 
@@ -28,7 +36,7 @@
 
 <i>Dec 5, 2021</i>
 
-### `unifire-js/firebase/auth`
+### `@unifire-js/firebase/auth`
 
 * 🛠️ Rework the `Middleware` class to support `key`-less instances which can be used to set up listeners that are initialized as part of the middleware.
 * 🛠️ Remove unused code from the `user-context` file.
@@ -37,7 +45,7 @@
 
 <i>Dec 4, 2021</i>
 
-### `unifire-js/firebase/auth`
+### `@unifire-js/firebase/auth`
 
 * 🛠️ Fix export.
 
@@ -45,7 +53,7 @@
 
 <i>Dec 4, 2021</i>
 
-### `unifire-js/firebase/auth`
+### `@unifire-js/firebase/auth`
 
 * 🛠️ Replace the `useUserContextProvider` function with a simpler `UserContextProvider` React functional component.
 
@@ -53,7 +61,7 @@
 
 <i>Dec 4, 2021</i>
 
-### `unifire-js/firebase/auth`
+### `@unifire-js/firebase/auth`
 
 * 🛠️ Modify the `useUserContextProvider` function to provide a different API to fix issues with constructing the Provider in a callback.
 
@@ -61,7 +69,7 @@
 
 <i>Dec 4, 2021</i>
 
-### `unifire-js/firebase/auth`
+### `@unifire-js/firebase/auth`
 
 * 🛠️ Wrap the `useUserContextProvider` provider function in a `useCallback` to stop unnecessary remounts.
 
@@ -69,7 +77,7 @@
 
 <i>Dec 4, 2021</i>
 
-### `unifire-js/firebase/firestore`
+### `@unifire-js/firebase/firestore`
 
 * 🛠️ Rethink the `useListener`-type hooks. They are now defined individually for each type of `addListener...` function within the `Submodel` and `ModelInstanceOperations` classes.
 
@@ -83,7 +91,7 @@
 
 <i>Dec 3, 2021</i>
 
-### `unifire-js/firebase/firestore`
+### `@unifire-js/firebase/firestore`
 
 * 👂 Add the `useListener` React hook!
 
@@ -91,7 +99,7 @@
 
 <i>Dec 1, 2021</i>
 
-### `unifire-js/firebase/auth`
+### `@unifire-js/firebase/auth`
 
 * 🚂 Added the `useRedirectOnAuthCondition` React hook for automatic redirects based on auth user context changes.
 
@@ -104,13 +112,13 @@
 * **\[!BREAKING CHANGES!\]** 🔧 Developer now create a separate "Unifire" Firebase app reference as opposed to passing an already-created reference to the package.
     * This fixed issues caused by `firebase/firestore` registration logic.
 
-### `unifire-js/firebase/auth`
+### `@unifire-js/firebase/auth`
 
 * 🚀 `auth` submodule released!
 * 🧍 React hooks for creating and using an automatically updating auth user context added!
 * 📦 Support for defining middleware to keep other values in the auth user context updated automatically on auth changes added!
 
-### `unifire-js/firebase/firestore`
+### `@unifire-js/firebase/firestore`
 
 * **\[!BREAKING CHANGES!\]** 🔧 Updated the `firestore` submodule to utilize the new separate "Unifire Firebase app" reference concept.
 

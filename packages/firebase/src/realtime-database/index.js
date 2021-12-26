@@ -1,1 +1,1 @@
-export { default as RealtimeModel } from './realtime-model/realtime-model';
+export { default as RealtimeDatabaseInterface } from './realtime-database-interface/realtime-database-interface';

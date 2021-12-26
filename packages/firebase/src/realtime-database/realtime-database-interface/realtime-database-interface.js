@@ -1,33 +1,23 @@
-import { useEffect } from 'react';
+import { FirebaseError } from '@firebase/util';
 import {
     set,
     get,
     onValue,
     onDisconnect,
 } from 'firebase/database';
-import Sanitizer from '../utilities/sanitization';
+import { useEffect } from 'react';
 import { getRefFromPath } from '../utilities/referencing';
 
 /**
- * Class which provides a streamlined approach for creating Firebase realtime
- * database model objects with various simplified read and write operations.
+ * Class which provides a streamlined approach for interacting with Firebase's
+ * Realtime Database.
  * 
- * Before models are constructed, the Unifire Firebase app should be created via
- * the `createUnifireFirebaseApp` function from this package.
- * 
- * @param {RealtimeModelParams} param The parameters to use when creating the
- * model
+ * Before the RealtimeInterface can be utilized, the Unifire Firebase app
+ * should be created via the `createUnifireFirebaseApp` function from this
+ * package.
  */
-class RealtimeModel {
-    constructor(params) {
-        this._validateConstructorParams(params);
-
-        // Create class variables
-        this.sanitizer = new Sanitizer(
-            params.collectionProps,
-            params.propDefaults || {}
-        );
-
+class RealtimeDatabaseInterface {
+    constructor() {
         /**
          * Map of listener names to their unsubscribe function.
          */
@@ -44,23 +34,27 @@ class RealtimeModel {
      ********************/
 
     /**
-     * Sanitizes the specified data and writes it to a specified path.
+     * Writes the specified data to a specified path.
      * @public
      * @function
      * 
-     * @param {string} path The path to write sanitized data to
-     * @param {Object} data The unsanitized data to first sanitize, and then
-     * write to the specified "document" in the realtime database
+     * @param {string} path The path to write the data to
+     * @param {Object} data The data to write to the specified path in the
+     * realtime database
      * @param {WriteToPathParams} [params] Various settings for the operation
      * @returns {Promise<void>} Resolves when the data has been written to the
      * realtime database
      */
     async writeToPath(path, data, params) {
         const ref = getRefFromPath(path);
-        let dataToWrite = this.sanitizer.getSanitizedDataToSave(
-            data,
-            params?.mergeWithDefaultValues
-        );
+        let dataToWrite = data;
+        if (params?.mergeWithExistingData) {
+            const existingData = await this.getByPath(path);
+            dataToWrite = {
+                ...existingData,
+                ...dataToWrite
+            };
+        }
         await set(ref, dataToWrite);
     }
 
@@ -70,19 +64,43 @@ class RealtimeModel {
      * @function
      * 
      * @param {string} path The path to read data from
-     * @returns {Promise<Object>} Resolves with the sanitized data from the
-     * specified path in the realtime database
+     * @returns {Promise<Object>} Resolves with the data from the specified
+     * path in the realtime database
      */
     async getByPath(path) {
         const ref = getRefFromPath(path);
         const dataSnapshot = await get(ref);
-        return this.sanitizer.sanitizeFromRead(dataSnapshot);
+        return this._sanitizeFromRead(dataSnapshot);
     }
 
     /**
-     * Register a listener for a specific path. The listener is stored on the
-     * model itself, and can be removed by calling either the `removeListener`
-     * or `removeAllListeners` functions.
+     * Registers a listener for a specific path. The listener is stored on the
+     * realtime interface instance itself, and can be removed by calling either
+     * the `removeListener` or `removeAllListeners` functions.
+     * @public
+     * @function
+     * 
+     * @param {string} nameOfListener The name to give to the listener during
+     * registration; used to reference the lsitener when you need to delete it
+     * later
+     * @param {string} path The path to register the listener for
+     * @param {function} fn The callback function for the listener; should accept
+     * the data from the snapshot
+     */
+    addListenerByPath(nameOfListener, path, fn) {
+        const ref = getRefFromPath(path);
+        this.listeners[nameOfListener] = onValue(
+            ref,
+            (dataSnapshot) => {
+                const data = this._sanitizeFromRead(dataSnapshot);
+                fn(data);
+            }
+        );
+    }
+
+    /**
+     * React hook for adding a listener for a specific path, and then removing
+     * it once the component unmounts.
      * @public
      * @function
      * 
@@ -90,49 +108,24 @@ class RealtimeModel {
      * registration; used to reference the listener when you need to delete it
      * later
      * @param {string} path The path to register the listener for
-     * @param {function} fn The callback function for the listener; should
-     * accept the sanitized data snapshot
-     */
-    addListenerByPath(nameOfListener, path, fn) {
-        const ref = getRefFromPath(path);
-        this.listeners[nameOfListener] = onValue(
-            ref,
-            (docSnapshot) => {
-                const sanitizedData = this.sanitizer.sanitizeFromRead(docSnapshot);
-                fn(sanitizedData);
-            }
-        );
-    }
-
-    /**
-     * React hook for adding a listener for a specific path, and then
-     * removing it once the component unmounts.
-     * @public
-     * @function
-     * 
-     * @param {string} nameOfListener The name to give to the listener during
-     * registration; used to reference the listener when you need to delete
-     * it later
-     * @param {string} path The path to register the listener for
      * @param {function} fn The callback function for the listener; should accept
-     * the sanitized data snapshot
+     * the data from the snapshot
      */
     useListenerByPath(nameOfListener, path, fn) {
         useEffect(() => {
             // Create the listener
             this.addListenerByPath(nameOfListener, path, fn);
-            // In the useEffect cleanup, remove the listener
+            // In the userEffect cleanup, remove the listener
             return () => this.removeListener(nameOfListener);
         }, []);
     }
 
     /**
-     * Removes a specified listener from the model.
+     * Removes a specified listener.
      * @public
      * @function
      * 
-     * @param {string} nameOfListener The name of the listener to remove from
-     * the model
+     * @param {string} nameOfListener The name of the listener to remove
      * @throws {Error} Thrown if a non-existent listener is attempted to be
      * removed
      */
@@ -144,9 +137,9 @@ class RealtimeModel {
             throw new Error(`Attempted to remove non-existent listener, ${nameOfListener}.`);
         }
     }
-
+    
     /**
-     * Removes all listeners from the model.
+     * Removes all listeners.
      * @public
      * @function
      */
@@ -157,9 +150,7 @@ class RealtimeModel {
     }
 
     /**
-     * Add an onDisconnect listener to the model. Due to the nature of how
-     * `onDisconnect` functions work, sanitization will not be applied to
-     * any data passed to the onDisconnectFn.
+     * Add an onDisconnect listener.
      * 
      * @param {string} nameOfListener The name to give to the disconnect
      * listener during registration; used to reference the listener when you
@@ -202,12 +193,12 @@ class RealtimeModel {
     }
 
     /**
-     * Removes a specified disconnect listener from the model.
+     * Removes a specified disconnect listener.
      * @public
      * @function
      * 
      * @param {string} nameOfListener The name of the disconnect listener to
-     * remove from the model
+     * remove
      * @throws {Error} Thrown if a non-existent disconnect listener is attempted
      * to be removed
      */
@@ -221,7 +212,7 @@ class RealtimeModel {
     }
 
     /**
-     * Removes all disconnect listeners from the model.
+     * Removes all disconnect listeners.
      * @public
      * @function
      */
@@ -234,22 +225,26 @@ class RealtimeModel {
     /*********************
      * PRIVATE FUNCTIONS *
      *********************/
-
+    
     /**
-     * Validates the Model constructor's params object.
+     * Sanitize the return value of read operations from the database down
+     * to just the desired data.
      * @private
      * @function
      * 
-     * @param {Object} params Argument given to the Model's constructor
+     * @param {FirebaseError.DataSnapshot} dataSnapshot The data snapshot
+     * to sanitize
+     * @returns {Object | null} The data from the data snapshot, if it existed;
+     * otherwise, null
      */
-    _validateConstructorParams(params) {
-        if (!params.collectionName) {
-            throw new Error('`collectionName` must be specified when constructing a new model.');
+    _sanitizeFromRead(dataSnapshot) {
+        const value = dataSnapshot.val();
+        if (!value) {
+            return null;
         }
-        if (!params.collectionProps) {
-            throw new Error('`collectionProps` must be specified when constructing a new model.');
-        }
+        // Return the data
+        return value;
     }
 }
 
-export default RealtimeModel;
+export default new RealtimeDatabaseInterface();

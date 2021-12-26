@@ -1,15 +1,11 @@
 import { expect } from 'chai';
-import {
-    connect,
-    disconnect,
-} from './utilities/connection';
-import { RealtimeModel } from '../lib/realtime-database';
+import { RealtimeDatabaseInterface } from '../lib/realtime-database';
 import { setUpApp, setUpFunctionsEmulator, setUpRealtimeDatabaseEmulator } from './utilities/set-up-emulator';
 import { clearRealtimeDatabaseEmulatorData } from './utilities/clear-emulator-data';
 import freeAppResources from './utilities/free-app-resources';
 import { Deferred } from '@unifire-js/async';
 
-describe('Realtime Model', () => {
+describe('Realtime Database Interface', () => {
 
     before(async () => {
         setUpApp();
@@ -19,30 +15,25 @@ describe('Realtime Model', () => {
 
     beforeEach(async () => {
         await clearRealtimeDatabaseEmulatorData();
+        await RealtimeDatabaseInterface.removeAllListeners();
+        await RealtimeDatabaseInterface.removeAllOnDisconnectListeners();
     });
 
     after(() => {
         freeAppResources();
     });
 
-    it('can write data to the realtime database with proper sanitization, and then fetch the written data', async () => {
-        const RoomModel = new RealtimeModel({
-            collectionName: 'rooms',
-            collectionProps: [
-                'users'
-            ]
-        });
-        await RoomModel.writeToPath(
+    it('can write data to the realtime database, and then fetch the written data', async () => {
+        await RealtimeDatabaseInterface.writeToPath(
             'rooms/1',
             {
                 users: {
                     john: true,
                     joey: false,
                 },
-                unsupportedProp: 'Some Value'
             }
         );
-        const data = await RoomModel.getByPath('rooms/1');
+        const data = await RealtimeDatabaseInterface.getByPath('rooms/1');
         expect(data).to.deep.equal({
             users: {
                 john: true,
@@ -51,57 +42,8 @@ describe('Realtime Model', () => {
         });
     });
 
-    it('can write data to the realtime database with default values merged in', async () => {
-        const RoomModel = new RealtimeModel({
-            collectionName: 'rooms',
-            collectionProps: [
-                'active',
-                'users',
-            ],
-            propDefaults: {
-                active: true,
-                users: {},
-            }
-        });
-        await RoomModel.writeToPath(
-            'rooms/1',
-            {
-                users: {
-                    john: {
-                        vote: 1,
-                        inLobby: true
-                    },
-                    joey: {
-                        inLobby: false,
-                    }
-                }
-            },
-            { mergeWithDefaultValues: true }
-        );
-        const data = await RoomModel.getByPath('rooms/1');
-        expect(data).to.deep.equal({
-            active: true,
-            users: {
-                john: {
-                    vote: 1,
-                    inLobby: true,
-                },
-                joey: {
-                    inLobby: false,
-                }
-            },
-        });
-    });
-
     it('can handle deep writes', async () => {
-        const RoomModel = new RealtimeModel({
-            collectionName: 'rooms',
-            collectionProps: [
-                'active',
-                'users',
-            ],
-        });
-        await RoomModel.writeToPath(
+        await RealtimeDatabaseInterface.writeToPath(
             'test/1/rooms/2',
             {
                 active: {
@@ -128,7 +70,7 @@ describe('Realtime Model', () => {
                 },
             },
         );
-        const data = await RoomModel.getByPath('test/1/rooms/2');
+        const data = await RealtimeDatabaseInterface.getByPath('test/1/rooms/2');
         expect(data).to.deep.equal({
             active: {
                 isTrue: {
@@ -158,26 +100,18 @@ describe('Realtime Model', () => {
     it('can subscribe to changes at a specific path', async () => {
         const deferred = new Deferred();
 
-        const RoomModel = new RealtimeModel({
-            collectionName: 'rooms',
-            collectionProps: [
-                'publicInfo',
-                'privateInfo',
-            ],
-        });
-
-        RoomModel.addListenerByPath(
+        RealtimeDatabaseInterface.addListenerByPath(
             'TestListener',
             'rooms/1',
             (doc) => {
                 if (doc?.publicInfo?.testVar === true) {
-                    RoomModel.removeListener('TestListener');
+                    RealtimeDatabaseInterface.removeListener('TestListener');
                     deferred.resolve();
                 }
             }
         );
 
-        await RoomModel.writeToPath(
+        await RealtimeDatabaseInterface.writeToPath(
             'rooms/1',
             {
                 privateInfo: {
@@ -186,7 +120,7 @@ describe('Realtime Model', () => {
             }
         );
 
-        await RoomModel.writeToPath(
+        await RealtimeDatabaseInterface.writeToPath(
             'rooms/1',
             {
                 publicInfo: {
@@ -202,26 +136,19 @@ describe('Realtime Model', () => {
     it('can remove a registered listener', async () => {
         const readings = {};
 
-        const RoomModel = new RealtimeModel({
-            collectionName: 'rooms',
-            collectionProps: [
-                'active',
-            ]
-        });
+        readings.first = Boolean(RealtimeDatabaseInterface.listeners.TestListener);
 
-        readings.first = Boolean(RoomModel.listeners.TestListener);
-
-        RoomModel.addListenerByPath(
+        RealtimeDatabaseInterface.addListenerByPath(
             'TestListener',
             'rooms/1',
             (doc) => {}
         );
 
-        readings.second = Boolean(RoomModel.listeners.TestListener);
+        readings.second = Boolean(RealtimeDatabaseInterface.listeners.TestListener);
 
-        RoomModel.removeListener('TestListener');
+        RealtimeDatabaseInterface.removeListener('TestListener');
 
-        readings.third = Boolean(RoomModel.listeners.TestListener);
+        readings.third = Boolean(RealtimeDatabaseInterface.listeners.TestListener);
 
         expect(readings).to.deep.equal({
             first: false,
@@ -233,36 +160,29 @@ describe('Realtime Model', () => {
     it('can remove all registered listeners', async () => {
         const readings = {};
 
-        const RoomModel = new RealtimeModel({
-            collectionName: 'rooms',
-            collectionProps: [
-                'active',
-            ]
-        });
+        readings.first = Object.keys(RealtimeDatabaseInterface.listeners).length;
 
-        readings.first = Object.keys(RoomModel.listeners).length;
-
-        RoomModel.addListenerByPath(
+        RealtimeDatabaseInterface.addListenerByPath(
             'test1',
             'rooms/1',
             (doc) => {}
         );
-        RoomModel.addListenerByPath(
+        RealtimeDatabaseInterface.addListenerByPath(
             'test2',
             'rooms/2',
             (doc) => {}
         );
-        RoomModel.addListenerByPath(
+        RealtimeDatabaseInterface.addListenerByPath(
             'test3',
             'rooms/3',
             (doc) => {}
         );
 
-        readings.second = Object.keys(RoomModel.listeners).length;
+        readings.second = Object.keys(RealtimeDatabaseInterface.listeners).length;
 
-        RoomModel.removeAllListeners();
+        RealtimeDatabaseInterface.removeAllListeners();
 
-        readings.third = Object.keys(RoomModel.listeners).length;
+        readings.third = Object.keys(RealtimeDatabaseInterface.listeners).length;
 
         expect(readings).to.deep.equal({
             first: 0,
@@ -272,15 +192,7 @@ describe('Realtime Model', () => {
     });
 
     it('will completely overwrite any data at the path when `writeToPath` is called', async () => {
-        const RoomModel = new RealtimeModel({
-            collectionName: 'rooms',
-            collectionProps: [
-                'active',
-                'users',
-            ]
-        });
-
-        await RoomModel.writeToPath(
+        await RealtimeDatabaseInterface.writeToPath(
             'rooms/1',
             {
                 active: true,
@@ -292,7 +204,7 @@ describe('Realtime Model', () => {
                 }
             }
         );
-        await RoomModel.writeToPath(
+        await RealtimeDatabaseInterface.writeToPath(
             'rooms/1',
             {
                 users: {
@@ -303,7 +215,7 @@ describe('Realtime Model', () => {
             }
         );
 
-        const data = await RoomModel.getByPath('rooms/1');
+        const data = await RealtimeDatabaseInterface.getByPath('rooms/1');
         expect(data).to.deep.equal({
             users: {
                 joey: {
@@ -314,20 +226,51 @@ describe('Realtime Model', () => {
     });
 
     it('throws an error if a listener name is already taken when attempting to create a new listener', async () => {
-        const RoomModel = new RealtimeModel({
-            collectionName: 'rooms',
-            collectionProps: [
-                'active',
-            ]
-        });
-
-        RoomModel.addListenerByPath('TestListener', 'rooms/1', (doc) => {});
+        RealtimeDatabaseInterface.addListenerByPath('TestListener', 'rooms/1', (doc) => {});
         try {
-            RoomModel.addListenerByPath('TestListener', 'rooms/1', (doc) => {});
+            RealtimeDatabaseInterface.addListenerByPath('TestListener', 'rooms/1', (doc) => {});
             expect(false).to.equal(true);
         } catch (err) {
             expect(true).to.equal(true);
         }
+    });
+
+    it('can merge existing data with new data, if specified in the `writeToPath` function', async () => {
+        await RealtimeDatabaseInterface.writeToPath(
+            'rooms/1',
+            {
+                users: {
+                    john: { active: false },
+                    joey: { active: false },
+                },
+                testing: {
+                    what: {
+                        is: true,
+                    }
+                }
+            }
+        );
+        await RealtimeDatabaseInterface.writeToPath(
+            'rooms/1',
+            {
+                users: {
+                    john: { active: true }
+                }
+            },
+            { mergeWithExistingData: true }
+        );
+
+        const data = await RealtimeDatabaseInterface.getByPath('rooms/1');
+        expect(data).to.deep.equal({
+            users: {
+                john: { active: true },
+            },
+            testing: {
+                what: {
+                    is: true,
+                }
+            }
+        });
     });
 
 });
