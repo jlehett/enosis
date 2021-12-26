@@ -2,6 +2,7 @@ import { FirebaseError } from '@firebase/util';
 import {
     set,
     get,
+    remove,
     onValue,
     onDisconnect,
 } from 'firebase/database';
@@ -56,6 +57,21 @@ class RealtimeDatabaseInterface {
             };
         }
         await set(ref, dataToWrite);
+    }
+
+    /**
+     * Deletes the data (and any child data in the JSON tree) at the specified
+     * path.
+     * @public
+     * @function
+     * 
+     * @param {string} path The path to delete the data from
+     * @returns {Promise<void>} Resolves when the data at the specified path
+     * has been deleted
+     */
+    async deleteAtPath(path) {
+        const ref = getRefFromPath(path);
+        await remove(ref);
     }
 
     /**

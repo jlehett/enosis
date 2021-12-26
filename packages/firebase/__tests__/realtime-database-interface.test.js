@@ -273,4 +273,20 @@ describe('Realtime Database Interface', () => {
         });
     });
 
+    it('can delete data at a given path', async () => {
+        await RealtimeDatabaseInterface.writeToPath(
+            'rooms/1',
+            'Test',
+        );
+        const readings = {
+            first: await RealtimeDatabaseInterface.getByPath('rooms/1')
+        };
+        await RealtimeDatabaseInterface.deleteAtPath('rooms/1');
+        readings.second = await RealtimeDatabaseInterface.getByPath('rooms/1');
+        expect(readings).to.deep.equal({
+            first: 'Test',
+            second: null
+        });
+    });
+
 });

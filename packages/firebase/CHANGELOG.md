@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 3.0.1
+
+<i>Dec 26, 2021</i>
+
+### `@unifire-js/firebase/realtime-database`
+
+* 🗑 Add `deleteAtPath` function to the `RealtimeDatabaseInterface` API!
+
 ## 3.0.0
 
 <i>Dec 25, 2021</i>

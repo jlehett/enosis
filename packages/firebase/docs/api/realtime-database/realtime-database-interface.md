@@ -70,6 +70,29 @@ await RealtimeDatabaseInterface.writeToPath(
 );
 ```
 
+### deleteAtPath(path)
+
+Deletes the data (and any child data in the JSON tree) at the specified path.
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| path | string | The path to delete the data from. |
+
+#### Return Value
+
+This function returns a promise that resolves when the data at the specified path has been deleted from the Realtime Database.
+
+#### Example
+
+```js
+/**
+ * Delete all data starting at the path `rooms/1` in the realtime database.
+ */
+await RealtimeDatabaseInterface.deleteAtPath('rooms/1');
+```
+
 ### getByPath(path)
 
 Reads data from the given path in the Firebase Realtime Database. This will return that data and any children of that path in the Realtime Database JSON tree.
