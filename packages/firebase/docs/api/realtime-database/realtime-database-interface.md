@@ -185,6 +185,48 @@ RealtimeDatabaseInterface.useListenerByPath(
 );
 ```
 
+#### useLiveDataByPath(nameOfListener, path)
+
+React hook for adding a listener for a specific path, and tracking the live data in state.
+
+The listener will be automatically removed once the component unmounts.
+
+This function will throw an error if a listener with the name specified by `nameOfListener` already exists.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name to give to the listener during registration. It is used to reference the listener when you need to delete it later. |
+| path | string | The path in the Realtime Database to register the listener for. |
+
+#### Return Value
+
+This hook returns an array with the following structure:
+
+| Index | Type | Description |
+| --- | --- | --- |
+| 0 | * | The live data from the subscription, continuously updated in state. |
+| 1 | boolean | Flag indicating whether the initial fetch of the data has been performed yet or not. |
+
+##### Example
+
+```js
+// In a functional component...
+
+/**
+ * Registers a listener on the path, `rooms/1`, in the Realtime Database,
+ * and track the live data in state.
+ * 
+ * This listener will automatically be cleaned up when the React component
+ * unmounts.
+ */
+const [room, initialFetchDone] = RealtimeDatabaseInterface.useLiveDataByPath(
+    'TestListener',
+    'rooms/1'
+);
+```
+
 #### removeListener(nameOfListener)
 
 Removes a specified listener from the realtime database interface. Throws an error if the listener does not exist.

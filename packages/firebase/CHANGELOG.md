@@ -1,5 +1,17 @@
 # @unifire-js/firebase
 
+## 3.0.2
+
+<i>Dec 26, 2021</i>
+
+### `@unifire-js/firebase/firestore`
+
+* 👂 Add `useLiveDataBy...` functions as simplifications of the existing `useListenerBy...` functions.
+
+### `@unifire-js/firebase/realtime-database`
+
+* 👂 Add `useLiveDataByPath` function as a simplification of the `useListenerByPath` function.
+
 ## 3.0.1
 
 <i>Dec 26, 2021</i>

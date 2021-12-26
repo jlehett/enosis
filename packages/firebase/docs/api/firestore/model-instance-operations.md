@@ -310,6 +310,50 @@ ProfileModel.useListenerByID(
 );
 ```
 
+### useLiveDataByID(nameOfListener, id)
+
+A simplified API for creating listeners and tracking the data in state automatically.
+
+This hook will add a realtime listener for changes on a specific document, given an ID. The data will be stored in state for easy-access, as well as a flag indicating whether the initial fetch of the data has been performed yet or not to assist with conditional logic that relies on that live data.
+
+When the component unmounts, the listener will automatically be cleaned up.
+
+Throws an error if the name for the listener is already taken by another active listener on the model or submodel class instance.
+
+#### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener| string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
+| id | string | The ID of the document to register the listener for. |
+
+#### Return Value
+
+This hook returns an array with the following structure:
+
+| Index | Type | Description |
+| --- | --- | --- |
+| 0 | * | The live data from the subscription, continuously updated in state. |
+| 1 | boolean | Flag indicating whether the initial fetch of the data has been performed yet or not. |
+
+#### Example
+
+```js
+// In a functional React component...
+
+/**
+ * Registers a listener on the Profile model for any changes on a document
+ * with ID, `john`, and stores the live data in state.
+ * 
+ * This listener will automatically be cleaned up when the React component
+ * unmounts.
+ */
+const [profile, initialProfileFetchDone] = ProfileModel.useLiveDataByID(
+    'TestListener',
+    'john',
+);
+```
+
 ### addListenerByQuery(nameOfListener, queryFns, fn)
 
 Add a realtime listener for changes on any documents in the collection or subcollection instance matching the specified query functions. The listener references are stored in the model or submodel class instance, and can be removed via the `removeListener` or `removeAllListeners` functions on that model or submodel class instance.
@@ -397,6 +441,62 @@ ProfileModel.useListenerByQuery(
             console.log(`${doc.id}`);
         }
     }
+);
+```
+
+### useLiveDataByQuery(nameOfListener, queryFns)
+
+A simplified API for creating listeners and tracking the data in state automatically.
+
+This hook will add a realtime listener for changes on multiple documents in a collection or subcollection, given a query. The data will be stored in state for easy-access, as well as a flag indicating whether the initial fetch of the data has been performed yet or not to assist with conditional logic that relies on that live data.
+
+When the component unmounts, the listener will automatically be cleaned up.
+
+Throws an error if the name for the listener is already taken by another active listener on the model or submodel class instance.
+
+#### Argument
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener| string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. 
+| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+
+#### Return Value
+
+This hook returns an array with the following structure:
+
+| Index | Type | Description |
+| --- | --- | --- |
+| 0 | * | The live data from the subscription, continuously updated in state. |
+| 1 | boolean | Flag indicating whether the initial fetch of the data has been performed yet or not. |
+
+#### Example
+
+```js
+import {
+    where,
+    orderBy
+} from '@unifire-js/firebase/firestore';
+
+// In a functional component...
+
+/**
+ * Registers a listener on the Profile model for any changes on documents in
+ * the profiles collection where the display name is equal to `John` and its
+ * `active` property is set to `true`.
+ * 
+ * The live data will be stored in state.
+ * 
+ * This listener will automatically be cleaned up when the React component
+ * unmounts.
+ */
+const [profilesMatchingQuery, initialFetchDone] = ProfileModel.useLiveDataByQuery(
+    'TestListener',
+    [
+        where('displayName', '==', 'John'),
+        where('active', '==', true),
+        orderBy('displayName'),
+    ],
 );
 ```
 

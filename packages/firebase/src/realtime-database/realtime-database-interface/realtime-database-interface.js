@@ -1,4 +1,3 @@
-import { FirebaseError } from '@firebase/util';
 import {
     set,
     get,
@@ -6,7 +5,7 @@ import {
     onValue,
     onDisconnect,
 } from 'firebase/database';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getRefFromPath } from '../utilities/referencing';
 
 /**
@@ -134,6 +133,48 @@ class RealtimeDatabaseInterface {
             // In the userEffect cleanup, remove the listener
             return () => this.removeListener(nameOfListener);
         }, []);
+    }
+
+    /**
+     * React hook for adding a listener for a specific path, tracking the
+     * live data in state, and then removing the listener once the component
+     * unmounts.
+     * @public
+     * @function
+     * 
+     * @param {string} nameOfListener The name to give to the listener during
+     * registration; used to reference the listener when you need to delete it
+     * later
+     * @param {string} path The path to register the listener for
+     * @returns {[*, boolean]} First index is the live data; second index is a flag indicating whether the
+     * data's initial fetch has been performed or not
+     */
+    useLiveDataByPath(nameOfListener, path) {
+        /**
+         * Track live data info in state.
+         */
+        const [liveDataInfo, setLiveDataInfo] = useState({
+            data: null,
+            initialFetchDone: false,
+        });
+
+        /**
+         * When the component mounts, create the listener.
+         */
+        useEffect(() => {
+            // Create the lsitener
+            this.addListenerByPath(nameOfListener, path, (data) => {
+                setLiveDataInfo({
+                    data,
+                    initialFetchDone: true,
+                });
+            });
+            // In the useEffect cleanup, remove the listener
+            return () => this.removeListener(nameOfListener);
+        }, []);
+
+        // Return the hook API
+        return [liveDataInfo.data, liveDataInfo.initialFetchDone];
     }
 
     /**
