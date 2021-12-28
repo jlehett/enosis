@@ -36,7 +36,7 @@ const ExampleComponent = () => {
             return !user || !profile.displayName;
         },
         [user]
-    );j
+    );
 
     // We want to display a loading state until the user's access has been authenticated
     if (!authorizationChecked) {
