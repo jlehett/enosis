@@ -502,7 +502,7 @@ const [profilesMatchingQuery, initialFetchDone] = ProfileModel.useLiveDataByQuer
 
 ### removeListener(nameOfListener)
 
-Removes a specified listener from the model. Throws an error if the listener does not exist.
+Removes a specified listener from the model. If the listener does not exist, nothing happens.
 
 #### Arguments
 

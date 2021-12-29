@@ -229,7 +229,7 @@ const [room, initialFetchDone] = RealtimeDatabaseInterface.useLiveDataByPath(
 
 #### removeListener(nameOfListener)
 
-Removes a specified listener from the realtime database interface. Throws an error if the listener does not exist.
+Removes a specified listener from the realtime database interface. If the listener does not exist, nothing happens.
 
 To remove the special `onDisconnect` listeners, you must use the `removeOnDisconnectListener` or `removeAllOnDisconnectListeners` instead.
 
@@ -351,7 +351,7 @@ RealtimeDatabaseInterface.useOnDisconnectListenerByPath(
 
 Removes a specified `onDisconnect` listener from the realtime database interface. Note that this function will only remove `onDisconnect` listeners. Regular listeners that are referenced will *not* be removed by this function.
 
-Throws an error if the `onDisconnect` listener does not exist.
+If the listener does not exist, nothing happens.
 
 ##### Arguments
 

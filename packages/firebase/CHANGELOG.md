@@ -1,5 +1,17 @@
 # @unifire-js/firebase
 
+## 3.0.3
+
+<i>Dec 29, 2021</i>
+
+### `@unifire-js/firebase/firestore`
+
+* ⚠️ [!POTENTIALLY BREAKING CHANGE!] Attempting to remove listeners that don't exist will no longer throw an error and will instead be silently handled to minimize the use of `try...catch` blocks.
+
+### `@unifire-js/firebase/realtime-database`
+
+* ⚠️ [!POTENTIALLY BREAKING CHANGE!] Attempting to remove regular listeners or `onDisconnect` listeners that don't exist will no longer throw an error and will instead be silently handled to minimize the use of `try...catch` blocks.
+
 ## 3.0.2
 
 <i>Dec 26, 2021</i>

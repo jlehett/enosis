@@ -183,15 +183,11 @@ class RealtimeDatabaseInterface {
      * @function
      * 
      * @param {string} nameOfListener The name of the listener to remove
-     * @throws {Error} Thrown if a non-existent listener is attempted to be
-     * removed
      */
     removeListener(nameOfListener) {
         if (this.listeners[nameOfListener]) {
             this.listeners[nameOfListener]();
             delete this.listeners[nameOfListener];
-        } else {
-            throw new Error(`Attempted to remove non-existent listener, ${nameOfListener}.`);
         }
     }
     
@@ -256,15 +252,11 @@ class RealtimeDatabaseInterface {
      * 
      * @param {string} nameOfListener The name of the disconnect listener to
      * remove
-     * @throws {Error} Thrown if a non-existent disconnect listener is attempted
-     * to be removed
      */
     removeOnDisconnectListener(nameOfListener) {
         if (this.disconnectListeners[nameOfListener]) {
             this.disconnectListeners[nameOfListener]();
             delete this.disconnectListeners(nameOfListener);
-        } else {
-            throw new Error(`Attempted to remove non-existent disconnect listener, ${nameOfListener}.`);
         }
     }
 

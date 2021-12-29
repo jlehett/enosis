@@ -777,7 +777,7 @@ const [matchedMessages, initialFetchDone] = MessagesModel.useLiveDataByQuery(
 
 #### removeListener(nameOfListener)
 
-Removes a specified listener from the submodel. Throws an error if the listener does not exist.
+Removes a specified listener from the submodel. If the listener does not exist, nothing happens.
 
 ##### Arguments
 
