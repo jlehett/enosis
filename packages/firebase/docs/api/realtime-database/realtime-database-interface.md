@@ -116,7 +116,7 @@ This function returns a promise that resolves with the data read from the specif
 const roomData = await RealtimeDatabaseInterface.getByPath('rooms/1');
 ```
 
-#### addListenerByPath(nameOfListener, path, fn)
+### addListenerByPath(nameOfListener, path, fn)
 
 Registers a listener for a specific path in the Realtime Database. The listener is stored on the Realtime Database Interface instance itself, and can be removed by calling either the `removeListener` or `removeAllListeners` functions.
 
@@ -126,7 +126,7 @@ The callback function passed as an argument should take in the data at the given
 
 This function will throw an error if a listener with the name specified by `nameOfListener` already exists.
 
-##### Arguments
+#### Arguments
 
 | Argument | Type | Description |
 | --- | --- | --- |
@@ -134,7 +134,7 @@ This function will throw an error if a listener with the name specified by `name
 | path | string | The path in the Realtime Database to register the listener for. |
 | fn | function | The callback function for the listener; should accept the data from the specified path as its only argument. |
 
-##### Example
+#### Example
 
 ```js
 /**
@@ -150,7 +150,7 @@ RealtimeDatabaseInterface.addListenerByPath(
 );
 ```
 
-#### useListenerByPath(nameOfListener, path, fn)
+### useListenerByPath(nameOfListener, path, fn)
 
 React hook for adding a listener for a specific path in the Realtime Database JSON tree, and then removing it once the component unmounts.
 
@@ -158,7 +158,7 @@ The callback function passed as an argument should take in the data at the given
 
 This function will throw an error if a listener with the name specified by `nameOfListener` already exists.
 
-##### Arguments
+#### Arguments
 
 | Argument | Type | Description |
 | --- | --- | --- |
@@ -166,7 +166,7 @@ This function will throw an error if a listener with the name specified by `name
 | path | string | The path in the Realtime Database to register the listener for. |
 | fn | function | The callback function for the listener; should accept the data at the given path as its only argument. |
 
-##### Example
+#### Example
 
 ```js
 // In a functional component...
@@ -185,7 +185,7 @@ RealtimeDatabaseInterface.useListenerByPath(
 );
 ```
 
-#### useLiveDataByPath(nameOfListener, path)
+### useLiveDataByPath(nameOfListener, path)
 
 React hook for adding a listener for a specific path, and tracking the live data in state.
 
@@ -193,7 +193,7 @@ The listener will be automatically removed once the component unmounts.
 
 This function will throw an error if a listener with the name specified by `nameOfListener` already exists.
 
-##### Arguments
+#### Arguments
 
 | Argument | Type | Description |
 | --- | --- | --- |
@@ -209,7 +209,7 @@ This hook returns an array with the following structure:
 | 0 | * | The live data from the subscription, continuously updated in state. |
 | 1 | boolean | Flag indicating whether the initial fetch of the data has been performed yet or not. |
 
-##### Example
+#### Example
 
 ```js
 // In a functional component...
@@ -227,19 +227,19 @@ const [room, initialFetchDone] = RealtimeDatabaseInterface.useLiveDataByPath(
 );
 ```
 
-#### removeListener(nameOfListener)
+### removeListener(nameOfListener)
 
 Removes a specified listener from the realtime database interface. If the listener does not exist, nothing happens.
 
 To remove the special `onDisconnect` listeners, you must use the `removeOnDisconnectListener` or `removeAllOnDisconnectListeners` instead.
 
-##### Arguments
+#### Arguments
 
 | Argument | Type | Description |
 | --- | --- | --- |
 | nameOfListener | string | The name of the listener to remove. |
 
-##### Example
+#### Example
 
 ```js
 /**
@@ -249,17 +249,17 @@ To remove the special `onDisconnect` listeners, you must use the `removeOnDiscon
 RealtimeDatabaseInterface.removeListener('TestListener');
 ```
 
-#### removeAllListeners()
+### removeAllListeners()
 
 Removes all listeners from the realtime database interface. This does *not* include the special `onDisconnect` listeners. To remove those listeners, you must use the `removeOnDisconnectListener` or `removeAllOnDisconnectListeners` instead.
 
-##### Arguments
+#### Arguments
 
 | Argument | Type | Description |
 | --- | --- | --- |
 | \- | \- | \- |
 
-##### Example
+#### Example
 
 ```js
 /**
@@ -268,13 +268,13 @@ Removes all listeners from the realtime database interface. This does *not* incl
 RealtimeDatabaseInterface.removeAllListeners();
 ```
 
-#### addOnDisconnectListenerByPath(nameOfListener, path, onDisconnectFn, args=[])
+### addOnDisconnectListenerByPath(nameOfListener, path, onDisconnectFn, args=[])
 
 Adds an `onDisconnect` listener to the realtime database interface, which will trigger a certain realtime database operation whenever the user disconnects from the database for any reason (e.g., closing the tab, turning off their computer, etc.).
 
 `onDisconnect` listeners are stored separately from regular listeners. Therefore, if you would like to delete an `onDisconnect` listener, you must use either the `removeOnDisconnectListener` or `removeAllOnDisconnectListeners` functions. The usual `removeListener` and `removeAllListeners` functions will not affect any `onDisconnect` listeners, and name collisions between `onDisconnect` listeners and regular listeners will not affect anything.
 
-##### Arguments
+#### Arguments
 
 | Argument | Type | Description |
 | --- | --- | --- |
@@ -283,7 +283,7 @@ Adds an `onDisconnect` listener to the realtime database interface, which will t
 | onDisconnectFn | string | The name of one of the functions exposed by the [`OnDisconnect`](https://firebase.google.com/docs/reference/js/database.ondisconnect) class instance that should be used by the `onDisconnect` listener. |
 | args | Array | (opt.) List of args to pass to the `onDisconnectFn`. |
 
-##### Example
+#### Example
 
 An example of using the `set` `onDisconnectFn`:
 
@@ -314,13 +314,13 @@ RealtimeDatabaseInterface.addOnDisconnectListenerByPath(
 );
 ```
 
-#### useOnDisconnectListenerByPath(nameOfListener, path, onDisconectFn, args=[])
+### useOnDisconnectListenerByPath(nameOfListener, path, onDisconectFn, args=[])
 
 React hook for adding an `onDisconnect` listener for a specific path, and then removing it once the component unmounts.
 
 The documentation from `addOnDisconnectListenerByPath` also applies to this function.
 
-##### Arguments
+#### Arguments
 
 | Argument | Type | Description |
 | --- | --- | --- |
@@ -329,7 +329,7 @@ The documentation from `addOnDisconnectListenerByPath` also applies to this func
 | onDisconnectFn | string | The name of one of the functions exposed by the [`OnDisconnect`](https://firebase.google.com/docs/reference/js/database.ondisconnect) class instance that should be used by the `onDisconnect` listener. |
 | args | Array | (opt.) List of args to pass to the `onDisconnectFn`. |
 
-##### Example
+#### Example
 
 ```js
 // In a functional component...
@@ -347,19 +347,19 @@ RealtimeDatabaseInterface.useOnDisconnectListenerByPath(
 );
 ```
 
-#### removeOnDisconnectListener(nameOfListener)
+### removeOnDisconnectListener(nameOfListener)
 
 Removes a specified `onDisconnect` listener from the realtime database interface. Note that this function will only remove `onDisconnect` listeners. Regular listeners that are referenced will *not* be removed by this function.
 
 If the listener does not exist, nothing happens.
 
-##### Arguments
+#### Arguments
 
 | Argument | Type | Description |
 | --- | --- | --- |
 | nameOfListener | string | The name of the `onDisconnect` listener to remove. |
 
-##### Example
+#### Example
 
 ```js
 /**
@@ -369,17 +369,17 @@ If the listener does not exist, nothing happens.
 RealtimeDatabaseInterface.removeOnDisconnectListener('User Presence Listener');
 ```
 
-#### removeAllOnDisconnectListener()
+### removeAllOnDisconnectListener()
 
 Removes all `onDisconnect` listeners from the realtime database interface. Note that this function only affects `onDisconnect` listeners. Any regular listeners that exist will remain untouched by this function.
 
-##### Arguments
+#### Arguments
 
 | Argument | Type | Description |
 | --- | --- | --- |
 | \- | \- | \- |
 
-##### Example
+#### Example
 
 ```js
 /**
