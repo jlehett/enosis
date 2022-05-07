@@ -457,6 +457,48 @@ MessagesModel.useListenerByPath(
 );
 ```
 
+#### useLiveDataByPath(nameOfListener, path)
+
+React hook for adding a listener for a specific document, tracking that data in state while also tracking whether the initial fetch has been performed yet or not.
+
+Then, when the component unmounts, the listener will be automatically cleaned up.
+
+Throws an error if the name for the listener is already taken by another active listener on the submodel class instance.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
+| path | string | The path to the document to register the listener for. |
+
+#### Return Value
+
+This hook returns an array with the following structure:
+
+| Index | Type | Description |
+| --- | --- | --- |
+| 0 | * | The live data from the subscription, continuously updated in state. |
+| 1 | boolean | Flag indicating whether the initial fetch of the data has been performed yet or not. |
+
+##### Example
+
+```js
+// In a functional component...
+
+/**
+ * Registers a listener on the document at path, `profiles/john/messages/1`,
+ * and tracks the live data in state.
+ * 
+ * This listener will automatically be cleane dup when the React component
+ * unmounts.
+ */
+const [message, initialFetchDone] MessagesModel.useLiveDataByPath(
+    'TestListener',
+    'profiles/john/messages/1'
+);
+```
+
 #### addListenerByQueryInInstance(nameOfListener, path, queryFns, fn)
 
 Register a listener for multiple documents in a specific subcollection instance, given a query. The listener is stored on the submodel itself, and can be removed by calling either the `removeListener` or `removeAllListeners` functions.
@@ -549,6 +591,57 @@ MessagesModel.useListenerByQueryInInstance(
 );
 ```
 
+#### useLiveDataByQueryInInstance(nameOfListener, path)
+
+React hook for registering a listener for multiple documents in a specific subcollection instance, given a query, and tracking the live data in state.
+
+The listener will be automatically removed when the component unmounts.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
+| path | string | The path to the specific subcollection instance to register the listener for. |
+| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+
+#### Return Value
+
+This hook returns an array with the following structure:
+
+| Index | Type | Description |
+| --- | --- | --- |
+| 0 | * | The live data from the subscription, continuously updated in state. |
+| 1 | boolean | Flag indicating whether the initial fetch of the data has been performed yet or not. |
+
+##### Example
+
+```js
+import {
+    where,
+    orderBy
+} from '@unifire-js/firebase/firestore';
+
+// In a functional component..
+
+/**
+ * Registers a query listener for the subcollection instance at path,
+ * `profiles/john/messages`, and storing the live data in state.
+ * 
+ * This listener will automatically be cleaned up when the React component
+ * unmounts.
+ */
+const [matchedMessages, initialFetchDone] = MessagesModel.useLiveDataByQueryInInstance(
+    'TestListener',
+    'profiles/john/messages',
+    [
+        where('posted', '==', true),
+        where('content', '==', 'Hello World!'),
+        orderBy('userPosted'),
+    ]
+);
+```
+
 #### addListenerByQuery(nameOfListener, queryFns, fn)
 
 Register a listener for multiple documents in a subcollection group, given a query. The listener is stored on the submodel itself, and can be removed by calling either the `removeListener` or `removeAllListeners` functions.
@@ -635,9 +728,56 @@ MessagesModel.useListenerByQuery(
 );
 ```
 
+#### useLiveDataByQuery(nameOfListener, queryFns)
+
+React hook for registering a listener for multiple documents in a subcollection group, given a query, and tracking the live data in state.
+
+This listener will automatically be cleaned up when the React component unmounts.
+
+##### Arguments
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
+| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+
+#### Return Value
+
+This hook returns an array with the following structure:
+
+| Index | Type | Description |
+| --- | --- | --- |
+| 0 | * | The live data from the subscription, continuously updated in state. |
+| 1 | boolean | Flag indicating whether the initial fetch of the data has been performed yet or not. |
+
+##### Example
+
+```js
+import {
+    where,
+    orderBy
+} from '@unifire-js/firebase/firestore';
+
+/**
+ * Registers a query listener for the subcollection as a whole, and tracks
+ * the live data in state.
+ * 
+ * This listener will automatically be cleaned up when the React component
+ * unmounts.
+ */
+const [matchedMessages, initialFetchDone] = MessagesModel.useLiveDataByQuery(
+    'TestListener',
+    [
+        where('posted', '==', true),
+        where('content', '==', 'Hello World!'),
+        orderBy('userPosted'),
+    ]
+);
+```
+
 #### removeListener(nameOfListener)
 
-Removes a specified listener from the submodel. Throws an error if the listener does not exist.
+Removes a specified listener from the submodel. If the listener does not exist, nothing happens.
 
 ##### Arguments
 

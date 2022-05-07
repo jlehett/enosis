@@ -10,7 +10,7 @@ import {
 import {
     map
 } from 'lodash';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
     attachSubmodelInstanceReferencesToDocRef,
     attachSubmodelInstanceReferencesToFetchedData,
@@ -24,7 +24,7 @@ import {
 class ModelInstanceOperations {
     constructor() {
         /**
-         * Map of listener names to their unsubscribe functions.
+         * Map of listener names to their unsubscribe function.
          */
         this.listeners = {};
     }
@@ -210,7 +210,7 @@ class ModelInstanceOperations {
     }
 
     /**
-     * React hook for adding a listener for a specific document, and the removing it once the component
+     * React hook for adding a listener for a specific document, and then removing it once the component
      * unmounts.
      * @public
      * @function
@@ -228,6 +228,46 @@ class ModelInstanceOperations {
             // In the useEffect cleanup, remove the listener
             return () => this.removeListener(nameOfListener);
         }, []);
+    }
+
+    /**
+     * React hook for adding a listener for a specific document, and tracking that data in state while also
+     * tracking whether the initial fetch has been performed yet or not.
+     * @public
+     * @function
+     * 
+     * @param {string} nameOfListener The name to give to the listener during registration; used to reference
+     * the listener when you need to delete it later
+     * @param {string} id The ID of the document to register the listener for
+     * @returns {[*, boolean]} First index is the live data; second index is a flag indicating whether the
+     * data's initial fetch has been performed or not
+     */
+    useLiveDataByID(nameOfListener, id) {
+        /**
+         * Track live data info in state.
+         */
+        const [liveDataInfo, setLiveDataInfo] = useState({
+            data: null,
+            initialFetchDone: false,
+        });
+
+        /**
+         * When the component mounts, create the listener.
+         */
+        useEffect(() => {
+            // Create the listener
+            this.addListenerByID(nameOfListener, id, (data) => {
+                setLiveDataInfo({
+                    data,
+                    initialFetchDone: true,
+                });
+            });
+            // In the useEffect cleanup, remove the listener
+            return () => this.removeListener(nameOfListener);
+        }, []);
+
+        // Return the hook API
+        return [liveDataInfo.data, liveDataInfo.initialFetchDone];
     }
 
     /**
@@ -289,19 +329,58 @@ class ModelInstanceOperations {
     }
 
     /**
+     * React hook for adding a listener for multiple documents in a collection or subcollection, given
+     * a query, and tracking that data in state while also tracking whether the initial fetch has been
+     * performed yet or not.
+     * @public
+     * @function
+     * 
+     * @param {string} nameOfListener The name to give to the listener during registration; used to reference
+     * the listener when you need to delete it later
+     * @param {function[]} queryFns Array of Firestore query functions to use in the query, e.g.,
+     * `limit`, `orderBy`, and `where`
+     * @returns {[*, boolean]} First index is the live data; second index is a flag indicating whether the
+     * data's initial fetch has been performed or not
+     */
+    useLiveDataByQuery(nameOfListener, queryFns) {
+        /**
+         * Track live data info in state.
+         */
+        const [liveDataInfo, setLiveDataInfo] = useState({
+            data: null,
+            initialFetchDone: false,
+        });
+
+        /**
+         * When the component mounts, create the listener.
+         */
+        useEffect(() => {
+            // Create the listener
+            this.addListenerByQuery(nameOfListener, queryFns, (data) => {
+                setLiveDataInfo({
+                    data,
+                    initialFetchDone: true,
+                });
+            });
+            // In the useEffect cleanup, remove the listener
+            return () => this.removeListener(nameOfListener);
+        }, []);
+
+        // Return the hook API
+        return [liveDataInfo.data, liveDataInfo.initialFetchDone];
+    }
+
+    /**
      * Removes a specified listener from the model.
      * @public
      * @function
      * 
      * @param {string} nameOfListener The name of the listener to remove from the model
-     * @throws {Error} Thrown if a non-existent listener is attempted to be removed
      */
     removeListener(nameOfListener) {
         if (this.listeners[nameOfListener]) {
             this.listeners[nameOfListener]();
             delete this.listeners[nameOfListener];
-        } else {
-            throw new Error(`Attempted to remove non-existent listener, ${nameOfListener}.`);
         }
     }
 

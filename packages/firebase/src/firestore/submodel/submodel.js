@@ -19,7 +19,7 @@ import {
     onSnapshot,
 } from 'firebase/firestore';
 import { map } from 'lodash';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
  * Class which provides a streamlined approach for creating Firestore
@@ -343,6 +343,47 @@ class Submodel {
     }
 
     /**
+     * React hook for adding a listener for a specific document, and tracking
+     * that data in state while also tracking whether the initial fetch has
+     * been performed yet or not.
+     * @public
+     * @function
+     * 
+     * @param {string} nameOfListener The name to give to the listener during registration; used to
+     * reference the listener when you need to delete it later
+     * @param {string} path The path to the document to register the listener for
+     * @returns {[*, boolean]} First index is the live data; second index is a flag indicating whether the
+     * data's initial fetch has been performed or not
+     */
+    useLiveDataByPath(nameOfListener, path) {
+        /**
+         * Track live data info in state.
+         */
+        const [liveDataInfo, setLiveDataInfo] = useState({
+            data: null,
+            initialFetchDone: false,
+        });
+
+        /**
+         * When the component mounts, create the listener.
+         */
+        useEffect(() => {
+            // Create the listener
+            this.addListenerByPath(nameOfListener, path, (data) => {
+                setLiveDataInfo({
+                    data,
+                    initialFetchDone: true
+                });
+            });
+            // In the useEffect cleanup, remove the listener
+            return () => this.removeListener(nameOfListener);
+        }, []);
+        
+        // Return the hook API
+        return [liveDataInfo.data, liveDataInfo.initialFetchDone];
+    }
+
+    /**
      * Register a listener for multiple documents in a specific subcollection instance, given a query.
      * The listener is stored on the model or submodel itself, and can be removed by calling either the
      * `removeListener` or `removeAllListeners` functions.
@@ -405,6 +446,49 @@ class Submodel {
     }
 
     /**
+     * React hook for registering a listener for multiple documents in a specific
+     * subcollection instance, given a query, tracking the data in state, and then
+     * removing the listener when the component unmounts.
+     * @public
+     * @function
+     * 
+     * @param {string} nameOfListener The name to give to the listener during registration; used to
+     * reference the listener when you need to delete it later
+     * @param {string} path The path to the specific subcollection instance to register the listener for
+     * @param {function[]} queryFns Array of Firestore query functions to use in the query, e.g., `limit`,
+     * `orderBy`, and `where`
+     * @returns {[*, boolean]} First index is the live data; second index is a flag indicating whether the
+     * data's initial fetch has been performed or not
+     */
+    useLiveDataByQueryInInstance(nameOfListener, path, queryFns) {
+        /**
+         * Track live data info in state.
+         */
+        const [liveDataInfo, setLiveDataInfo] = useState({
+            data: null,
+            initialFetchDone: false,
+        });
+
+        /**
+         * When the component mounts, create the listener.
+         */
+        useEffect(() => {
+            // Create the listener
+            this.addListenerByQueryInInstance(nameOfListener, path, queryFns, (data) => {
+                setLiveDataInfo({
+                    data,
+                    initialFetchDone: true,
+                });
+            });
+            // In the useEffect cleanup, remove the listener
+            return () => this.removeListener(nameOfListener);
+        }, []);
+
+        // Return the hook API
+        return [liveDataInfo.data, liveDataInfo.initialFetchDone];
+    }
+
+    /**
      * Register a listener for multiple documents in a subcollection group, given a query. The listener
      * is stored on the model or submodel itself, and can be removed by calling either the
      * `removeListener` or `removeAllListeners` functions.
@@ -464,19 +548,58 @@ class Submodel {
     }
 
     /**
+     * React hook for registering a listener for multiple documents in a subcollection group, given
+     * a query, tracking the live data in state, and then removing the listener once the component
+     * unmounts.
+     * @public
+     * @function
+     * 
+     * @param {string} nameOfListener The name to give to the listener during registration; used to
+     * reference the listener when you need to delete it later
+     * @param {function[]} queryFns Array of Firestore query functions to use in the query, e.g., `limit`,
+     * `orderBy`, and `where`
+     * @returns {[*, boolean]} First index is the live data; second index is a flag indicating whether the
+     * data's initial fetch has been performed or not
+     */
+    useLiveDataByQuery(nameOfListener, queryFns) {
+        /**
+         * Track live data info in state.
+         */
+        const [liveDataInfo, setLiveDataInfo] = useState({
+            data: null,
+            initialFetchDone: false,
+        });
+
+        /**
+         * When the component mounts, create the listener.
+         */
+        useEffect(() => {
+            // Create the listener
+            this.addListenerByQuery(nameOfListener, queryFns, (data) => {
+                setLiveDataInfo({
+                    data,
+                    initialFetchDone: true,
+                });
+            });
+            // In the useEffect cleanup, remove the listener
+            return () => this.removeListener(nameOfListener);
+        }, []);
+
+        // Return the hook API
+        return [liveDataInfo.data, liveDataInfo.initialFetchDone];
+    }
+
+    /**
      * Removes a specified listener from the submodel.
      * @public
      * @function
      * 
      * @param {string} nameOfListener The name of the listener to remove from the submodel
-     * @throws {Error} Thrown if a non-existent listener is attempted to be removed 
      */
     removeListener(nameOfListener) {
         if (this.listeners[nameOfListener]) {
             this.listeners[nameOfListener]();
             delete this.listeners[nameOfListener];
-        } else {
-            throw new Error(`Attempted to remove non-existent listener, ${nameOfListener}.`);
         }
     }
 

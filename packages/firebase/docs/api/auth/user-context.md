@@ -27,9 +27,9 @@ import { UserContextProvider } from '@unifire-js/firebase/auth';
 
 const App = ({children}) => {
     return (
-        <UserContext.Provider middleware={middleware}>
+        <UserContextProvider middleware={middleware}>
             {children}
-        </UserContext.Provider>
+        </UserContextProvider>
     );
 };
 ```
