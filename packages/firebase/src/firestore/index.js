@@ -18,5 +18,9 @@ export {
 export {
     where,
     orderBy,
-    limit
+    limit,
+    startAt,
+    startAfter,
+    endAt,
+    endBefore,
 } from 'firebase/firestore';

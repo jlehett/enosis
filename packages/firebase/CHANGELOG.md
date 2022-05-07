@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 2.4.0
+
+<i>May 7, 2021</i>
+
+### `unifire-js/firebase/firestore`
+
+* 🔧 Add `startAt`, `startAfter`, `endAt`, and `endBefore` exports to the Unifire-JS Firestore package to use in query pagination.
+
 ## 2.3.7
 
 <i>Dec 12, 2021</i>
