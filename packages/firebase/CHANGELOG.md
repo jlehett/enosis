@@ -1,5 +1,11 @@
 # @unifire-js/firebase
 
+## 3.1.2
+
+<i>May 15, 2022</i>
+
+* 🛠️ Add peer dependency support for React v18.x
+
 ## 3.1.1
 
 <i>May 15, 2022</i>
