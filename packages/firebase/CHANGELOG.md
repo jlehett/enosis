@@ -1,8 +1,16 @@
 # @unifire-js/firebase
 
+## 3.1.1
+
+<i>May 15, 2022</i>
+
+### `unifire-js/firebase/auth`
+
+* 🛠️ Fix issue with async `useEffect` hook usage.
+
 ## 3.1.0
 
-<i>May 7, 2021</i>
+<i>May 7, 2022</i>
 
 ### `unifire-js/firebase/firestore`
 

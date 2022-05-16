@@ -1,5 +1,11 @@
 # @unifire-js/hooks
 
+## 0.0.14
+
+<i>May 15, 2022</i>
+
+* 🛠️ Fix issue with async `useEffect` hook usage.
+
 ## 0.0.13
 
 <i>Dec 11, 2021</i>

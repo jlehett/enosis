@@ -36,14 +36,18 @@ export default function(redirectTo, condition) {
 
     // Whenever the user context updates, re-run the condition
     // function and trigger the redirect if it returns true
-    useEffect(async () => {
-        if (userContext.initialLoadDone) {
-            const conditionResult = await condition(userContext);
-            if (conditionResult) {
-                navigate(redirectTo);
+    useEffect(() => {
+        const fn = async () => {
+            if (userContext.initialLoadDone) {
+                const conditionResult = await condition(userContext);
+                if (conditionResult) {
+                    navigate(redirectTo);
+                }
+                setInitialCheckDone(true);
             }
-            setInitialCheckDone(true);
-        }
+        };
+
+        fn();
     }, [userContext]);
 
     // Return the flag stating whether an initial check has been done

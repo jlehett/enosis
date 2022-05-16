@@ -29,16 +29,20 @@ export default function(redirectTo, redirectCondition, dependencies, skipCheckIf
     const navigate = useNavigate();
 
     // Create the redirect side effect
-    useEffect(async () => {
-        // Skip the check if the skipCheckIfCondition result is true
-        const skipCheck = skipCheckIfCondition ? await skipCheckIfCondition() : false;
-        if (!skipCheck) {
-            const redirect = await redirectCondition();
-            if (redirect) {
-                navigate(redirectTo);
+    useEffect(() => {
+        const fn = async () => {
+            // Skip the check if the skipCheckIfCondition result is true
+            const skipCheck = skipCheckIfCondition ? await skipCheckIfCondition() : false;
+            if (!skipCheck) {
+                const redirect = await redirectCondition();
+                if (redirect) {
+                    navigate(redirectTo);
+                }
+                setInitialCheckDone(true);
             }
-            setInitialCheckDone(true);
-        }
+        };
+
+        fn();
     }, dependencies);
 
     // Return the flag stating whether an initial check has been done
