@@ -1,5 +1,11 @@
 # @unifire-js/hooks
 
+## 0.0.15
+
+<i>May 15, 2022</i>
+
+* 🛠️ Add support for React 18.x
+
 ## 0.0.14
 
 <i>May 15, 2022</i>
