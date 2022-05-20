@@ -27,11 +27,11 @@ export default function(fn) {
     /**
      * Define a new `runFn` function that tracks itself with state.
      */
-    const runFn = async () => {
+    const runFn = async (...args) => {
         setFnRunning(true);
         try {
             if (fn) {
-                await fn();
+                await fn(...args);
             }
         } catch (err) {
             // We do not need to do anything here -- error handling

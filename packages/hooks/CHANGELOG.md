@@ -1,5 +1,11 @@
 # @unifire-js/hooks
 
+## 0.0.16
+
+<i>May 20, 2022</i>
+
+* 🛠️ Add support for passing args to tracked functions using the `useTrackFunction` hook.
+
 ## 0.0.15
 
 <i>May 15, 2022</i>
