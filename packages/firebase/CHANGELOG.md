@@ -1,5 +1,11 @@
 # @unifire-js/firebase
 
+## 3.1.3
+
+<i>May 20, 2022</i>
+
+* 🛠️ Make `firebase` a peer dependency.
+
 ## 3.1.2
 
 <i>May 15, 2022</i>
