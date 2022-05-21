@@ -1,6 +1,6 @@
 import {
     deleteApp
-} from '@firebase/app';
+} from 'firebase/app';
 import { getUnifireFirebaseApp } from '../../lib/firebase-app/firebase-app';
 
 export default function() {

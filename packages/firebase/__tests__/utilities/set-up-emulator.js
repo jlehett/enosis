@@ -1,17 +1,18 @@
 import {
     connectFirestoreEmulator,
     getFirestore
-} from '@firebase/firestore';
+} from 'firebase/firestore';
 import {
     connectDatabaseEmulator,
     getDatabase
-} from '@firebase/database';
+} from 'firebase/database';
 import {
     connectFunctionsEmulator,
     getFunctions
-} from '@firebase/functions';
+} from 'firebase/functions';
+import { initializeApp } from 'firebase/app';
 import firebaseConfig from '../../firebase.config';
-import { createUnifireFirebaseApp } from '../../lib';
+import { setUnifireFirebaseApp } from '../../lib';
 import {
     clearFirestoreEmulatorData,
     clearRealtimeDatabaseEmulatorData
@@ -21,7 +22,8 @@ import {
  * Create the Unifire Firebase app.
  */
 export function setUpApp() {
-    createUnifireFirebaseApp(firebaseConfig);
+    const app = initializeApp(firebaseConfig);
+    setUnifireFirebaseApp(app);
 }
 
 /**

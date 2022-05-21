@@ -9,8 +9,8 @@ import ModelInstanceOperations from '../utilities/model-instance-operations';
  * Class which provides a streamlined approach for creating Firestore model
  * objects with various simplified read and write operations.
  * 
- * Before models are constructed, the Unifire Firebase app should be created via
- * the `createUnifireFirebaseApp` function from this package.
+ * Before models are constructed, the Unifire Firebase app should be set via
+ * the `setUnifireFirebaseApp` function from this package.
  * 
  * @param {ModelParams} params The parameters to use when creating the model
  */

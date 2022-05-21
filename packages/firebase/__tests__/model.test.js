@@ -14,7 +14,7 @@ import {
     where,
     orderBy,
     limit
-} from '@firebase/firestore';
+} from 'firebase/firestore';
 import { setUpApp, setUpFirestoreEmulator } from './utilities/set-up-emulator';
 import { clearFirestoreEmulatorData } from './utilities/clear-emulator-data';
 import freeAppResources from './utilities/free-app-resources';

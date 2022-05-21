@@ -1,5 +1,3 @@
-import { initializeApp } from 'firebase/app';
-
 /**
  * Storage of the Unifire Firebase app.
  * @type {Firebase.App | null}
@@ -7,12 +5,12 @@ import { initializeApp } from 'firebase/app';
 let unifireFirebaseApp = null;
 
 /**
- * Function to create the Unifire Firebase App for use throughout the package.
+ * Function to set the Unifire Firebase App for use throughout the package.
  * 
  * @param {Object} FIREBASE_CONFIG Object defining the necessary keys for the Firebase App to be created
  */
-export function createUnifireFirebaseApp(FIREBASE_CONFIG) {
-    unifireFirebaseApp = initializeApp(FIREBASE_CONFIG);
+export function setUnifireFirebaseApp(app) {
+    unifireFirebaseApp = app;
 }
 
 /**
@@ -25,6 +23,6 @@ export function getUnifireFirebaseApp() {
     if (unifireFirebaseApp) {
         return unifireFirebaseApp;
     } else {
-        throw new Error('The Unifire Firebase App needs to be created via `createUnifireFirebaseApp` before any utilities can be used from @unifire/firebase');
+        throw new Error('The Unifire Firebase App needs to be set via `setUnifireFirebaseApp` before any utilities can be used from @unifire/firebase');
     }
 }

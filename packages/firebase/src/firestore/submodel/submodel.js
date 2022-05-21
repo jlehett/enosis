@@ -25,8 +25,8 @@ import { useEffect, useState } from 'react';
  * Class which provides a streamlined approach for creating Firestore
  * submodel objects with various simplified read and write operations.
  * 
- * Before submodels are constructed, the Unifire Firebase app should be created via
- * the `createUnifireFirebaseApp` function from this package.
+ * Before submodels are constructed, the Unifire Firebase app should be set via
+ * the `setUnifireFirebaseApp` function from this package.
  * 
  * Submodels are unique in that each instance associates a particular
  * document as its parent. For this reason, the `Submodel` class is

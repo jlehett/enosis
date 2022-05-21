@@ -1,5 +1,11 @@
 # @unifire-js/firebase
 
+## 4.0.0
+
+<i>May 21, 2022</i>
+
+* 🛠️ [!BREAKING CHANGE!] Creating a separate Firebase project reference with `createUnifireFirebaseApp` is no longer necessary! Now, an existing Firebase project reference can be brought simply with `setUnifireFirebaseApp`!
+
 ## 3.1.3
 
 <i>May 20, 2022</i>

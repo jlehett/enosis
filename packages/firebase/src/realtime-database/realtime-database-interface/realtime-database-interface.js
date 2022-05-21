@@ -13,7 +13,7 @@ import { getRefFromPath } from '../utilities/referencing';
  * Realtime Database.
  * 
  * Before the RealtimeInterface can be utilized, the Unifire Firebase app
- * should be created via the `createUnifireFirebaseApp` function from this
+ * should be set via the `setUnifireFirebaseApp` function from this
  * package.
  */
 class RealtimeDatabaseInterface {
