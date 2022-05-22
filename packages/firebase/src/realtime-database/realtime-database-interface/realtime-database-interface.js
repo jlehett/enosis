@@ -24,7 +24,7 @@ class RealtimeDatabaseInterface {
         this.listeners = {};
 
         /**
-         * Map of disconnect listener names to their unsubscribe function.
+         * Map of disconnect listener names to their `onDisconnect` objects.
          */
         this.disconnectListeners = {};
     }
@@ -218,7 +218,7 @@ class RealtimeDatabaseInterface {
         const ref = getRefFromPath(path);
         const onDisconnectObj = onDisconnect(ref);
         onDisconnectObj[onDisconnectFn](...args);
-        this.disconnectListeners[nameOfListener] = onDisconnectObj.cancel;
+        this.disconnectListeners[nameOfListener] = onDisconnectObj;
     }
 
     /**
@@ -255,8 +255,8 @@ class RealtimeDatabaseInterface {
      */
     removeOnDisconnectListener(nameOfListener) {
         if (this.disconnectListeners[nameOfListener]) {
-            this.disconnectListeners[nameOfListener]();
-            delete this.disconnectListeners(nameOfListener);
+            this.disconnectListeners[nameOfListener].cancel();
+            delete this.disconnectListeners[nameOfListener];
         }
     }
 

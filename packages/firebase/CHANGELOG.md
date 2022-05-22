@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 4.0.2
+
+<i>May 22, 2022</i>
+
+### `unifire-js/firebase/realtime-database`
+
+* 🛠️ Fix broken `onDisconnect` listeners in the Realtime Database Interface.
+
 ## 4.0.1
 
 <i>May 22, 2022</i>
