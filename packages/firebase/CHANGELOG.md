@@ -1,5 +1,11 @@
 # @unifire-js/firebase
 
+## 4.0.1
+
+<i>May 22, 2022</i>
+
+* 🛠️ [!BREAKING CHANGE!] Removed Firestore re-exports that are no longer necessary now that `createUnifireFirebaseApp` has been replaced with `setUnifireFirebaseApp`.
+
 ## 4.0.0
 
 <i>May 21, 2022</i>

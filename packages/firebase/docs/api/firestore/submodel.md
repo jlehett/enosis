@@ -283,7 +283,7 @@ Retrieves all documents from the database matching the specified query parameter
 | Argument | Type | Description |
 | --- | --- | --- |
 | path | string | The path to the specific subcollection instance to run the query inside of. |
-| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. |
 
 ##### Return Value
 
@@ -302,7 +302,7 @@ import {
     limit,
     orderBy,
     where,
-} from '@unifire-js/firebase/firestore';
+} from 'firebase/firestore';
 
 /**
  * Find all groups that match the given query in the document with ID,
@@ -326,7 +326,7 @@ Retrieves all documents from the database matching the specified query parameter
 
 | Argument | Type | Description |
 | --- | --- | --- |
-| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. |
 
 ##### Return Value
 
@@ -345,7 +345,7 @@ import {
     limit,
     orderBy,
     where,
-} from '@unifire-js/firebase/firestore';
+} from 'firebase/firestore';
 
 /**
  * Find all groups that match the given query.
@@ -511,7 +511,7 @@ Throws an error if the name for the listener is already taken by another active 
 | --- | --- | --- |
 | nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
 | path | string | The path to the specific subcollection instance to register the listener for. |
-| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. |
 | fn | function | The callback function for the listener; should accept the sanitized document array (with `_ref` and `subcollections` attached to each sanitized document in the array) as its param. |
 
 ##### Example
@@ -520,7 +520,7 @@ Throws an error if the name for the listener is already taken by another active 
 import {
     where,
     orderBy
-} from '@unifire-js/firebase/firestore';
+} from 'firebase/firestore';
 
 /**
  * Registers a query listener for the subcollection instance at path, `profiles/john/messages`. The
@@ -555,7 +555,7 @@ Throws an error if the name for the listener is already taken by another active 
 | --- | --- | --- |
 | nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
 | path | string | The path to the specific subcollection instance to register the listener for. |
-| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. |
 | fn | function | The callback function for the listener; should accept the sanitized document array (with `_ref` and `subcollections` attached to each sanitized document in the array) as its param. |
 
 ##### Example
@@ -564,7 +564,7 @@ Throws an error if the name for the listener is already taken by another active 
 import {
     where,
     orderBy
-} from '@unifire-js/firebase/firestore';
+} from 'firebase/firestore';
 
 // In a functional component..
 
@@ -603,7 +603,7 @@ The listener will be automatically removed when the component unmounts.
 | --- | --- | --- |
 | nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
 | path | string | The path to the specific subcollection instance to register the listener for. |
-| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. |
 
 #### Return Value
 
@@ -620,7 +620,7 @@ This hook returns an array with the following structure:
 import {
     where,
     orderBy
-} from '@unifire-js/firebase/firestore';
+} from 'firebase/firestore';
 
 // In a functional component..
 
@@ -653,7 +653,7 @@ Throws an error if the name for the listener is already taken by another active 
 | Argument | Type | Description |
 | --- | --- | --- |
 | nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
-| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. |
 | fn | function | The callback function for the listener; should accept the sanitized document array (with `_ref` and `subcollections` attached to each sanitized document in the array) as its param. |
 
 ##### Example
@@ -662,7 +662,7 @@ Throws an error if the name for the listener is already taken by another active 
 import {
     where,
     orderBy
-} from '@unifire-js/firebase/firestore';
+} from 'firebase/firestore';
 
 /**
  * Registers a query listener for the subcollection as a whole. The listener callback specifies that we
@@ -695,7 +695,7 @@ Throws an error if the name for the listener is already taken by another active 
 | Argument | Type | Description |
 | --- | --- | --- |
 | nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
-| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. |
 | fn | function | The callback function for the listener; should accept the sanitized document array (with `_ref` and `subcollections` attached to each sanitized document in the array) as its param. |
 
 ##### Example
@@ -704,7 +704,7 @@ Throws an error if the name for the listener is already taken by another active 
 import {
     where,
     orderBy
-} from '@unifire-js/firebase/firestore';
+} from 'firebase/firestore';
 
 /**
  * Registers a query listener for the subcollection as a whole. The listener callback specifies that we
@@ -739,7 +739,7 @@ This listener will automatically be cleaned up when the React component unmounts
 | Argument | Type | Description |
 | --- | --- | --- |
 | nameOfListener | string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. |
-| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| queryFns | function[] | Array of Firestore query functions to use in the query, e.g., `limit`, `orderBy`, and `where`. |
 
 #### Return Value
 
@@ -756,7 +756,7 @@ This hook returns an array with the following structure:
 import {
     where,
     orderBy
-} from '@unifire-js/firebase/firestore';
+} from 'firebase/firestore';
 
 /**
  * Registers a query listener for the subcollection as a whole, and tracks

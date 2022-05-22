@@ -16,7 +16,6 @@ $ npm install @unifire-js/firebase
 
 * [What is this package?](/packages/firebase/docs/overview/what-is-this-package.md)
 * [Setting Up](/packages/firebase/docs/overview/setting-up.md)
-* [Why are we setting up a second Firebase App instance?](/packages/firebase/docs/overview/why-a-second-app.md)
 
 ### API
 

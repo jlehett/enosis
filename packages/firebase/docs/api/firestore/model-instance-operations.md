@@ -166,7 +166,7 @@ Retrieves all documents from the database matching the specified query parameter
 
 | Argument | Type | Description |
 | --- | --- | --- |
-| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. |
 
 #### Return Value
 
@@ -185,7 +185,7 @@ import {
     limit,
     orderBy,
     where,
-} from '@unifire-js/firebase/firestore';
+} from 'firebase/firestore';
 
 /**
  * Find the first 4 profiles, ordered by their `email` properties, in the 
@@ -365,7 +365,7 @@ Throws an error if the name of the listener is already taken by another active l
 | Argument | Type | Description |
 | --- | --- | --- |
 | nameOfListener| string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. 
-| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. |
 | fn | function | The callback function for the listener; should accept the sanitized document (with `_ref` and `subcollections` attached to it) as its param. |
 
 #### Example
@@ -374,7 +374,7 @@ Throws an error if the name of the listener is already taken by another active l
 import {
     where,
     orderBy
-} from '@unifire-js/firebase/firestore';
+} from 'firebase/firestore';
 
 /**
  * Registers a listener on the Profile model for any changes on documents in the profiles collection
@@ -408,7 +408,7 @@ Throws an error if the name of the listener is already taken by another active l
 | Argument | Type | Description |
 | --- | --- | --- |
 | nameOfListener| string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. 
-| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. |
 | fn | function | The callback function for the listener; should accept the sanitized document (with `_ref` and `subcollections` attached to it) as its param. |
 
 #### Example
@@ -417,7 +417,7 @@ Throws an error if the name of the listener is already taken by another active l
 import {
     where,
     orderBy
-} from '@unifire-js/firebase/firestore';
+} from 'firebase/firestore';
 
 // In a functional component...
 
@@ -459,7 +459,7 @@ Throws an error if the name for the listener is already taken by another active 
 | Argument | Type | Description |
 | --- | --- | --- |
 | nameOfListener| string | The name to give to the listener during registration; used to reference the listener when you need to delete it later. 
-| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. Note that these functions **MUST** be exported from `@unifire-js/firebase/firestore` or you will get an error about mixing Firestore SDK references. |
+| queryFns | Array\<function\> | Array of Firestore query functions to use in the query, i.e., `limit`, `orderBy`, and `where`. |
 
 #### Return Value
 
@@ -476,7 +476,7 @@ This hook returns an array with the following structure:
 import {
     where,
     orderBy
-} from '@unifire-js/firebase/firestore';
+} from 'firebase/firestore';
 
 // In a functional component...
 
