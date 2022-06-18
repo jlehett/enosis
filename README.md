@@ -16,6 +16,8 @@ For the full list of packages offered by `@unifire-js`, please see below:
     * <i>Uniform solutions for Storybook utilities.</i>
 * [hooks](/packages/hooks)
     * <i>Uniform solutions for React hooks.</i>
+* [context](/packages/context)
+    * <i>Uniform solutions for React state management.</i>
 
 ## Testing
 
