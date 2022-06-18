@@ -102,7 +102,7 @@ export function createContextSlice(initialState) {
  * @returns {React.FunctionalComponent} Returns a single Provider component that combines all of the
  * given context slice providers
  */
-export function combineContextProviders(...contextProviders) {
+export function combineContextProviders(contextProviders) {
     return contextProviders.reduce(
         (AccumulatedContextProviders, CurrentContextProvider) => {
             return ({ children }) => {
