@@ -1,5 +1,11 @@
 # @unifire-js/context
 
+## 0.1.1
+
+<i>Jun 17, 2022</i>
+
+* 🔧 Fix Babel compilation causing issues with JSX in source code.
+
 ## 0.1.0
 
 <i>Jun 17, 2022</i>
