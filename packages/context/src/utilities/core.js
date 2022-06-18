@@ -69,7 +69,7 @@ export function createContextSlice(initialState) {
             /**
              * Regular set state hook function.
              */
-            set,
+            set: setState,
             /**
              * Reset function to set state back to the defined initial state.
              */
