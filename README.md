@@ -1,6 +1,6 @@
 # `@unifire-js`
 
-<img src="./unifire-black.svg">
+<img src="./unifire-white.svg">
 
 #### <b>Uniform solutions for a variety of web development problems.</b>
 
