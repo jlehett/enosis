@@ -1,5 +1,7 @@
 # `@unifire-js`
 
+<img src="./unifire-black.svg">
+
 #### <b>Uniform solutions for a variety of web development problems.</b>
 
 ## Mono-Repo Directory
