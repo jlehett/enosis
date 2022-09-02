@@ -24,19 +24,19 @@ import { useEffect, useState } from 'react';
 /**
  * Class which provides a streamlined approach for creating Firestore
  * submodel objects with various simplified read and write operations.
- * 
+ *
  * Before submodels are constructed, the Unifire Firebase app should be set via
  * the `setUnifireFirebaseApp` function from this package.
- * 
+ *
  * Submodels are unique in that each instance associates a particular
  * document as its parent. For this reason, the `Submodel` class is
  * intended as a way to interact with Firestore subcollections in very
  * general aspects.
- * 
+ *
  * Each Model (or SubmodelInstance) will contain references to its direct
  * SubmodelInstance children, which can be used for interacting with specific
  * instances of Firestore subcollections.
- * 
+ *
  * @param {SubmodelParams} params The parameters to use when creating the
  * submodel
  */
@@ -70,11 +70,24 @@ class Submodel {
      ********************/
 
     /**
+     * Creates a new document ID that can be used in Firestore.
+     * @public
+     * @function
+     *
+     * @param {string} path The path to the subcollection to create the new document ID for
+     * @returns {string} The new document ID that can be used.
+     */
+    createNewDocID(path) {
+        const collectionRef = createCollectionRefWithPath(path);
+        return doc(collectionRef).id;
+    }
+
+    /**
      * Sanitizes the specified data and writes it to a new document in the
      * given collection reference path with an auto-assigned ID.
      * @public
      * @function
-     * 
+     *
      * @param {string} path The path to the subcollection to write the new
      * document to
      * @param {Object} data The data to sanitize and write to the new document
@@ -88,7 +101,7 @@ class Submodel {
         const collectionRef = createCollectionRefWithPath(path);
         const docRef = doc(collectionRef);
         const pathWithID = `${path}/${docRef.id}`;
-        
+
         return this.writeToPath(pathWithID, data, params);
     }
 
@@ -96,17 +109,17 @@ class Submodel {
      * Sanitizes the specified data and writes it to a specified document
      * in a specified instance of the subcollection. A new document will
      * be created if it doesn't already exist.
-     * 
+     *
      * By default, this will completely overwrite the existing document, if
      * one exists. Properties unspecified by the new data will be deleted
      * from the existing document.
-     * 
+     *
      * In order to merge the existing data with the new data, the
      * `mergeWithExistingValues` property can be set to true in the `params`
      * object.
      * @public
      * @function
-     * 
+     *
      * @param {string} path The path to the document to write to
      * @param {Object} data The data to sanitize and write to the new document
      * @param {WriteToIDParams} [params] Various settings for the operation
@@ -141,7 +154,7 @@ class Submodel {
         } else {
             await setDoc(...writeArgs);
         }
-        
+
         // Attach additional info to doc ref and return
         attachSubmodelInstanceReferencesToDocRef(docRef, this.subcollections);
         return docRef;
@@ -151,7 +164,7 @@ class Submodel {
      * Retrieves the specified document's data from the database, if it exists.
      * @public
      * @function
-     * 
+     *
      * @param {string} path Path specifying both the collection path and the
      * ID of the document to retrieve
      * @param {GetByPathParams} [params] Various settings for the operation
@@ -179,7 +192,7 @@ class Submodel {
             // and attach submodel instances for reference
             attachSubmodelInstanceReferencesToFetchedData(sanitizedData, this.subcollections);
         }
-        
+
         // Return the sanitized data
         return sanitizedData;
     }
@@ -189,7 +202,7 @@ class Submodel {
      * parameters, in the given Firestore path.
      * @public
      * @function
-     * 
+     *
      * @param {string} path Path specifying the specific subcollection instance
      * path
      * @param {function[]} queryFns Array of Firestore query functions to use
@@ -208,7 +221,7 @@ class Submodel {
 
         // Make the query call
         const querySnapshot = await getDocs(q);
-        
+
         // Sanitize the documents
         const sanitizedDocuments = this.sanitizer.sanitizeFromRead(querySnapshot);
 
@@ -228,7 +241,7 @@ class Submodel {
      * parameters, in the given subcollection group.
      * @public
      * @function
-     * 
+     *
      * @param {function[]} queryFns Array of Firestore query functions to use
      * in the query, e.g., 'limi', 'orderBy', and 'where'
      * @returns {Promise<Object[]>} Resolves with an array of all documents in
@@ -262,7 +275,7 @@ class Submodel {
      * Deletes a document from the database, given the path to the document.
      * @public
      * @function
-     * 
+     *
      * @param {string} path The path to the document to delete
      * @returns {Promise<void>} Resolves once the document has been deleted
      * (if not using an autobatcher)
@@ -292,7 +305,7 @@ class Submodel {
      * functions.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to
      * reference the listener when you need to delete it later
      * @param {string} path The path to the document to register the listener for
@@ -326,7 +339,7 @@ class Submodel {
      * component unmounts.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to
      * reference the listener when you need to delete it later
      * @param {string} path The path to the document to register the listener for
@@ -348,7 +361,7 @@ class Submodel {
      * been performed yet or not.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to
      * reference the listener when you need to delete it later
      * @param {string} path The path to the document to register the listener for
@@ -378,7 +391,7 @@ class Submodel {
             // In the useEffect cleanup, remove the listener
             return () => this.removeListener(nameOfListener);
         }, []);
-        
+
         // Return the hook API
         return [liveDataInfo.data, liveDataInfo.initialFetchDone];
     }
@@ -389,7 +402,7 @@ class Submodel {
      * `removeListener` or `removeAllListeners` functions.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to
      * reference the listener when you need to delete it later
      * @param {string} path The path to the specific subcollection instance to register the listener for
@@ -426,7 +439,7 @@ class Submodel {
      * given a query, and then removing it once the component unmounts.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to
      * reference the listener when you need to delete it later
      * @param {string} path The path to the specific subcollection instance to register the listener for
@@ -451,7 +464,7 @@ class Submodel {
      * removing the listener when the component unmounts.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to
      * reference the listener when you need to delete it later
      * @param {string} path The path to the specific subcollection instance to register the listener for
@@ -494,7 +507,7 @@ class Submodel {
      * `removeListener` or `removeAllListeners` functions.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to
      * reference the listener when you need to delete it later
      * @param {function[]} queryFns Array of Firestore query functions to use in the query, e.g., `limit`,
@@ -529,7 +542,7 @@ class Submodel {
      * query, and then removing it once the component unmounts.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to
      * reference the listener when you need to delete it later
      * @param {function[]} queryFns Array of Firestore query functions to use in the query, e.g., `limit`,
@@ -553,7 +566,7 @@ class Submodel {
      * unmounts.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to
      * reference the listener when you need to delete it later
      * @param {function[]} queryFns Array of Firestore query functions to use in the query, e.g., `limit`,
@@ -593,7 +606,7 @@ class Submodel {
      * Removes a specified listener from the submodel.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name of the listener to remove from the submodel
      */
     removeListener(nameOfListener) {
@@ -622,7 +635,7 @@ class Submodel {
      * Validates the Submodel constructor's params object.
      * @private
      * @function
-     * 
+     *
      * @param {Object} params Argument given to the Submodel's constructor
      */
     _validateConstructorParams(params) {
@@ -642,13 +655,13 @@ class Submodel {
             throw new Error('`parent` must be specified and be of type `Model` or `Submodel` when constructing a new submodel.');
         }
     }
-    
+
     /**
      * Given the doc or doc reference to associate as the parent, create a
      * new submodel instance.
      * @private
      * @function
-     * 
+     *
      * @param {Firestore.DocumentSnapshot | Firestore.DocumentReference} docOrDocRef
      * The doc or doc reference to set as the parent of the new submodel
      * instance
@@ -670,7 +683,7 @@ class Submodel {
      * path.
      * @private
      * @function
-     * 
+     *
      * @param {string} path The path to verify
      */
     _verifyPathIncludesSubmodelCollectionName(path) {
@@ -692,11 +705,11 @@ class Submodel {
      * an object with the collection path split from the ID.
      * @private
      * @function
-     * 
+     *
      * @param {string} path The path including both the collection path and
      * the ID
      * @returns {Object} Returns an object with `id` and `collectionPath`
-     * properties 
+     * properties
      */
     _getCollectionPathAndIDFromPath(path) {
         const pathSegments = path.split('/');
@@ -712,7 +725,7 @@ class Submodel {
      * Validates that the listener name is not already taken by another active listener.
      * @private
      * @function
-     * 
+     *
      * @param {string} nameOfListener The listener name to validate
      */
     _validateListenerNameNotTaken(nameOfListener) {

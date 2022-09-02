@@ -10,7 +10,7 @@
 
 <i>Jun 17, 2022</i>
 
-* 🔧 Fix another JSX issue.
+* 🔧 Fix another JSX issue.12
 
 ## 0.1.1
 

@@ -1,5 +1,6 @@
 import {
     doc,
+    addDoc,
     getDoc,
     getDocs,
     setDoc,
@@ -34,11 +35,22 @@ class ModelInstanceOperations {
      ********************/
 
     /**
+     * Creates a new document ID that can be used in Firestore.
+     * @public
+     * @function
+     *
+     * @returns {string} The new document ID that can be used.
+     */
+    createNewDocID() {
+        return doc(this.collectionRef).id;
+    }
+
+    /**
      * Sanitizes the specified data and writes it to a new document in the
      * model's collection with an auto-assigned ID.
      * @public
      * @function
-     * 
+     *
      * @param {Object} data The data to sanitize and write to the new document
      * @param {WriteToNewDocParams} [params] Various settings for the operation
      * @returns {Promise<Object>} Resolves with the newly created document
@@ -53,17 +65,17 @@ class ModelInstanceOperations {
      * Sanitizes the specified data and writes it to a specified document in the
      * model's collection. A new document will be created if it doesn't already
      * exist.
-     * 
+     *
      * By default, this will completely overwrite the existing document, if one
      * exists. Properties unspecified by the new data will be deleted from the
      * existing document.
-     * 
+     *
      * In order to merge the existing data with the new data, the
      * `mergeWithExistingValues` property can be set to true in the `params`
      * object.
      * @public
      * @function
-     * 
+     *
      * @param {string} id The ID of the document to write the sanitized data to
      * @param {Object} data The data to sanitize and write to the specified
      * document
@@ -101,7 +113,7 @@ class ModelInstanceOperations {
      * Retrieves the specified document's data from the database, if it exists.
      * @public
      * @function
-     * 
+     *
      * @param {string} id The ID of the document to fetch from the database
      * @param {GetByIDParams} [params] Various settings for the operation
      * @returns {Promise<Object | null>} If the document exists, the promise
@@ -130,7 +142,7 @@ class ModelInstanceOperations {
      * parameters.
      * @public
      * @function
-     * 
+     *
      * @param {function[]} queryFns Array of Firestore query functions to
      * use in the query, e.g., `limit`, `orderBy`, and `where`
      * @returns {Promise<Object[]>} Resolves with an array of all documents in
@@ -157,7 +169,7 @@ class ModelInstanceOperations {
      * Deletes a document from the database, given its ID.
      * @public
      * @function
-     * 
+     *
      * @param {string} id The ID of the document to delete from the database
      * @param {DeleteByIDParams} [params] Various settings for the operation
      * @returns {Promise<void>} Resolves once the document has been deleted
@@ -183,7 +195,7 @@ class ModelInstanceOperations {
      * functions.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to
      * reference the listener when you need to delete it later
      * @param {string} id The ID of the document to register the listener for
@@ -214,7 +226,7 @@ class ModelInstanceOperations {
      * unmounts.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to
      * reference the listener when you need to delete it later
      * @param {string} id The ID of the document to register the listener for
@@ -235,7 +247,7 @@ class ModelInstanceOperations {
      * tracking whether the initial fetch has been performed yet or not.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to reference
      * the listener when you need to delete it later
      * @param {string} id The ID of the document to register the listener for
@@ -276,7 +288,7 @@ class ModelInstanceOperations {
      * `removeListener` or `removeAllListeners` functions.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to
      * reference the listener when you need to delete it later
      * @param {function[]} queryFns Array of Firestore query functions to use in the query, e.g.,
@@ -310,7 +322,7 @@ class ModelInstanceOperations {
      * and then removing it once the component unmounts.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to
      * reference the listener when you need to delete it later
      * @param {function[]} queryFns Array of Firestore query functions to use in the query, e.g.,
@@ -334,7 +346,7 @@ class ModelInstanceOperations {
      * performed yet or not.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name to give to the listener during registration; used to reference
      * the listener when you need to delete it later
      * @param {function[]} queryFns Array of Firestore query functions to use in the query, e.g.,
@@ -374,7 +386,7 @@ class ModelInstanceOperations {
      * Removes a specified listener from the model.
      * @public
      * @function
-     * 
+     *
      * @param {string} nameOfListener The name of the listener to remove from the model
      */
     removeListener(nameOfListener) {
@@ -403,7 +415,7 @@ class ModelInstanceOperations {
      * Validates that the listener name is not already taken by another active listener.
      * @private
      * @function
-     * 
+     *
      * @param {string} nameOfListener The listener name to validate
      */
     _validateListenerNameNotTaken(nameOfListener) {

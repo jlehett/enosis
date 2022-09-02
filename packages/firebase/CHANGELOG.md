@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 4.1.0
+
+<i>Sept 1, 2022</i>
+
+### `unifire-js/firebase/firestore`
+
+* 🔧 Add `createNewDocID` functions to the model instance operations API and the submodel API.
+
 ## 4.0.2
 
 <i>May 22, 2022</i>

@@ -1,6 +1,6 @@
 {
   "name": "@unifire-js/firebase",
-  "version": "4.0.2",
+  "version": "4.1.0",
   "description": "Uniform solutions for Firebase integrations.",
   "author": "Tanner Lehett <johntannerlehett@gmail.com>",
   "homepage": "https://github.com/jlehett/unifire-js/blob/master/packages/firebase/README.md",
@@ -30,7 +30,7 @@
   "scripts": {
     "build": "npx babel src --out-dir lib",
     "test": "npm run build && mocha -r @babel/register --timeout 5000 __tests__",
-    "prepublishOnly": "npm run test"
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@unifire-js/async": "0.0.11",
