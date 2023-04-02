@@ -1,5 +1,13 @@
 # @unifire-js/firebase
 
+## 4.1.1
+
+<i>April 2, 2023</i>
+
+### `unifire-js/firebase/firestore`
+
+* 🛠️ Fix issue with Submodel's `useListenerByPath` hook re-running on every re-render.
+
 ## 4.1.0
 
 <i>Sept 1, 2022</i>

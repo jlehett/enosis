@@ -352,7 +352,7 @@ class Submodel {
             this.addListenerByPath(nameOfListener, path, fn);
             // In the useEffect cleanup, remove the listener
             return () => this.removeListener(nameOfListener);
-        });
+        }, []);
     }
 
     /**
